@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Operator GUI</title>
+  </head>
+  <body>
+    <h1>Operator GUI</h1>
+    <button id="start-btn">Start</button>
+    <button id="stop-btn">Stop</button>
+  </body>
+</html>
+
+<script>
+  const startBtn = document.getElementById('start-btn')
+  const stopBtn = document.getElementById('stop-btn')
+  startBtn.addEventListener('click', async (_) => {
+    try {
+      const response = await fetch('/start', {
+        method: 'post',
+        body: {},
+      })
+      console.log('starting server...', response)
+    } catch (err) {
+      console.error(`Error: ${err}`)
+    }
+  })
+  stopBtn.addEventListener('click', async (_) => {
+    try {
+      const response = await fetch('/stop', {
+        method: 'post',
+        body: {},
+      })
+      console.log('stopping server...', response)
+    } catch (err) {
+      console.error(`Error: ${err}`)
+    }
+  })
+</script>
