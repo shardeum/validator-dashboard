@@ -1,4 +1,4 @@
-FROM registry.gitlab.com/shardeum/shardeum-server:1.0.0.0
+FROM registry.gitlab.com/shardeum/server:dev
 
 # Create node user
 RUN usermod -aG sudo node && \
