@@ -1,19 +1,20 @@
 #!/usr/bin/env bash
 
-# Install PM2 globally
+echo "Install PM2 globally"
+
 npm i -g pm2
 
 # Pull latest versions of the CLI and GUI
-git fetch
-git checkout main
-git pull --rebase origin main
+# git fetch
+# git checkout main
+# git pull --rebase origin main
 
-# Install the CLI globally and put it in the path
+echo "Install the CLI globally and put it in the path"
 cd cli
 npm i && npm link
 cd ..
 
-# Install the GUI
+echo "Install the GUI"
 cd gui
 cd backend
 npm i
