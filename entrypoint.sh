@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
+sleep 10;
 
-echo "Install PM2 globally"
+echo "Install PM2"
 
 npm i -g pm2
 
@@ -9,20 +10,30 @@ npm i -g pm2
 # git checkout main
 # git pull --rebase origin main
 
+#git clone https://gitlab.com/shardeum/validator/cli.git
 git clone https://gitlab.com/shardus/validator/cli.git
 
-echo "Install the CLI globally and put it in the path"
+echo "Install the CLI"
 cd cli
 npm i && npm link
 cd ..
 
-git clone https://gitlab.com/shardus/validator/gui.git
+# git clone https://gitlab.com/shardeum/validator/gui.git
+git clone https://gitlab.com/shardus/validator/gui.git 
 
 echo "Install the GUI"
 cd gui
 cd backend
 npm i
 cd ../..
+
+# Start GUI if configured to in env file
+if [ "$RUNDASHBOARD" == "y" ]
+then
+# Call the CLI command to start the GUI
+operator-cli gui start
+fi
+
 
 # Clone the shardeum validator
 #git config --global credential.helper '!f() { sleep 1; echo "username=${GIT_USER}"; echo "password=${GIT_PASS}"; }; f'
@@ -31,14 +42,7 @@ cd ../..
 #git config --global credential.helper cache
 #cd ..
 
-# Start GUI if configured to in env file
-if [ "$START_GUI" == "1" ]
-then
-# Call the CLI command to start the GUI
-operator-cli gui start
-fi
-
-echo "Please run ./shell.sh for next steps."
+echo "done";
 
 # Keep container running
 tail -f /dev/null

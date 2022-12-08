@@ -1,5 +1,7 @@
 FROM registry.gitlab.com/shardeum/server:dev
 
+ARG RUNDASHBOARD
+
 # Create node user
 RUN usermod -aG sudo node && \
   echo '%sudo ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers && \

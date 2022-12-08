@@ -1,4 +1,14 @@
-#!/usr/bin/env bash
+#!/bin/bash
+
+cat << EOF
+
+#########################
+# 0. Pulling base image #
+#########################
+
+EOF
+
+docker build --no-cache -t test-dashboard -f Dockerfile .
 
 cat << EOF
 
@@ -56,3 +66,8 @@ cat << EOF
 EOF
 
 ./docker-up.sh
+
+echo "Building image."
+( docker logs -f shardeum-dashboard &) | grep -q 'done';
+
+echo "Please run ./shell.sh for next steps."
