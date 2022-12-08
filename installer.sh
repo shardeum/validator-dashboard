@@ -23,8 +23,8 @@ read -p "Do you want to run the web based Dashboard? (y/n): " RUNDASHBOARD
 read -p "Set the password to access the Dashboard: " -s DASHPASS
 echo
 
-read -p "Dashboard can be accessed at localhost:59999. Use another port? (1025-65536): " DASHPORT
-DASHPORT=${DASHPORT:-59999}
+read -p "Dashboard can be accessed at localhost:8080. Use another port? (1025-65536): " DASHPORT
+DASHPORT=${DASHPORT:-8080}
 
 read -p "What base directory should the node use (defaults to ~/.shardeum): " NODEHOME
 NODEHOME=${NODEHOME:-~/.shardeum}
