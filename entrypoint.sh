@@ -10,16 +10,16 @@ npm i -g pm2
 # git checkout main
 # git pull --rebase origin main
 
-#git clone https://gitlab.com/shardeum/validator/cli.git
-git clone https://gitlab.com/shardus/validator/cli.git
+git clone https://gitlab.com/shardeum/validator/cli.git
+# git clone https://gitlab.com/shardus/validator/cli.git
 
 echo "Install the CLI"
 cd cli
 npm i && npm link
 cd ..
 
-# git clone https://gitlab.com/shardeum/validator/gui.git
-git clone https://gitlab.com/shardus/validator/gui.git 
+git clone https://gitlab.com/shardeum/validator/gui.git
+#git clone https://gitlab.com/shardus/validator/gui.git 
 
 echo "Install the GUI"
 cd gui
