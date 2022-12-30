@@ -19,6 +19,12 @@ DASHPORT=${DASHPORT:-8080}
 read -p "What base directory should the node use (defaults to ~/.shardeum): " NODEHOME
 NODEHOME=${NODEHOME:-~/.shardeum}
 
+read -p "What is the IP of this node?: " APPIP
+
+read -p "What is the IP of the archiver?: " APPSEEDLIST
+
+read -p "What is the IP of the monitor?: " APPMONITOR
+
 echo
 
 cat <<EOF
@@ -41,6 +47,7 @@ cat <<EOF
 
 EOF
 
+cd ${NODEHOME} &&
 docker build --no-cache -t test-dashboard -f Dockerfile .
 
 cat <<EOF
@@ -51,10 +58,13 @@ cat <<EOF
 
 EOF
 
-# touch ./.env &&
-# cat >./.env <<EOL
-# BASE_DIR=${NODEHOME}
-# EOL
+cd ${NODEHOME} &&
+touch ./.env
+cat >./.env <<EOL
+APP_IP=${APPIP}
+APP_SEEDLIST=${APPSEEDLIST}
+APP_MONITOR=${APPMONITOR}
+EOL
 
 cat <<EOF
 
@@ -64,9 +74,10 @@ cat <<EOF
 
 EOF
 
+cd ${NODEHOME} &&
 ./docker-up.sh
 
 echo "Starting image."
 (docker logs -f shardeum-dashboard &) | grep -q 'done'
 
-echo "Please run ./shell.sh for next steps."
+echo "Please run ${NODEHOME}/shell.sh for next steps."

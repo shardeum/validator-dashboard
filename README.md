@@ -1,8 +1,8 @@
 # HOW TO
 
-After cloning the repo, run 
+After installing `docker` and `docker-compose`, you may download and run the install script manually, or use the following command:
 ```
-./install.sh
+curl -O https://gitlab.com/shardeum/validator/dashboard/-/raw/dashboard-gui-nextjs/installer.sh && chmod +x installer.sh && ./installer.sh
 ```
 
 This will build the operator/dashboard image using an exisitng validator-server image.
