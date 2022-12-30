@@ -1,19 +1,9 @@
 #!/bin/bash
 
-cat << EOF
+cat <<EOF
 
 #########################
-# 0. Pulling base image #
-#########################
-
-EOF
-
-docker build --no-cache -t test-dashboard -f Dockerfile .
-
-cat << EOF
-
-#########################
-# 1. GET INFO FROM USER #
+# 0. GET INFO FROM USER #
 #########################
 
 EOF
@@ -31,19 +21,29 @@ NODEHOME=${NODEHOME:-~/.shardeum}
 
 echo
 
-cat << EOF
+cat <<EOF
 
 ###########################
-# 2. Pull Compose Project #
+# 1. Pull Compose Project #
 ###########################
 
 EOF
 
 git clone -b dashboard-gui-nextjs https://gitlab.com/shardeum/validator/dashboard.git ${NODEHOME} &&
-cd ${NODEHOME} &&
-chmod a+x ./*.sh &&
+  cd ${NODEHOME} &&
+  chmod a+x ./*.sh
 
-cat << EOF
+cat <<EOF
+
+#########################
+# 2. Building base image #
+#########################
+
+EOF
+
+docker build --no-cache -t test-dashboard -f Dockerfile .
+
+cat <<EOF
 
 ###############################
 # 3. Create and Set .env File #
@@ -51,12 +51,12 @@ cat << EOF
 
 EOF
 
-touch ./.env &&
+# touch ./.env &&
 # cat >./.env <<EOL
 # BASE_DIR=${NODEHOME}
 # EOL
 
-cat << EOF
+cat <<EOF
 
 ############################
 # 4. Start Compose Project #
@@ -66,7 +66,7 @@ EOF
 
 ./docker-up.sh
 
-echo "Building image."
-( docker logs -f shardeum-dashboard &) | grep -q 'done';
+echo "Starting image."
+(docker logs -f shardeum-dashboard &) | grep -q 'done'
 
 echo "Please run ./shell.sh for next steps."
