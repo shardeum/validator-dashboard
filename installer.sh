@@ -9,6 +9,7 @@ cat <<EOF
 EOF
 
 read -p "Do you want to run the web based Dashboard? (y/n): " RUNDASHBOARD
+RUNDASHBOARD=${RUNDASHBOARD:-y}
 
 read -p "Set the password to access the Dashboard: " -s DASHPASS
 echo
@@ -48,7 +49,7 @@ cat <<EOF
 EOF
 
 cd ${NODEHOME} &&
-docker build --no-cache -t test-dashboard -f Dockerfile .
+docker build --no-cache -t test-dashboard -f Dockerfile --build-arg RUNDASHBOARD=${RUNDASHBOARD} .
 
 cat <<EOF
 

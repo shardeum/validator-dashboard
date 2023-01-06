@@ -1,6 +1,7 @@
 FROM registry.gitlab.com/shardeum/server:dev
 
-ARG RUNDASHBOARD
+ARG RUNDASHBOARD=y
+ENV RUNDASHBOARD=${RUNDASHBOARD}
 
 # Create node user
 RUN usermod -aG sudo node && \

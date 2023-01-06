@@ -18,7 +18,7 @@ cd cli
 npm i && npm link
 cd ..
 
-git clone -b feature/dashboard-ui https://gitlab.com/shardeum/validator/gui.git
+git clone -b feature/dashboard-cli-integration https://gitlab.com/shardeum/validator/gui.git
 #git clone https://gitlab.com/shardus/validator/gui.git 
 
 echo "Install the GUI"
@@ -34,8 +34,10 @@ cd ../..
 
 
 # Start GUI if configured to in env file
+echo $RUNDASHBOARD
 if [ "$RUNDASHBOARD" == "y" ]
 then
+echo "Starting operator gui"
 # Call the CLI command to start the GUI
 operator-cli gui start
 fi
