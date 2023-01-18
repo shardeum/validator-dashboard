@@ -7,7 +7,7 @@
 3. You may download and run the install script manually, or use the following command:
 
 	```
-	curl -O https://gitlab.com/shardeum/validator/dashboard/-/raw/dashboard-gui-nextjs/installer.sh && chmod +x installer.sh && ./installer.sh
+	curl -O https://gitlab.com/shardeum/validator/dashboard/-/raw/fresh-os-fixes/installer.sh && chmod +x installer.sh && ./installer.sh
 	```
 
 4. Follow the steps of the installer script to finish setup. Be sure to enter the correct Archiver and Monitor IP's of the network you want your validator to join.
