@@ -1,6 +1,11 @@
 #!/bin/bash
 
-cat <<EOF
+# Check all things that will be needed for this script to succeed like access to docker and docker-compose
+# If any check fails exit with a message on what the user needs to do to fix the problem
+command -v docker >/dev/null 2>&1 || { echo >&2 "'docker' is required but not installed. See https://gitlab.com/shardeum/validator/dashboard/-/tree/dashboard-gui-nextjs#how-to for details."; exit 1; }
+command -v docker-compose >/dev/null 2>&1 || { echo >&2 "'docker-compose' is required but not installed. See https://gitlab.com/shardeum/validator/dashboard/-/tree/dashboard-gui-nextjs#how-to for details."; exit 1; }
+
+cat << EOF
 
 #########################
 # 0. GET INFO FROM USER #

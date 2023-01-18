@@ -1,13 +1,24 @@
 # HOW TO
 
-1. Prerequisites: Install `curl`, `docker` and `docker-compose` on your machine and include them in the path of your shell.
+1. Prerequisites: Ensure `curl`, `docker` and `docker-compose` are installed on your machine and included in the path of your shell:
 
-2. If you are behind a router, ensure ports `9001` and `10001` are forwarded. https://www.noip.com/support/knowledgebase/general-port-forwarding-guide/
+	__curl__: https://curl.se/download.html  
+	__docker__: https://docs.docker.com/engine/install/  
+	__docker-compose__: https://docs.docker.com/compose/install/linux/
 
-3. You may download and run the install script manually, or use the following command:
+2. If you are behind a router, ensure ports `9001` and `10001` are forwarded.  
+	https://www.noip.com/support/knowledgebase/general-port-forwarding-guide/
 
+3. You may download and run the install script manually, or use one of the following commands:
+
+	_Ensure `curl` is installed before running this command. If not, install it through your distro's package manager or get it from here: https://curl.se/download.html_
 	```
 	curl -O https://gitlab.com/shardeum/validator/dashboard/-/raw/fresh-os-fixes/installer.sh && chmod +x installer.sh && ./installer.sh
+	```
+
+	_Ensure `wget` is installed before running this command. If not, install it through your distro's package manager or get it from here: https://www.gnu.org/software/wget/_
+	```
+	wget -O https://gitlab.com/shardeum/validator/dashboard/-/raw/dashboard-gui-nextjs/installer.sh && chmod +x installer.sh && ./installer.sh
 	```
 
 4. Follow the steps of the installer script to finish setup. Be sure to enter the correct Archiver and Monitor IP's of the network you want your validator to join.
