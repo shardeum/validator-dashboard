@@ -13,7 +13,7 @@ USER node
 # Copy cli src files as regular user
 WORKDIR /home/node/app
 COPY --chown=node:node . .
-RUN ln -s /usr/src/app /home/node/app/validator
+RUN chown node:node /usr/src/app && ln -s /usr/src/app /home/node/app/validator
 
 # Start entrypoint script as regular user
 CMD ["./entrypoint.sh"]
