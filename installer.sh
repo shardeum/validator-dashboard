@@ -20,7 +20,7 @@ DASHPORT=${DASHPORT:-8080}
 read -p "What base directory should the node use (defaults to ~/.shardeum): " NODEHOME
 NODEHOME=${NODEHOME:-~/.shardeum}
 
-read -p "What is the IP of this node?: " APPIP
+# read -p "What is the IP of this node?: " APPIP
 
 read -p "What is the IP of the archiver?: " APPSEEDLIST
 
@@ -62,7 +62,7 @@ EOF
 cd ${NODEHOME} &&
 touch ./.env
 cat >./.env <<EOL
-APP_IP=${APPIP}
+APP_IP=auto
 APP_SEEDLIST=${APPSEEDLIST}
 APP_MONITOR=${APPMONITOR}
 EOL
