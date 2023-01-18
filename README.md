@@ -1,13 +1,29 @@
 # HOW TO
 
-After installing `docker` and `docker-compose`, you may download and run the install script manually, or use the following command:
-```
-curl -O https://gitlab.com/shardeum/validator/dashboard/-/raw/dashboard-gui-nextjs/installer.sh && chmod +x installer.sh && ./installer.sh
-```
+1. Prerequisites: Install `docker` and `docker-compose` on your machine and include them in the path of your shell.
 
-This will build the operator/dashboard image using an exisitng validator-server image.
+2. If you are behind a router, ensure ports `9001` and `10001` are forwarded. https://www.noip.com/support/knowledgebase/general-port-forwarding-guide/
 
-The entryscript clones and installs the cli AND gui repos.
+3. You may download and run the install script manually, or use the following command:
+
+	```
+	curl -O https://gitlab.com/shardeum/validator/dashboard/-/raw/dashboard-gui-nextjs/installer.sh && chmod +x installer.sh && ./installer.sh
+	```
+
+4. Follow the steps of the installer script to finish setup. Be sure to enter the correct Archiver and Monitor IP's of the network you want your validator to join.
+
+5. Once the installer finishes, start the validator through either the command line or the web-based dashboard:
+
+	__Web Dashboard__
+
+	1. Open a web browser and navigate to the web dashboard at `localhost:8080`
+	2. Go to the `Maintenance` tab and click the `Start Node` button.
+
+	__Command Line__
+
+	1. Open a terminal and navigate to the Shardeum home directory (`$HOME/.shardeum`).
+	2. Enter the validator container with `./shell`.
+	3. In the container, run `operator-cli start` to start the validator node.
 
 ## Stack management
 ### Start the stack:
