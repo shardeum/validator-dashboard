@@ -1,6 +1,6 @@
 # HOW TO
 
-1. Prerequisites: Install `docker` and `docker-compose` on your machine and include them in the path of your shell.
+1. Prerequisites: Install `curl`, `docker` and `docker-compose` on your machine and include them in the path of your shell.
 
 2. If you are behind a router, ensure ports `9001` and `10001` are forwarded. https://www.noip.com/support/knowledgebase/general-port-forwarding-guide/
 
