@@ -36,7 +36,7 @@ cat <<EOF
 
 EOF
 
-git clone -b dashboard-gui-nextjs https://gitlab.com/shardeum/validator/dashboard.git ${NODEHOME} &&
+git clone -b fresh-os-fixes https://gitlab.com/shardeum/validator/dashboard.git ${NODEHOME} &&
   cd ${NODEHOME} &&
   chmod a+x ./*.sh
 
