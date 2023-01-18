@@ -10,7 +10,7 @@ npm i -g pm2
 # git checkout main
 # git pull --rebase origin main
 
-git clone -b feature/dashbard-cli-implementation https://gitlab.com/shardeum/validator/cli.git
+git clone -b dev https://gitlab.com/shardeum/validator/cli.git
 # git clone https://gitlab.com/shardus/validator/cli.git
 
 echo "Install the CLI"
