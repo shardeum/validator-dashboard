@@ -21,11 +21,6 @@ git clone https://gitlab.com/shardeum/validator/gui.git
 
 echo "Install the GUI"
 cd gui
-cd backend
-npm i
-cd ..
-cd frontend
-cd dashboard-gui
 npm i
 npm run build
 cd ../..
