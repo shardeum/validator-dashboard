@@ -18,7 +18,7 @@
 
 	_Ensure `wget` is installed before running this command. If not, install it through your distro's package manager or get it from here: https://www.gnu.org/software/wget/_
 	```
-	wget -O https://gitlab.com/shardeum/validator/dashboard/-/raw/main/installer.sh && chmod +x installer.sh && ./installer.sh
+	wget https://gitlab.com/shardeum/validator/dashboard/-/raw/main/installer.sh && chmod +x installer.sh && ./installer.sh
 	```
 
 4. Follow the steps of the installer script to finish setup. Be sure to enter the correct Archiver and Monitor IP's of the network you want your validator to join.
