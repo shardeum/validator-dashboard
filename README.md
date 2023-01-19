@@ -5,29 +5,36 @@
 	__docker__: https://docs.docker.com/engine/install/  
 	__docker-compose__: https://docs.docker.com/compose/install/
 
-2. If you are behind a router, ensure ports `9001` and `10001` are forwarded.  
-	https://www.noip.com/support/knowledgebase/general-port-forwarding-guide/
+2. Make sure you have either 'curl' or 'wget' installed.
 
-3. You may download and run the install script manually, or use one of the following commands:
+    _Install 'curl' through your distro's package manager or get it from here: https://curl.se/download.html_
 
-	_Ensure `curl` is installed before running this command. If not, install it through your distro's package manager or get it from here: https://curl.se/download.html_
+    _Or you can install 'wget' through your distro's package manager or get it from here: https://www.gnu.org/software/wget/_
+
+3. Use one of the following commands to download and run the install script:
+
+	_If you have `curl`
 	```
 	curl -O https://gitlab.com/shardeum/validator/dashboard/-/raw/main/installer.sh && chmod +x installer.sh && ./installer.sh
 	```
 
-	_Ensure `wget` is installed before running this command. If not, install it through your distro's package manager or get it from here: https://www.gnu.org/software/wget/_
+	_If you have `wget` 
 	```
 	wget https://gitlab.com/shardeum/validator/dashboard/-/raw/main/installer.sh && chmod +x installer.sh && ./installer.sh
 	```
 
-4. Follow the steps of the installer script to finish setup. Be sure to enter the correct Archiver and Monitor IP's of the network you want your validator to join.
+4. Follow the steps of the installer script to finish setup. Be sure to enter the correct Archiver and Monitor IP's of the network you want your validator to join. The IPs will be posted in https://docs.shardeum.org/
 
-5. Once the installer finishes, start the validator through either the command line or the web-based dashboard:
+5. If you are behind a router, ensure ports `9001` and `10001` are forwarded.  
+	https://www.noip.com/support/knowledgebase/general-port-forwarding-guide/
+
+6. Once the installer finishes, start the validator through either the web-based dashboard or command line:
 
 	__Web Dashboard__
 
-	1. Open a web browser and navigate to the web dashboard at `localhost:8080`
-	2. Go to the `Maintenance` tab and click the `Start Node` button.
+	1. Open a web browser and navigate to the web dashboard at `localhost:8080` or ServerIP:8080
+	2. Go to the `Settings` tab and connect a wallet.
+	3. Go to the `Maintenance` tab and click the `Start Node` button.
 
 	__Command Line__
 
