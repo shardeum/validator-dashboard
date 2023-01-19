@@ -3,7 +3,7 @@
 1. Prerequisites: Ensure `docker` and `docker-compose` are installed on your machine and included in the path of your shell:
 
 	__docker__: https://docs.docker.com/engine/install/  
-	__docker-compose__: https://docs.docker.com/compose/install/linux/
+	__docker-compose__: https://docs.docker.com/compose/install/
 
 2. If you are behind a router, ensure ports `9001` and `10001` are forwarded.  
 	https://www.noip.com/support/knowledgebase/general-port-forwarding-guide/
