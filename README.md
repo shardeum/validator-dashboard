@@ -23,7 +23,7 @@
 	wget https://gitlab.com/shardeum/validator/dashboard/-/raw/main/installer.sh && chmod +x installer.sh && ./installer.sh
 	```
 
-4. Follow the steps of the installer script to finish setup. Be sure to enter the correct Archiver and Monitor IP's of the network you want your validator to join. The IPs will be posted in https://docs.shardeum.org/
+4. Follow the steps of the installer script to finish setup. Be sure to enter the correct Archiver and Monitor IP's of the network you want your validator to join. The IPs will be posted here: https://docs.shardeum.org/nodes/run-a-node
 
 5. If you are behind a router, ensure ports `9001` and `10001` are forwarded.  
 	https://www.noip.com/support/knowledgebase/general-port-forwarding-guide/
