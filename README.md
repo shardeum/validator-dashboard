@@ -1,4 +1,4 @@
-# HOW TO
+# HOW TO Install and Run a Shardeum Validator node
 
 1. Prerequisites: Ensure `docker` and `docker-compose` are installed on your machine and included in the path of your shell:
 
@@ -13,12 +13,12 @@
 
 3. Use one of the following commands to download and run the install script:
 
-	_If you have `curl`
+	_If you have `curl`_
 	```
 	curl -O https://gitlab.com/shardeum/validator/dashboard/-/raw/main/installer.sh && chmod +x installer.sh && ./installer.sh
 	```
 
-	_If you have `wget` 
+	_If you have `wget`_
 	```
 	wget https://gitlab.com/shardeum/validator/dashboard/-/raw/main/installer.sh && chmod +x installer.sh && ./installer.sh
 	```
