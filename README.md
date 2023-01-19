@@ -1,8 +1,7 @@
 # HOW TO
 
-1. Prerequisites: Ensure `curl`, `docker` and `docker-compose` are installed on your machine and included in the path of your shell:
+1. Prerequisites: Ensure `docker` and `docker-compose` are installed on your machine and included in the path of your shell:
 
-	__curl__: https://curl.se/download.html  
 	__docker__: https://docs.docker.com/engine/install/  
 	__docker-compose__: https://docs.docker.com/compose/install/linux/
 
