@@ -8,6 +8,11 @@ echo "down exiting stack"
 ./docker-down.sh
 
 echo "delete existing image"
-docker rmi $(docker images | grep test-dashboard | awk {' print $3 '})
+{
+    docker rmi $(docker images | grep test-dashboard | awk {' print $3 '})
+} || {
+    sudo docker rmi $(docker images | grep test-dashboard | awk {' print $3 '})
+}
+
 
 echo "done."

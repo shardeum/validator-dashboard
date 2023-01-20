@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # Check all things that will be needed for this script to succeed like access to docker and docker-compose
 # If any check fails exit with a message on what the user needs to do to fix the problem
@@ -14,10 +14,19 @@ if ! command -v docker-compose >/dev/null 2>&1; then
         echo >&2 "docker compose subcommand not found. Aborting."
         exit 1
     fi
-    echo "docker compose subcommand found, creating alias"
-    alias docker-compose='docker compose'
+    echo "docker compose subcommand found, creating function"
+    docker-compose() {
+        if ! docker compose "$@"; then
+            sudo docker compose "$@"
+        fi
+    }
 else
-    echo "docker-compose command found"
+    echo "docker-compose command found, creating function"
+    docker-compose() {
+        if ! docker-compose "$@"; then
+            sudo docker-compose "$@"
+        fi
+    }
 fi
 
 cat << EOF
