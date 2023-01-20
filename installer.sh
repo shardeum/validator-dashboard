@@ -4,39 +4,40 @@
 # If any check fails exit with a message on what the user needs to do to fix the problem
 command -v git >/dev/null 2>&1 || { echo >&2 "'git' is required but not installed."; exit 1; }
 command -v docker >/dev/null 2>&1 || { echo >&2 "'docker' is required but not installed. See https://gitlab.com/shardeum/validator/dashboard/-/tree/dashboard-gui-nextjs#how-to for details."; exit 1; }
-
-if ! docker ps >/dev/null 2>&1 ; then
-    echo "docker command requires sudo, creating function"
-    function docker(){
-        command sudo docker "$@"
-    }
+if command -v docker-compose &>/dev/null; then
+  echo "docker-compose is installed on this machine"
+elif docker --help | grep -q "compose"; then
+  echo "docker compose subcommand is installed on this machine"
 else
-    echo "docker command works without sudo"
+  echo "docker-compose or docker compose is not installed on this machine"
+  exit 1
 fi
 
-if ! command -v docker-compose >/dev/null 2>&1; then
-    if ! command -v docker >/dev/null 2>&1 ; then
-        echo >&2 "docker or docker-compose command not found. Aborting."
-        exit 1
-    fi
-    if ! docker --help | grep -q "compose"; then
-        echo >&2 "docker compose subcommand not found. Aborting."
-        exit 1
-    fi
-    echo "docker compose subcommand found, creating function"
-    docker-compose() {
-        if ! docker compose "$@"; then
-            sudo docker compose "$@"
-        fi
-    }
-else
-    echo "docker-compose command found, creating function"
-    docker-compose() {
-        if ! docker-compose "$@"; then
-            sudo docker-compose "$@"
-        fi
-    }
-fi
+docker-safe() {
+  if ! command -v docker &>/dev/null; then
+    echo "docker is not installed on this machine"
+    exit 1
+  fi
+
+  if ! docker $@; then
+    sudo docker $@
+  fi
+}
+
+docker-compose-safe() {
+  if command -v docker-compose &>/dev/null; then
+    cmd="docker-compose"
+  elif docker --help | grep -q "compose"; then
+    cmd="docker compose"
+  else
+    echo "docker-compose or docker compose is not installed on this machine"
+    exit 1
+  fi
+
+  if ! $cmd $@; then
+    sudo $cmd $@
+  fi
+}
 
 cat << EOF
 
@@ -87,7 +88,7 @@ cat <<EOF
 EOF
 
 cd ${NODEHOME} &&
-docker build --no-cache -t test-dashboard -f Dockerfile --build-arg RUNDASHBOARD=${RUNDASHBOARD} .
+docker-safe build --no-cache -t test-dashboard -f Dockerfile --build-arg RUNDASHBOARD=${RUNDASHBOARD} .
 
 cat <<EOF
 
@@ -117,6 +118,6 @@ cd ${NODEHOME} &&
 ./docker-up.sh
 
 echo "Starting image."
-(docker logs -f shardeum-dashboard &) | grep -q 'done'
+(docker-safe logs -f shardeum-dashboard &) | grep -q 'done'
 
 echo "Please run ${NODEHOME}/shell.sh for next steps."

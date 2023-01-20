@@ -1,17 +1,14 @@
 #!/usr/bin/env bash
 
-if ! command -v docker >/dev/null 2>&1 ; then
-    echo >&2 "docker command not found. Aborting."
+docker-safe() {
+  if ! command -v docker &>/dev/null; then
+    echo "docker is not installed on this machine"
     exit 1
-fi
+  fi
 
-if ! docker ps >/dev/null 2>&1 ; then
-    echo "docker command requires sudo, creating function"
-    function docker(){
-        command sudo docker "$@"
-    }
-else
-    echo "docker command works without sudo"
-fi
+  if ! docker $@; then
+    sudo docker $@
+  fi
+}
 
-docker exec -it shardeum-dashboard /bin/bash
+docker-safe exec -it shardeum-dashboard /bin/bash
