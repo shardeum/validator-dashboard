@@ -1,9 +1,17 @@
 #!/usr/bin/env bash
 
-command -v docker >/dev/null 2>&1 || { echo >&2 "'docker' is required but not installed."; exit 1; }
+if ! command -v docker >/dev/null 2>&1 ; then
+    echo >&2 "docker command not found. Aborting."
+    exit 1
+fi
 
-{
-    docker logs -f shardeum-dashboard
-} || {
-    sudo docker logs -f shardeum-dashboard
-}
+if ! docker "$@" >/dev/null 2>&1 ; then
+    echo "docker command requires sudo, creating function"
+    docker() {
+        sudo docker "$@"
+    }
+else
+    echo "docker command found and works without sudo"
+fi
+
+docker logs -f shardeum-dashboard

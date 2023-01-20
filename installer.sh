@@ -5,6 +5,20 @@
 command -v git >/dev/null 2>&1 || { echo >&2 "'git' is required but not installed."; exit 1; }
 command -v docker >/dev/null 2>&1 || { echo >&2 "'docker' is required but not installed. See https://gitlab.com/shardeum/validator/dashboard/-/tree/dashboard-gui-nextjs#how-to for details."; exit 1; }
 
+if ! command -v docker >/dev/null 2>&1 ; then
+    echo >&2 "docker command not found. Aborting."
+    exit 1
+fi
+
+if ! docker "$@" >/dev/null 2>&1 ; then
+    echo "docker command requires sudo, creating function"
+    docker() {
+        sudo docker "$@"
+    }
+else
+    echo "docker command found and works without sudo"
+fi
+
 if ! command -v docker-compose >/dev/null 2>&1; then
     if ! command -v docker >/dev/null 2>&1 ; then
         echo >&2 "docker or docker-compose command not found. Aborting."
@@ -78,11 +92,7 @@ cat <<EOF
 EOF
 
 cd ${NODEHOME} &&
-{
-    docker build --no-cache -t test-dashboard -f Dockerfile --build-arg RUNDASHBOARD=${RUNDASHBOARD} .
-} || {
-    sudo docker build --no-cache -t test-dashboard -f Dockerfile --build-arg RUNDASHBOARD=${RUNDASHBOARD} .
-}
+docker build --no-cache -t test-dashboard -f Dockerfile --build-arg RUNDASHBOARD=${RUNDASHBOARD} .
 
 cat <<EOF
 
@@ -112,6 +122,6 @@ cd ${NODEHOME} &&
 ./docker-up.sh
 
 echo "Starting image."
-({ docker logs -f shardeum-dashboard & } || { sudo docker logs -f shardeum-dashboard & }) | grep -q 'done'
+(docker logs -f shardeum-dashboard &) | grep -q 'done'
 
 echo "Please run ${NODEHOME}/shell.sh for next steps."
