@@ -17,12 +17,12 @@ if ! command -v docker-compose >/dev/null 2>&1; then
     }
 else
     echo "docker-compose command found, creating function"
-    docker-compose() {
+    docker-compose-sudo() {
         if ! docker-compose "$@"; then
             sudo docker-compose "$@"
         fi
     }
 fi
 
-docker-compose -f docker-compose.yml up -d
+docker-compose-sudo -f docker-compose.yml up -d
 
