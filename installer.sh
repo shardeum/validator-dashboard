@@ -7,7 +7,14 @@ command -v docker >/dev/null 2>&1 || { echo >&2 "'docker' is required but not in
 
 if ! docker ps >/dev/null 2>&1 ; then
     echo "docker command requires sudo, creating function"
-    alias docker='sudo docker'
+    function docker(){
+        command docker "$@"
+        local ret=$?
+        if [ $ret -ne 0 ]
+        then
+            command sudo docker "$@"
+        fi
+    }
 else
     echo "docker command works without sudo"
 fi
