@@ -5,18 +5,11 @@
 command -v git >/dev/null 2>&1 || { echo >&2 "'git' is required but not installed."; exit 1; }
 command -v docker >/dev/null 2>&1 || { echo >&2 "'docker' is required but not installed. See https://gitlab.com/shardeum/validator/dashboard/-/tree/dashboard-gui-nextjs#how-to for details."; exit 1; }
 
-if ! command -v docker >/dev/null 2>&1 ; then
-    echo >&2 "docker command not found. Aborting."
-    exit 1
-fi
-
-if ! docker "$@" >/dev/null 2>&1 ; then
+if ! docker ps >/dev/null 2>&1 ; then
     echo "docker command requires sudo, creating function"
-    docker() {
-        sudo docker "$@"
-    }
+    alias docker='sudo docker'
 else
-    echo "docker command found and works without sudo"
+    echo "docker command works without sudo"
 fi
 
 if ! command -v docker-compose >/dev/null 2>&1; then

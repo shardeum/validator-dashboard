@@ -5,14 +5,13 @@ if ! command -v docker >/dev/null 2>&1 ; then
     exit 1
 fi
 
-if ! docker "$@" >/dev/null 2>&1 ; then
+if ! docker ps >/dev/null 2>&1 ; then
     echo "docker command requires sudo, creating function"
-    docker() {
-        sudo docker "$@"
-    }
+    alias docker='sudo docker'
 else
-    echo "docker command found and works without sudo"
+    echo "docker command works without sudo"
 fi
+
 
 #rm ./output.log
 
