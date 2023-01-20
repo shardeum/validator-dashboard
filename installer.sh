@@ -69,7 +69,11 @@ cat <<EOF
 EOF
 
 cd ${NODEHOME} &&
-docker build --no-cache -t test-dashboard -f Dockerfile --build-arg RUNDASHBOARD=${RUNDASHBOARD} .
+{
+    docker build --no-cache -t test-dashboard -f Dockerfile --build-arg RUNDASHBOARD=${RUNDASHBOARD} .
+} || {
+    sudo docker build --no-cache -t test-dashboard -f Dockerfile --build-arg RUNDASHBOARD=${RUNDASHBOARD} .
+}
 
 cat <<EOF
 
@@ -99,6 +103,6 @@ cd ${NODEHOME} &&
 ./docker-up.sh
 
 echo "Starting image."
-(docker logs -f shardeum-dashboard &) | grep -q 'done'
+({ docker logs -f shardeum-dashboard & } || { sudo docker logs -f shardeum-dashboard & }) | grep -q 'done'
 
 echo "Please run ${NODEHOME}/shell.sh for next steps."

@@ -2,4 +2,8 @@
 
 command -v docker >/dev/null 2>&1 || { echo >&2 "'docker' is required but not installed."; exit 1; }
 
-docker logs -f shardeum-dashboard
+{
+    docker logs -f shardeum-dashboard
+} || {
+    sudo docker logs -f shardeum-dashboard
+}
