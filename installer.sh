@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+set -e
 
 # Check all things that will be needed for this script to succeed like access to docker and docker-compose
 # If any check fails exit with a message on what the user needs to do to fix the problem
@@ -53,19 +54,40 @@ RUNDASHBOARD=${RUNDASHBOARD:-y}
 read -p "Set the password to access the Dashboard: " -s DASHPASS
 echo
 
-read -p "Dashboard can be accessed at localhost:8080. Use another port? (1025-65536): " DASHPORT
-DASHPORT=${DASHPORT:-8080}
+while :; do
+  read -p "Enter the port (1025-65536) to access the web based Dashboard (default 8080): " DASHPORT
+  DASHPORT=${DASHPORT:-8080}
+  [[ $DASHPORT =~ ^[0-9]+$ ]] || { echo "Enter a valid port"; continue; }
+  if ((DASHPORT >= 1025 && DASHPORT <= 65536)); then
+    DASHPORT=${DASHPORT:-8080}
+    break
+  else
+    echo "Port out of range, try again"
+  fi
+done
 
 read -p "What base directory should the node use (defaults to ~/.shardeum): " NODEHOME
 NODEHOME=${NODEHOME:-~/.shardeum}
 
-# read -p "What is the IP of this node?: " APPIP
-
-read -p "What is the IP of the archiver?: " APPSEEDLIST
-
-read -p "What is the IP of the monitor?: " APPMONITOR
-
-echo
+PS3='Select a network to connect to: '
+options=("mainnet" "betanet" "devnet")
+select opt in "${options[@]}"
+do
+    case $opt in
+        "mainnet")
+            echo "Mainnet not released yet. Please select another network"
+            ;;
+        "betanet")
+            echo "Betanet not released yet. Please select another network"
+            ;;
+        "devnet")
+            APPSEEDLIST="18.185.177.105"
+            APPMONITOR="3.76.104.97"
+            break
+            ;;
+        *) echo "invalid option $REPLY";;
+    esac
+done
 
 cat <<EOF
 
@@ -120,4 +142,22 @@ cd ${NODEHOME} &&
 echo "Starting image."
 (docker-safe logs -f shardeum-dashboard &) | grep -q 'done'
 
-echo "Please run ${NODEHOME}/shell.sh for next steps."
+cat <<EOF
+
+To use the Command Line Interface:
+	1. Navigate to the Shardeum home directory ($NODEHOME).
+	2. Enter the validator container with ./shell.sh.
+	3. Run "operator-cli --help" for commands
+
+EOF
+
+#Do not indent
+if [$RUNDASHBOARD = "y"]
+then
+cat <<EOF
+  To use the Web Dashboard:
+    1. Open a web browser and navigate to the web dashboard at localhost:8080 or ServerIP:8080
+    2. Go to the Settings tab and connect a wallet.
+    3. Go to the Maintenance tab and click the Start Node button.
+EOF
+fi
