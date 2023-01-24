@@ -11,6 +11,7 @@ docker-compose-safe() {
   fi
 
   if ! $cmd $@; then
+    echo "Trying again with sudo..."
     sudo $cmd $@
   fi
 }

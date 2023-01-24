@@ -7,6 +7,7 @@ docker-safe() {
   fi
 
   if ! docker $@; then
+    echo "Trying again with sudo..."
     sudo docker $@
   fi
 }

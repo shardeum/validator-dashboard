@@ -21,6 +21,7 @@ docker-safe() {
   fi
 
   if ! docker $@; then
+    echo "Trying again with sudo..."
     sudo docker $@
   fi
 }
@@ -36,6 +37,7 @@ docker-compose-safe() {
   fi
 
   if ! $cmd $@; then
+    echo "Trying again with sudo..."
     sudo $cmd $@
   fi
 }
@@ -139,7 +141,7 @@ EOF
 cd ${NODEHOME} &&
 ./docker-up.sh
 
-echo "Starting image."
+echo "Starting image. This could take a while..."
 (docker-safe logs -f shardeum-dashboard &) | grep -q 'done'
 
 cat <<EOF
