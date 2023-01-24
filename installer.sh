@@ -152,7 +152,7 @@ To use the Command Line Interface:
 EOF
 
 #Do not indent
-if [$RUNDASHBOARD = "y"]
+if [ $RUNDASHBOARD = "y" ]
 then
 cat <<EOF
   To use the Web Dashboard:
