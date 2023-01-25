@@ -87,6 +87,10 @@ do
             APPMONITOR="3.76.104.97"
             break
             ;;
+        "custom")
+            read -p "What is the IP of the archiver?: " APPSEEDLIST
+            read -p "What is the IP of the monitor?: " APPMONITOR
+            ;;
         *) echo "invalid option $REPLY";;
     esac
 done
