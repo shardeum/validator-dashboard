@@ -14,6 +14,8 @@ else
   exit 1
 fi
 
+export DOCKER_DEFAULT_PLATFORM=linux/amd64
+
 docker-safe() {
   if ! command -v docker &>/dev/null; then
     echo "docker is not installed on this machine"
