@@ -158,15 +158,6 @@ cd ${NODEHOME} &&
 echo "Starting image. This could take a while..."
 (docker-safe logs -f shardeum-dashboard &) | grep -q 'done'
 
-cat <<EOF
-
-To use the Command Line Interface:
-	1. Navigate to the Shardeum home directory ($NODEHOME).
-	2. Enter the validator container with ./shell.sh.
-	3. Run "operator-cli --help" for commands
-
-EOF
-
 #Do not indent
 if [ $RUNDASHBOARD = "y" ]
 then
@@ -177,3 +168,14 @@ cat <<EOF
     3. Go to the Maintenance tab and click the Start Node button.
 EOF
 fi
+
+cat <<EOF
+
+To use the Command Line Interface:
+	1. Navigate to the Shardeum home directory ($NODEHOME).
+	2. Enter the validator container with ./shell.sh.
+	3. Run "operator-cli --help" for commands
+
+EOF
+
+
