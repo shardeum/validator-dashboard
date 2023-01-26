@@ -5,6 +5,10 @@ set -e
 # If any check fails exit with a message on what the user needs to do to fix the problem
 command -v git >/dev/null 2>&1 || { echo >&2 "'git' is required but not installed."; exit 1; }
 command -v docker >/dev/null 2>&1 || { echo >&2 "'docker' is required but not installed. See https://gitlab.com/shardeum/validator/dashboard/-/tree/dashboard-gui-nextjs#how-to for details."; exit 1; }
+if docker stats 2>&1 | grep -q "Cannot connect to the Docker daemon"; then
+    echo "Could not find the Docker Daemon. Please make sure it's running"
+    exit 1
+fi
 if command -v docker-compose &>/dev/null; then
   echo "docker-compose is installed on this machine"
 elif docker --help | grep -q "compose"; then
@@ -17,6 +21,11 @@ fi
 docker-safe() {
   if ! command -v docker &>/dev/null; then
     echo "docker is not installed on this machine"
+    exit 1
+  fi
+
+  if docker stats 2>&1 | grep -q "Cannot connect to the Docker daemon"; then
+    echo "Could not find the Docker Daemon. Please make sure it's running"
     exit 1
   fi
 
