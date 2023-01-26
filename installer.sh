@@ -72,7 +72,7 @@ read -p "What base directory should the node use (defaults to ~/.shardeum): " NO
 NODEHOME=${NODEHOME:-~/.shardeum}
 
 PS3='Select a network to connect to: '
-options=("mainnet" "betanet" "devnet")
+options=("mainnet" "betanet" "devnet" "custom")
 select opt in "${options[@]}"
 do
     case $opt in
@@ -90,6 +90,7 @@ do
         "custom")
             read -p "What is the IP of the archiver?: " APPSEEDLIST
             read -p "What is the IP of the monitor?: " APPMONITOR
+            break
             ;;
         *) echo "invalid option $REPLY";;
     esac
