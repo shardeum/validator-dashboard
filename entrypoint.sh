@@ -33,6 +33,8 @@ then
 echo "Starting operator gui"
 # Call the CLI command to start the GUI
 operator-cli gui start
+# Call the CLI command to set the GUI password
+operator-cli gui set password $DASHPASS
 fi
 
 echo "done";
