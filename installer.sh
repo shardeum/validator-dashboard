@@ -44,6 +44,42 @@ docker-compose-safe() {
   fi
 }
 
+get_ip() {
+  local ip
+  if command -v ip >/dev/null; then
+    ip=$(ip addr show $(ip route | awk '/default/ {print $5}') | awk '/inet/ {print $2}' | cut -d/ -f1)
+  elif command -v ifconfig >/dev/null; then
+    ip=$(ifconfig | awk '/inet addr/{print substr($2,6)}')
+  else
+    echo "Error: neither 'ip' nor 'ifconfig' command found"
+    return 1
+  fi
+  echo $ip
+}
+
+get_external_ip() {
+  external_ip=''
+  external_ip=$(curl -s https://api.ipify.org)
+  if [[ -z "$external_ip" ]]; then
+    external_ip=$(curl -s http://checkip.dyndns.org | grep -oE "\b([0-9]{1,3}\.){3}[0-9]{1,3}\b")
+  fi
+  if [[ -z "$external_ip" ]]; then
+    external_ip=$(curl -s http://ipecho.net/plain)
+  fi
+  if [[ -z "$external_ip" ]]; then
+    external_ip=$(curl -s https://icanhazip.com/)
+  fi
+  if [[ -z "$external_ip" ]]; then
+    external_ip=$(get_ip)
+    if [ $? -eq 0 ]; then
+      echo "The IP address is: $IP"
+    else
+      external_ip="localhost"
+    fi
+  fi
+  echo $external_ip
+}
+
 if [[ $(docker-safe info 2>&1) == *"Cannot connect to the Docker daemon"* ]]; then
     echo "Docker daemon is not running"
     exit 1
@@ -158,12 +194,14 @@ cd ${NODEHOME} &&
 echo "Starting image. This could take a while..."
 (docker-safe logs -f shardeum-dashboard &) | grep -q 'done'
 
+SERVERIP=$(get_external_ip)
+
 #Do not indent
 if [ $RUNDASHBOARD = "y" ]
 then
 cat <<EOF
   To use the Web Dashboard:
-    1. Open a web browser and navigate to the web dashboard at localhost:8080 or ServerIP:8080
+    1. Open a web browser and navigate to the web dashboard at http://$SERVERIP:8080
     2. Go to the Settings tab and connect a wallet.
     3. Go to the Maintenance tab and click the Start Node button.
 EOF
