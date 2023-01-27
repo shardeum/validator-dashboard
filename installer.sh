@@ -128,8 +128,8 @@ do
             echo "Betanet not released yet. Please select another network"
             ;;
         "devnet")
-            APPSEEDLIST="18.185.177.105"
-            APPMONITOR="3.76.104.97"
+            APPSEEDLIST="3.70.168.34"
+            APPMONITOR="3.120.149.194"
             break
             ;;
         "custom")
