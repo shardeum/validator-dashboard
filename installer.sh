@@ -178,4 +178,6 @@ To use the Command Line Interface:
 
 EOF
 
+echo "View the network monitor at http://$APPMONITOR:3000/"
+
 
