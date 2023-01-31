@@ -23,6 +23,7 @@ echo "Install the GUI"
 cd gui
 npm i
 npm run build
+openssl req -x509 -nodes -days 99999 -newkey rsa:2048 -keyout ./selfsigned.key -out selfsigned.crt -subj "/C=US/ST=Texas/L=Dallas/O=Shardeum/OU=Shardeum/CN=shardeum.org"
 cd ../..
 
 
