@@ -43,8 +43,8 @@
 	3. In the container, run `operator-cli start` to start the validator node.
 
 7. Add the network to wallet
-	1. Open the file: https://gitlab.com/shardeum/validator/dashboard/networks/name where name is the network you selected during installation.
-	2. This file should contain the information needed to setup the wallet.
+	1. Open the page https://docs.shardeum.org/network/endpoints
+	2. Use the setting for the Sphinx network.
 
 8. Get some coins from the faucet
     Go the the faucet URL given in the network file and enter the address from your wallet to get some coins.
