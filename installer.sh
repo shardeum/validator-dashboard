@@ -194,7 +194,7 @@ if [ $RUNDASHBOARD = "y" ]
 then
 cat <<EOF
   To use the Web Dashboard:
-    1. Open a web browser and navigate to the web dashboard at http://localhost:$DASHPORT
+    1. Open a web browser and navigate to the web dashboard at https://localhost:$DASHPORT
     2. Go to the Settings tab and connect a wallet.
     3. Go to the Maintenance tab and click the Start Node button.
   
