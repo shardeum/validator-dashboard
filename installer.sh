@@ -117,24 +117,13 @@ read -p "What base directory should the node use (defaults to ~/.shardeum): " NO
 NODEHOME=${NODEHOME:-~/.shardeum}
 
 PS3='Select a network to connect to: '
-options=("mainnet" "betanet" "devnet" "custom")
+options=("betanet")
 select opt in "${options[@]}"
 do
     case $opt in
-        "mainnet")
-            echo "Mainnet not released yet. Please select another network"
-            ;;
         "betanet")
-            echo "Betanet not released yet. Please select another network"
-            ;;
-        "devnet")
-            APPSEEDLIST="3.70.168.34"
-            APPMONITOR="3.120.149.194"
-            break
-            ;;
-        "custom")
-            read -p "What is the IP of the archiver?: " APPSEEDLIST
-            read -p "What is the IP of the monitor?: " APPMONITOR
+            APPSEEDLIST="18.192.49.22"
+            APPMONITOR="3.76.28.10"
             break
             ;;
         *) echo "invalid option $REPLY";;
