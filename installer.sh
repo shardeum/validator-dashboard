@@ -138,8 +138,8 @@ NODEHOME=${NODEHOME:-~/.shardeum}
 #     esac
 # done
 
-APPSEEDLIST="18.196.23.139"
-APPMONITOR="54.93.204.116"
+APPSEEDLIST="archiver-sphinx.shardeum.org"
+APPMONITOR="monitor-sphinx.shardeum.org"
 
 cat <<EOF
 
