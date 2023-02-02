@@ -47,16 +47,17 @@
 	2. Use the setting for the Sphinx network.
 
 8. Get some coins from the faucet
-    Go the the faucet URL given in the network file and enter the address from your wallet to get some coins.
+	https://faucet-sphinx.shardeum.org/
+    Go the the above faucet URL and enter the address from your wallet to get some coins.
 
 7. Start your validator node
 	1. Open a web browser and navigate to the web dashboard at `localhost:8080` or ServerIP:8080 (or the port you picked)
 	2. Go to the `Maintenance` tab and click the `Start Node` button.
 
 8. Stake coins
-    1. Go to the Settings tab and connect the wallet and stake 10 coins.
+    1. Go to the 'Maintenance' tab and connect the wallet and stake 10 coins.
 
-9. Check that your node is joining the network by going to the Monitor URL given in the network file.
+9. Check that your node status is 'Standby'.
 
 ## Stack management
 ### Start the stack:
