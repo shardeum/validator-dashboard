@@ -24,7 +24,31 @@ cd gui
 npm i
 npm run build
 #openssl req -x509 -nodes -days 99999 -newkey rsa:2048 -keyout ./selfsigned.key -out selfsigned.crt -subj "/C=US/ST=Texas/L=Dallas/O=Shardeum/OU=Shardeum/CN=shardeum.org"
-echo "[req]
+
+# if CA.cnf does not exist, create it
+if [ ! -f "CA.cnf" ]; then
+    echo "[ req ]
+prompt = no
+distinguished_name = req_distinguished_name
+
+[ req_distinguished_name ]
+C = US
+ST = Localzone     
+L = localhost    
+O = Certificate Authority Local Validator Node
+OU = Develop      
+CN = develop.localhost.localdomain
+emailAddress = root@localhost.localdomain" > CA.cnf
+fi
+
+# if CA.key does not exist, create it
+if [ ! -f "CA_key.pem" ]; then
+    openssl req -nodes -new -x509 -keyout CA_key.pem -out CA_cert.pem -days 1825 -config CA.cnf
+fi
+
+# if selfsigned.cnf does not exist, create it
+if [ ! -f "selfsigned.cnf" ]; then
+    echo "[ req ]
 default_bits  = 4096
 distinguished_name = req_distinguished_name
 req_extensions = req_ext
@@ -33,10 +57,10 @@ prompt = no
 
 [req_distinguished_name]
 countryName = XX
-stateOrProvinceName = N/A
-localityName = N/A
-organizationName = Shardeum Sphinx 1.x Operator Node
-commonName = $SERVERIP
+stateOrProvinceName = Localzone
+localityName = Localhost
+organizationName = Shardeum Sphinx 1.x Validator Cert.
+commonName = localhost
 
 [req_ext]
 subjectAltName = @alt_names
@@ -45,13 +69,21 @@ subjectAltName = @alt_names
 subjectAltName = @alt_names
 
 [alt_names]
-DNS.1 = localhost
 IP.1 = $SERVERIP
 IP.2 = 127.0.0.1
+DNS.2 = localhost.localdomain
+DNS.3 = dev.local" > selfsigned.cnf
+fi
 
-" > san.cnf
-openssl req -x509 -nodes -days 730 -newkey rsa:2048 -keyout ./selfsigned.key -out selfsigned.crt -config san.cnf
-#rm san.cnf
+# if csr file does not exist, create it
+if [ ! -f "selfsigned.csr" ]; then
+    openssl req -sha256 -nodes -newkey rsa:4096 -keyout selfsigned.key -out selfsigned.csr -config selfsigned.cnf
+fi
+
+# if selfsigned.crt does not exist, create it
+if [ ! -f "selfsigned.crt" ]; then
+    openssl x509 -req -days 398 -in selfsigned.csr -CA CA_cert.pem -CAkey CA_key.pem -CAcreateserial -out selfsigned.crt -extensions req_ext -extfile selfsigned.cnf
+fi
 cd ../..
 
 
