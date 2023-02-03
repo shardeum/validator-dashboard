@@ -47,8 +47,8 @@
 	2. Use the setting for the Sphinx network.
 
 8. Get some coins from the faucet
-	https://faucet-sphinx.shardeum.org/
-    Go the the above faucet URL and enter the address from your wallet to get some coins.
+	* https://faucet-sphinx.shardeum.org/
+    * Go the the above faucet URL and enter the address from your wallet to get some coins.
 
 7. Start your validator node
 	1. Open a web browser and navigate to the web dashboard at `localhost:8080` or ServerIP:8080 (or the port you picked)
