@@ -32,13 +32,13 @@ prompt = no
 distinguished_name = req_distinguished_name
 
 [ req_distinguished_name ]
-C = US
+C = XX
 ST = Localzone     
 L = localhost    
 O = Certificate Authority Local Validator Node
 OU = Develop      
-CN = develop.localhost.localdomain
-emailAddress = root@localhost.localdomain" > CA.cnf
+CN = mynode-sphinx.sharedum.local
+emailAddress = community@.sharedum.local" > CA.cnf
 fi
 
 # if CA.key does not exist, create it
@@ -71,8 +71,7 @@ subjectAltName = @alt_names
 [alt_names]
 IP.1 = $SERVERIP
 IP.2 = 127.0.0.1
-DNS.2 = localhost.localdomain
-DNS.3 = dev.local" > selfsigned.cnf
+DNS.1 = localhost" > selfsigned.cnf
 fi
 
 # if csr file does not exist, create it
@@ -81,11 +80,14 @@ if [ ! -f "selfsigned.csr" ]; then
 fi
 
 # if selfsigned.crt does not exist, create it
+if [ ! -f "selfsigned_node.crt" ]; then
+    openssl x509 -req -days 398 -in selfsigned.csr -CA CA_cert.pem -CAkey CA_key.pem -CAcreateserial -out selfsigned_node.crt -extensions req_ext -extfile selfsigned.cnf
+fi
+# if selfsigned.crt does not exist, create it
 if [ ! -f "selfsigned.crt" ]; then
-    openssl x509 -req -days 398 -in selfsigned.csr -CA CA_cert.pem -CAkey CA_key.pem -CAcreateserial -out selfsigned.crt -extensions req_ext -extfile selfsigned.cnf
+  cat selfsigned_node.crt CA_cert.pem > selfsigned.crt
 fi
 cd ../..
-
 
 # Start GUI if configured to in env file
 echo $RUNDASHBOARD
