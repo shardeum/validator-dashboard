@@ -98,8 +98,16 @@ EOF
 read -p "Do you want to run the web based Dashboard? (y/n): " RUNDASHBOARD
 RUNDASHBOARD=${RUNDASHBOARD:-y}
 
-read -p "Set the password to access the Dashboard: " -s DASHPASS
-echo
+while true; do
+  read -p "Set the password to access the Dashboard: " -s input
+  echo
+  if [[ -n "$input" ]] && [[ ! "$input" =~ \  ]]; then
+    DASHPASS=$input
+    break
+  else
+    echo "Invalid input, try again."
+  fi
+done
 
 while :; do
   read -p "Enter the port (1025-65536) to access the web based Dashboard (default 8080): " DASHPORT
