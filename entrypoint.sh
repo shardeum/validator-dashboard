@@ -23,7 +23,35 @@ echo "Install the GUI"
 cd gui
 npm i
 npm run build
-openssl req -x509 -nodes -days 99999 -newkey rsa:2048 -keyout ./selfsigned.key -out selfsigned.crt -subj "/C=US/ST=Texas/L=Dallas/O=Shardeum/OU=Shardeum/CN=shardeum.org"
+#openssl req -x509 -nodes -days 99999 -newkey rsa:2048 -keyout ./selfsigned.key -out selfsigned.crt -subj "/C=US/ST=Texas/L=Dallas/O=Shardeum/OU=Shardeum/CN=shardeum.org"
+echo "[req]
+default_bits  = 4096
+distinguished_name = req_distinguished_name
+req_extensions = req_ext
+x509_extensions = v3_req
+prompt = no
+
+[req_distinguished_name]
+countryName = XX
+stateOrProvinceName = N/A
+localityName = N/A
+organizationName = Shardeum Sphinx 1.x Operator Node
+commonName = $SERVERIP
+
+[req_ext]
+subjectAltName = @alt_names
+
+[v3_req]
+subjectAltName = @alt_names
+
+[alt_names]
+DNS.1 = localhost
+IP.1 = $SERVERIP
+IP.2 = 127.0.0.1
+
+" > san.cnf
+openssl req -x509 -nodes -days 730 -newkey rsa:2048 -keyout ./selfsigned.key -out selfsigned.crt -config san.cnf
+#rm san.cnf
 cd ../..
 
 

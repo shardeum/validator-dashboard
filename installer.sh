@@ -172,6 +172,8 @@ cat <<EOF
 
 EOF
 
+SERVERIP=$(get_external_ip)
+
 cd ${NODEHOME} &&
 touch ./.env
 cat >./.env <<EOL
@@ -180,6 +182,7 @@ APP_SEEDLIST=${APPSEEDLIST}
 APP_MONITOR=${APPMONITOR}
 DASHPASS=${DASHPASS}
 DASHPORT=${DASHPORT}
+SERVERIP=${SERVERIP}
 EOL
 
 cat <<EOF
@@ -195,8 +198,6 @@ cd ${NODEHOME} &&
 
 echo "Starting image. This could take a while..."
 (docker-safe logs -f shardeum-dashboard &) | grep -q 'done'
-
-SERVERIP=$(get_external_ip)
 
 #Do not indent
 if [ $RUNDASHBOARD = "y" ]
