@@ -121,6 +121,27 @@ while :; do
   fi
 done
 
+while :; do
+  echo "To run a validator on the Sphinx network, you will need to open two ports in your firewall."
+  read -p "This allows p2p commnication between nodes. Enter the first port (1025-65536) for p2p comminucation (default 9001): " SHMEXT
+  SHMEXT=${SHMEXT:-9001}
+  [[ $SHMEXT =~ ^[0-9]+$ ]] || { echo "Enter a valid port"; continue; }
+  if ((SHMEXT >= 1025 && SHMEXT <= 65536)); then
+    SHMEXT=${SHMEXT:-9001}
+  else
+    echo "Port out of range, try again"
+  fi
+  read -p "Enter the second port (1025-65536) for p2p comminucation (default 10001): " SHMINT
+  SHMINT=${SHMINT:-10001}
+  [[ $SHMINT =~ ^[0-9]+$ ]] || { echo "Enter a valid port"; continue; }
+  if ((SHMINT >= 1025 && SHMINT <= 65536)); then
+    SHMINT=${SHMINT:-10001}
+    break
+  else
+    echo "Port out of range, try again"
+  fi
+done
+
 read -p "What base directory should the node use (defaults to ~/.shardeum): " NODEHOME
 NODEHOME=${NODEHOME:-~/.shardeum}
 
@@ -183,6 +204,8 @@ APP_MONITOR=${APPMONITOR}
 DASHPASS=${DASHPASS}
 DASHPORT=${DASHPORT}
 SERVERIP=${SERVERIP}
+SHMEXT=${SHMEXT}
+SHMINT=${SHMINT}
 EOL
 
 cat <<EOF
@@ -194,6 +217,9 @@ cat <<EOF
 EOF
 
 cd ${NODEHOME} &&
+sed -i "s/- '8080:8080'/- '$DASHPORT:$DASHPORT'/" docker-compose.yaml &&
+sed -i "s/- '9001-9010:9001-9010'/- '$SHMEXT:9001'/" docker-compose.yaml &&
+sed -i "s/- '10001-10010:10001-10010'/- '$SHMINT:10001'/" docker-compose.yaml &&
 ./docker-up.sh
 
 echo "Starting image. This could take a while..."
