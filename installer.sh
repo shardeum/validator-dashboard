@@ -218,8 +218,8 @@ EOF
 
 cd ${NODEHOME} &&
 sed -i "s/- '8080:8080'/- '$DASHPORT:$DASHPORT'/" docker-compose.yml &&
-sed -i "s/- '9001-9010:9001-9010'/- '$SHMEXT:9001'/" docker-compose.yml &&
-sed -i "s/- '10001-10010:10001-10010'/- '$SHMINT:10001'/" docker-compose.yml &&
+sed -i "s/- '9001-9010:9001-9010'/- '$SHMEXT:$SHMEXT'/" docker-compose.yml &&
+sed -i "s/- '10001-10010:10001-10010'/- '$SHMINT:$SHMINT'/" docker-compose.yml &&
 ./docker-up.sh
 
 echo "Starting image. This could take a while..."
