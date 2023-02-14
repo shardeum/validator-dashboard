@@ -1,6 +1,21 @@
 #!/usr/bin/env bash
 set -e
 
+
+read -p "During this early stage of Betanet the Shardeum team will be collecting some performance and debugging info from your node to help improve future versions of the software.
+This is only temporary and will be discontinued as we get closer to mainnet.
+Thanks for running a node and helping to make Shardeum better.
+
+By running this installer, you agree to allow the Shardeum team to collect this data. (y/n)?: " WARNING_AGREE
+WARNING_AGREE=${WARNING_AGREE:-y}
+
+if [ $WARNING_AGREE != "y" ];
+then
+  echo "Diagnostic data collection agreement not accepted. Exiting installer."
+  exit
+fi
+
+
 # Check all things that will be needed for this script to succeed like access to docker and docker-compose
 # If any check fails exit with a message on what the user needs to do to fix the problem
 command -v git >/dev/null 2>&1 || { echo >&2 "'git' is required but not installed."; exit 1; }
@@ -239,7 +254,7 @@ cat <<EOF
     1. Open a web browser and navigate to the web dashboard at https://localhost:$DASHPORT
     2. Go to the Settings tab and connect a wallet.
     3. Go to the Maintenance tab and click the Start Node button.
-  
+
   If this validator is on the cloud and you need to reach the dashboard over the internet,
   please set a strong password and use the external IP instead of localhost.
 EOF
