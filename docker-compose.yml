@@ -8,7 +8,6 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-      no_cache: true
       pull: true
     # volumes:
       # - './config.json:/usr/src/app/config.json:Z'
