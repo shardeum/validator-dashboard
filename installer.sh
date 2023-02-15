@@ -185,15 +185,30 @@ cat <<EOF
 
 EOF
 
+if [ -d "$NODEHOME" ]; then
+  echo "Removing existing directory $NODEHOME..."
+  rm -rf "$NODEHOME"
+fi
+
 git clone https://gitlab.com/shardeum/validator/dashboard.git ${NODEHOME} &&
   cd ${NODEHOME} &&
   chmod a+x ./*.sh
 
 cat <<EOF
 
-#########################
-# 2. Building base image #
-#########################
+##########################
+# 2. Clearing Old Images #
+##########################
+
+EOF
+
+./cleanup.sh
+
+cat <<EOF
+
+##########################
+# 3. Building base image #
+##########################
 
 EOF
 
@@ -203,7 +218,7 @@ docker-safe build --no-cache -t test-dashboard -f Dockerfile --build-arg RUNDASH
 cat <<EOF
 
 ###############################
-# 3. Create and Set .env File #
+# 4. Create and Set .env File #
 ###############################
 
 EOF
@@ -226,7 +241,7 @@ EOL
 cat <<EOF
 
 ############################
-# 4. Start Compose Project #
+# 5. Start Compose Project #
 ############################
 
 EOF
