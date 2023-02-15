@@ -84,6 +84,9 @@ get_external_ip() {
   if [[ -z "$external_ip" ]]; then
     external_ip=$(curl -s https://icanhazip.com/)
   fi
+    if [[ -z "$external_ip" ]]; then
+    external_ip=$(curl --header  "Host: icanhazip.com" -s 104.18.114.97)
+  fi
   if [[ -z "$external_ip" ]]; then
     external_ip=$(get_ip)
     if [ $? -eq 0 ]; then
@@ -138,7 +141,7 @@ done
 
 while :; do
   echo "To run a validator on the Sphinx network, you will need to open two ports in your firewall."
-  read -p "This allows p2p commnication between nodes. Enter the first port (1025-65536) for p2p comminucation (default 9001): " SHMEXT
+  read -p "This allows p2p communication between nodes. Enter the first port (1025-65536) for p2p communication (default 9001): " SHMEXT
   SHMEXT=${SHMEXT:-9001}
   [[ $SHMEXT =~ ^[0-9]+$ ]] || { echo "Enter a valid port"; continue; }
   if ((SHMEXT >= 1025 && SHMEXT <= 65536)); then
@@ -146,7 +149,7 @@ while :; do
   else
     echo "Port out of range, try again"
   fi
-  read -p "Enter the second port (1025-65536) for p2p comminucation (default 10001): " SHMINT
+  read -p "Enter the second port (1025-65536) for p2p communication (default 10001): " SHMINT
   SHMINT=${SHMINT:-10001}
   [[ $SHMINT =~ ^[0-9]+$ ]] || { echo "Enter a valid port"; continue; }
   if ((SHMINT >= 1025 && SHMINT <= 65536)); then
@@ -203,7 +206,7 @@ cat <<EOF
 EOF
 
 SERVERIP=$(get_external_ip)
-
+LOCALLANIP=$(get_ip)
 cd ${NODEHOME} &&
 touch ./.env
 cat >./.env <<EOL
@@ -213,6 +216,7 @@ APP_MONITOR=${APPMONITOR}
 DASHPASS=${DASHPASS}
 DASHPORT=${DASHPORT}
 SERVERIP=${SERVERIP}
+LOCALLANIP=${LOCALLANIP}
 SHMEXT=${SHMEXT}
 SHMINT=${SHMINT}
 EOL
@@ -248,11 +252,11 @@ EOF
 
 cd ${NODEHOME}
 if [[ "$(uname)" == "Darwin" ]]; then
-  sed -i '' "s/- '8080:8080'/- '$DASHPORT:$DASHPORT'/" docker-compose.yml
+  sed '' "s/- '8080:8080'/- '$DASHPORT:$DASHPORT'/" docker-compose.tmpl > docker-compose.yml
   sed -i '' "s/- '9001-9010:9001-9010'/- '$SHMEXT:$SHMEXT'/" docker-compose.yml
   sed -i '' "s/- '10001-10010:10001-10010'/- '$SHMINT:$SHMINT'/" docker-compose.yml
 else
-  sed -i "s/- '8080:8080'/- '$DASHPORT:$DASHPORT'/" docker-compose.yml
+  sed "s/- '8080:8080'/- '$DASHPORT:$DASHPORT'/" docker-compose.tmpl > docker-compose.yml
   sed -i "s/- '9001-9010:9001-9010'/- '$SHMEXT:$SHMEXT'/" docker-compose.yml
   sed -i "s/- '10001-10010:10001-10010'/- '$SHMINT:$SHMINT'/" docker-compose.yml
 fi
