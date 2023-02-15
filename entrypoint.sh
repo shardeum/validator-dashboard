@@ -71,7 +71,6 @@ subjectAltName = @alt_names
 [alt_names]
 IP.1 = $SERVERIP
 IP.2 = $LOCALLANIP
-IP.3 = 127.0.0.1
 DNS.1 = localhost" > selfsigned.cnf
 fi
 

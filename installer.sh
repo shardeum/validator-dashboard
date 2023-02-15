@@ -188,12 +188,12 @@ cat <<EOF
 
 EOF
 
-if [ -d "$NODEHOME" ]; then
-  echo "Removing existing directory $NODEHOME..."
-  rm -rf "$NODEHOME"
-fi
+# if [ -d "$NODEHOME" ]; then
+#   echo "Removing existing directory $NODEHOME..."
+#   rm -rf "$NODEHOME"
+# fi
 
-git clone https://gitlab.com/shardeum/validator/dashboard.git ${NODEHOME} &&
+#git clone https://gitlab.com/shardeum/validator/dashboard.git ${NODEHOME} &&
   cd ${NODEHOME} &&
   chmod a+x ./*.sh
 
