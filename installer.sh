@@ -62,7 +62,7 @@ docker-compose-safe() {
 get_ip() {
   local ip
   if command -v ip >/dev/null; then
-    ip=$(ip addr show $(ip route | awk '/default/ {print $5}') | awk '/inet/ {print $2}' | cut -d/ -f1)
+    ip=$(ip addr show $(ip route | awk '/default/ {print $5}') | awk '/inet/ {print $2}' | cut -d/ -f1 | head -n1)
   elif command -v ifconfig >/dev/null; then
     ip=$(ifconfig | awk '/inet addr/{print substr($2,6)}')
   else
