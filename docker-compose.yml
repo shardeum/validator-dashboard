@@ -1,4 +1,4 @@
-version: '3.8'
+version: '3.4'
 
 services:
   shardeum-dashboard:
@@ -8,8 +8,6 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-      pull: true
-      no_cache: true
     # volumes:
       # - './config.json:/usr/src/app/config.json:Z'
       # - './data/logs:/usr/src/app/logs:Z'

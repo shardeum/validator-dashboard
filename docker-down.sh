@@ -16,4 +16,10 @@ docker-compose-safe() {
   fi
 }
 
-docker-compose-safe -f docker-compose.yml down
+docker-compose-safe ps | grep -q "Up"
+if [ $? -eq 0 ]; then
+  echo "Docker Compose project is up"
+  docker-compose-safe -f docker-compose.yml down
+else
+  echo "Docker Compose project is not up"
+fi
