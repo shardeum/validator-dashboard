@@ -196,29 +196,8 @@ git clone https://gitlab.com/shardeum/validator/dashboard.git ${NODEHOME} &&
 
 cat <<EOF
 
-##########################
-# 2. Clearing Old Images #
-##########################
-
-EOF
-
-./cleanup.sh
-
-cat <<EOF
-
-##########################
-# 3. Building base image #
-##########################
-
-EOF
-
-cd ${NODEHOME} &&
-docker-safe build --no-cache -t test-dashboard -f Dockerfile --build-arg RUNDASHBOARD=${RUNDASHBOARD} .
-
-cat <<EOF
-
 ###############################
-# 4. Create and Set .env File #
+# 2. Create and Set .env File #
 ###############################
 
 EOF
@@ -237,6 +216,27 @@ SERVERIP=${SERVERIP}
 SHMEXT=${SHMEXT}
 SHMINT=${SHMINT}
 EOL
+
+cat <<EOF
+
+##########################
+# 3. Clearing Old Images #
+##########################
+
+EOF
+
+./cleanup.sh
+
+cat <<EOF
+
+##########################
+# 4. Building base image #
+##########################
+
+EOF
+
+cd ${NODEHOME} &&
+docker-safe build --no-cache -t test-dashboard -f Dockerfile --build-arg RUNDASHBOARD=${RUNDASHBOARD} .
 
 cat <<EOF
 
