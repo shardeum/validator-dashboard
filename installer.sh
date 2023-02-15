@@ -63,8 +63,11 @@ get_ip() {
   local ip
   if command -v ip >/dev/null; then
     ip=$(ip addr show $(ip route | awk '/default/ {print $5}') | awk '/inet/ {print $2}' | cut -d/ -f1 | head -n1)
-  elif command -v ifconfig >/dev/null; then
-    ip=$(ifconfig | awk '/inet addr/{print substr($2,6)}')
+  elif command -v netstat >/dev/null; then
+    # Get the default route interface
+    interface=$(netstat -rn | awk '/default/{print $4}')
+    # Get the IP address for the default interface
+    ip=$(ifconfig "$interface" | awk '/inet /{print $2}')
   else
     echo "Error: neither 'ip' nor 'ifconfig' command found"
     return 1
