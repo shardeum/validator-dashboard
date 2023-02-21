@@ -65,7 +65,7 @@ get_ip() {
     ip=$(ip addr show $(ip route | awk '/default/ {print $5}') | awk '/inet/ {print $2}' | cut -d/ -f1 | head -n1)
   elif command -v netstat >/dev/null; then
     # Get the default route interface
-    interface=$(netstat -rn | awk '/default/{print $4}')
+    interface=$(netstat -rn | awk '/default/{print $4}' | head -n1)
     # Get the IP address for the default interface
     ip=$(ifconfig "$interface" | awk '/inet /{print $2}')
   else
