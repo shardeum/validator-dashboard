@@ -12,4 +12,4 @@ docker-safe() {
   fi
 }
 
-docker-safe build --pull --no-cache -t test-dashboard -f Dockerfile .
+docker-safe build --pull --no-cache -t local-dashboard -f Dockerfile .

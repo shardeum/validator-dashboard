@@ -18,7 +18,7 @@ echo "down exiting stack"
 ./docker-down.sh
 
 echo "delete existing image"
-docker-safe rmi -f test-dashboard
+docker-safe rmi -f local-dashboard
 docker-safe rmi -f registry.gitlab.com/shardeum/server
 
 echo "done."

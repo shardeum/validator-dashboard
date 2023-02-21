@@ -22,6 +22,10 @@ docker-safe() {
 
 echo "Updating validator image and rebuilding docker..."
 ./docker-down.sh
+echo "Clearing validator images..."
 ./cleanup.sh
-docker-safe build --no-cache -t test-dashboard -f Dockerfile --build-arg RUNDASHBOARD=y .
+echo "Updating local repo..."
+git pull origin main
+echo "Rebuilding local validator image..."
+docker-safe build --no-cache -t local-dashboard -f Dockerfile --build-arg RUNDASHBOARD=y .
 ./docker-up.sh
