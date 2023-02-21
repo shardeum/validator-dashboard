@@ -69,7 +69,7 @@ get_ip() {
     # Get the IP address for the default interface
     ip=$(ifconfig "$interface" | awk '/inet /{print $2}')
   else
-    echo "Error: neither 'ip' nor 'ifconfig' command found"
+    echo "Error: neither 'ip' nor 'ifconfig' command found. Submit a bug for your OS."
     return 1
   fi
   echo $ip
