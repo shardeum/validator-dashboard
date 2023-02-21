@@ -266,9 +266,10 @@ if [ $RUNDASHBOARD = "y" ]
 then
 cat <<EOF
   To use the Web Dashboard:
-    1. Open a web browser and navigate to the web dashboard at https://localhost:$DASHPORT
-    2. Go to the Settings tab and connect a wallet.
-    3. Go to the Maintenance tab and click the Start Node button.
+    1. Note the IP address that you used to connect to the node. This could be an external IP, LAN IP or localhost.
+    2. Open a web browser and navigate to the web dashboard at https://<Node IP address>:$DASHPORT
+    3. Go to the Settings tab and connect a wallet.
+    4. Go to the Maintenance tab and click the Start Node button.
 
   If this validator is on the cloud and you need to reach the dashboard over the internet,
   please set a strong password and use the external IP instead of localhost.
