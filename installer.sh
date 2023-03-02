@@ -119,16 +119,39 @@ EOF
 read -p "Do you want to run the web based Dashboard? (y/n): " RUNDASHBOARD
 RUNDASHBOARD=${RUNDASHBOARD:-y}
 
-while true; do
-  read -p "Set the password to access the Dashboard: " -s input
-  echo
-  if [[ -n "$input" ]] && [[ ! "$input" =~ \  ]]; then
-    DASHPASS=$input
-    break
+unset CHARCOUNT
+echo -n "Set the password to access the Dashboard: "
+CHARCOUNT=0
+while IFS= read -p "$PROMPT" -r -s -n 1 CHAR
+do
+  # Enter - accept password
+  if [[ $CHAR == $'\0' ]] ; then
+    if [ $CHARCOUNT -gt 0 ] ; then # Make sure password character length is greater than 0.
+      break
+    else
+      echo
+      echo -n "Invalid password input. Enter a password with character length greater than 0:"
+      continue
+    fi
+  fi
+  # Backspace
+  if [[ $CHAR == $'\177' ]] ; then
+    if [ $CHARCOUNT -gt 0 ] ; then
+      CHARCOUNT=$((CHARCOUNT-1))
+      PROMPT=$'\b \b'
+      DASHPASS="${DASHPASS%?}"
+    else
+      PROMPT=''
+    fi
   else
-    echo "Invalid input, try again."
+    CHARCOUNT=$((CHARCOUNT+1))
+    PROMPT='*'
+    DASHPASS+="$CHAR"
   fi
 done
+
+echo # New line after inputs.
+# echo "Password saved as:" $DASHPASS #DEBUG: TEST PASSWORD WAS RECORDED AFTER ENTERED.
 
 while :; do
   read -p "Enter the port (1025-65536) to access the web based Dashboard (default 8080): " DASHPORT
