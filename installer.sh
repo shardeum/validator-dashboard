@@ -215,8 +215,12 @@ cat <<EOF
 EOF
 
 if [ -d "$NODEHOME" ]; then
-  echo "Removing existing directory $NODEHOME..."
-  rm -rf "$NODEHOME"
+  if [ "$NODEHOME" != "$(pwd)" ]; then
+    echo "Removing existing directory $NODEHOME..."
+    rm -rf "$NODEHOME"
+  else
+    echo "Cannot delete current working directory. Please move to another directory and try again."
+  fi
 fi
 
 git clone https://gitlab.com/shardeum/validator/dashboard.git ${NODEHOME} &&
