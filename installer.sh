@@ -189,21 +189,6 @@ done
 read -p "What base directory should the node use (defaults to ~/.shardeum): " NODEHOME
 NODEHOME=${NODEHOME:-~/.shardeum}
 
-# PS3='Select a network to connect to: '
-# options=("betanet")
-# select opt in "${options[@]}"
-# do
-#     case $opt in
-#         "betanet")
-#             APPSEEDLIST="18.192.49.22"
-#             APPMONITOR="3.76.28.10"
-#             break
-#             ;;
-#         *) echo "invalid option $REPLY";;
-#     esac
-# done
-
-APPSEEDLIST="archiver-sphinx.shardeum.org"
 APPMONITOR="monitor-sphinx.shardeum.org"
 
 cat <<EOF
