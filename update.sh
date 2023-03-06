@@ -29,3 +29,5 @@ git pull origin main
 echo "Rebuilding local validator image..."
 docker-safe build --no-cache -t local-dashboard -f Dockerfile --build-arg RUNDASHBOARD=y .
 ./docker-up.sh
+echo "Starting image. This could take a while..."
+(docker-safe logs -f shardeum-dashboard &) | grep -q 'done'
