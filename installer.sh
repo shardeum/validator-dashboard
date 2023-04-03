@@ -189,8 +189,9 @@ done
 read -p "What base directory should the node use (defaults to ~/.shardeum): " NODEHOME
 NODEHOME=${NODEHOME:-~/.shardeum}
 
-APPSEEDLIST="archiver-sphinx.shardeum.org"
-APPMONITOR="monitor-sphinx.shardeum.org"
+#APPSEEDLIST="archiver-sphinx.shardeum.org"
+#APPMONITOR="monitor-sphinx.shardeum.org"
+APPMONITOR="52.59.208.112"
 
 cat <<EOF
 
