@@ -166,6 +166,66 @@ while :; do
 done
 
 while :; do
+  read -p "If you wish to set an explicit external IP, enter an IPv4 address (default=auto): " EXTERNALIP
+  EXTERNALIP=${EXTERNALIP:-auto}
+
+  if [ "$EXTERNALIP" == "auto" ]; then
+    break
+  fi
+
+  # Use regex to check if the input is a valid IPv4 address
+  if [[ $EXTERNALIP =~ ^([0-9]{1,3}\.){3}[0-9]{1,3}$ ]]; then
+    # Check that each number in the IP address is between 0-255
+    valid_ip=true
+    IFS='.' read -ra ip_nums <<< "$EXTERNALIP"
+    for num in "${ip_nums[@]}"
+    do
+        if (( num < 0 || num > 255 )); then
+            valid_ip=false
+        fi
+    done
+    
+    if [ $valid_ip == true ]; then
+      break
+    else
+      echo "Invalid IPv4 address. Please try again."
+    fi
+  else
+    echo "Invalid IPv4 address. Please try again."
+  fi
+done
+
+while :; do
+  read -p "If you wish to set an explicit external IP, enter an IPv4 address (default=auto): " INTERNALIP
+  INTERNALIP=${INTERNALIP:-auto}
+
+  if [ "$INTERNALIP" == "auto" ]; then
+    break
+  fi
+
+  # Use regex to check if the input is a valid IPv4 address
+  if [[ $INTERNALIP =~ ^([0-9]{1,3}\.){3}[0-9]{1,3}$ ]]; then
+    # Check that each number in the IP address is between 0-255
+    valid_ip=true
+    IFS='.' read -ra ip_nums <<< "$INTERNALIP"
+    for num in "${ip_nums[@]}"
+    do
+        if (( num < 0 || num > 255 )); then
+            valid_ip=false
+        fi
+    done
+    
+    if [ $valid_ip == true ]; then
+      break
+    else
+      echo "Invalid IPv4 address. Please try again."
+    fi
+  else
+    echo "Invalid IPv4 address. Please try again."
+  fi
+done
+
+while :; do
   echo "To run a validator on the Sphinx network, you will need to open two ports in your firewall."
   read -p "This allows p2p communication between nodes. Enter the first port (1025-65536) for p2p communication (default 9001): " SHMEXT
   SHMEXT=${SHMEXT:-9001}
@@ -227,7 +287,8 @@ LOCALLANIP=$(get_ip)
 cd ${NODEHOME} &&
 touch ./.env
 cat >./.env <<EOL
-APP_IP=auto
+EXT_IP=${EXTERNALIP}
+INT_IP=${INTERNALIP}
 EXISTING_ARCHIVERS=[{"ip":"18.194.3.6","port":4000,"publicKey":"758b1c119412298802cd28dbfa394cdfeecc4074492d60844cc192d632d84de3"},{"ip":"139.144.19.178","port":4000,"publicKey":"840e7b59a95d3c5f5044f4bc62ab9fa94bc107d391001141410983502e3cde63"},{"ip":"139.144.43.47","port":4000,"publicKey":"7af699dd711074eb96a8d1103e32b589e511613ebb0c6a789a9e8791b2b05f34"},{"ip":"72.14.178.106","port":4000,"publicKey":"2db7c949632d26b87d7e7a5a4ad41c306f63ee972655121a37c5e4f52b00a542"}]
 APP_MONITOR=${APPMONITOR}
 DASHPASS=${DASHPASS}

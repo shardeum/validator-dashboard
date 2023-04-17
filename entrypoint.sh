@@ -102,8 +102,9 @@ operator-cli gui set port $DASHPORT
 operator-cli gui start
 fi
 
-operator-cli set external_port $SHMEXT
-operator-cli set internal_port $SHMINT
+# Deprecated
+# operator-cli set external_port $SHMEXT
+# operator-cli set internal_port $SHMINT
 
 echo "done";
 
