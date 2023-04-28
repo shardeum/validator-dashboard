@@ -206,46 +206,16 @@ else
   DASHPASS=$PREVIOUS_PASSWORD
 fi
 
-unset CHARCOUNT
-echo -n "Set the password to access the Dashboard: "
-CHARCOUNT=0
-while IFS= read -p "$PROMPT" -r -s -n 1 CHAR
-do
-  # Enter - accept password
-  if [[ $CHAR == $'\0' ]] ; then
-    if [ $CHARCOUNT -gt 0 ] ; then # Make sure password character length is greater than 0.
-      break
-    else
-      echo
-      echo -n "Invalid password input. Enter a password with character length greater than 0:"
-      continue
-    fi
-  fi
-  # Backspace
-  if [[ $CHAR == $'\177' ]] ; then
-    if [ $CHARCOUNT -gt 0 ] ; then
-      CHARCOUNT=$((CHARCOUNT-1))
-      PROMPT=$'\b \b'
-      DASHPASS="${DASHPASS%?}"
-    else
-      PROMPT=''
-    fi
-  else
-    CHARCOUNT=$((CHARCOUNT+1))
-    PROMPT='*'
-    DASHPASS+="$CHAR"
-  fi
-done
 
 echo # New line after inputs.
 # echo "Password saved as:" $DASHPASS #DEBUG: TEST PASSWORD WAS RECORDED AFTER ENTERED.
 
 while :; do
   read -p "Enter the port (1025-65536) to access the web based Dashboard (default $DASHPORT_DEFAULT): " DASHPORT
-  DASHPORT=${DASHPORT:-DASHPORT_DEFAULT}
+  DASHPORT=${DASHPORT:-$DASHPORT_DEFAULT}
   [[ $DASHPORT =~ ^[0-9]+$ ]] || { echo "Enter a valid port"; continue; }
   if ((DASHPORT >= 1025 && DASHPORT <= 65536)); then
-    DASHPORT=${DASHPORT:-DASHPORT_DEFAULT}
+    DASHPORT=${DASHPORT:-$DASHPORT_DEFAULT}
     break
   else
     echo "Port out of range, try again"
@@ -254,7 +224,7 @@ done
 
 while :; do
   read -p "If you wish to set an explicit external IP, enter an IPv4 address (default=$EXTERNALIP_DEFAULT): " EXTERNALIP
-  EXTERNALIP=${EXTERNALIP:-EXTERNALIP_DEFAULT}
+  EXTERNALIP=${EXTERNALIP:-$EXTERNALIP_DEFAULT}
 
   if [ "$EXTERNALIP" == "auto" ]; then
     break
@@ -284,7 +254,7 @@ done
 
 while :; do
   read -p "If you wish to set an explicit internal IP, enter an IPv4 address (default=$INTERNALIP_DEFAULT): " INTERNALIP
-  INTERNALIP=${INTERNALIP:-INTERNALIP_DEFAULT}
+  INTERNALIP=${INTERNALIP:-$INTERNALIP_DEFAULT}
 
   if [ "$INTERNALIP" == "auto" ]; then
     break
@@ -315,7 +285,7 @@ done
 while :; do
   echo "To run a validator on the Sphinx network, you will need to open two ports in your firewall."
   read -p "This allows p2p communication between nodes. Enter the first port (1025-65536) for p2p communication (default $SHMEXT_DEFAULT): " SHMEXT
-  SHMEXT=${SHMEXT:-SHMEXT_DEFAULT}
+  SHMEXT=${SHMEXT:-$SHMEXT_DEFAULT}
   [[ $SHMEXT =~ ^[0-9]+$ ]] || { echo "Enter a valid port"; continue; }
   if ((SHMEXT >= 1025 && SHMEXT <= 65536)); then
     SHMEXT=${SHMEXT:-9001}
@@ -323,7 +293,7 @@ while :; do
     echo "Port out of range, try again"
   fi
   read -p "Enter the second port (1025-65536) for p2p communication (default $SHMINT_DEFAULT): " SHMINT
-  SHMINT=${SHMINT:-SHMINT_DEFAULT}
+  SHMINT=${SHMINT:-$SHMINT_DEFAULT}
   [[ $SHMINT =~ ^[0-9]+$ ]] || { echo "Enter a valid port"; continue; }
   if ((SHMINT >= 1025 && SHMINT <= 65536)); then
     SHMINT=${SHMINT:-10001}
