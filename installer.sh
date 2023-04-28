@@ -38,7 +38,7 @@ docker-safe() {
   fi
 
   if ! docker $@; then
-    echo "Trying again with sudo..."
+    echo "Trying again with sudo..." >&2
     sudo docker $@
   fi
 }
@@ -114,6 +114,29 @@ EXTERNALIP_DEFAULT=auto
 INTERNALIP_DEFAULT=auto
 SHMEXT_DEFAULT=9001
 SHMINT_DEFAULT=10001
+
+#Check if container exists
+IMAGE_NAME="registry.gitlab.com/shardeum/server:latest"
+CONTAINER_ID=$(docker-safe ps -qf "ancestor=local-dashboard")
+if [ ! -z "${CONTAINER_ID}" ]; then
+  echo "CONTAINER_ID: ${CONTAINER_ID}"
+  echo "Existing container found. Reading settings from container."
+
+  # Assign output of read_container_settings to variable
+  if ! ENV_VARS=$(docker inspect --format="{{range .Config.Env}}{{println .}}{{end}}" "$CONTAINER_ID"); then
+    ENV_VARS=$(sudo docker inspect --format="{{range .Config.Env}}{{println .}}{{end}}" "$CONTAINER_ID")
+  fi
+
+  docker-safe stop "${CONTAINER_ID}"
+  docker-safe rm "${CONTAINER_ID}"
+
+  # UPDATE DEFAULT VALUES WITH SAVED VALUES
+  DASHPORT_DEFAULT=$(echo $ENV_VARS | grep -oP 'DASHPORT=\K[^ ]+')
+  EXTERNALIP_DEFAULT=$(echo $ENV_VARS | grep -oP 'EXT_IP=\K[^ ]+')
+  INTERNALIP_DEFAULT=$(echo $ENV_VARS | grep -oP 'INT_IP=\K[^ ]+')
+  SHMEXT_DEFAULT=$(echo $ENV_VARS | grep -oP 'SHMEXT=\K[^ ]+')
+  SHMINT_DEFAULT=$(echo $ENV_VARS | grep -oP 'SHMINT=\K[^ ]+')
+fi
 
 cat << EOF
 
