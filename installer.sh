@@ -114,6 +114,7 @@ EXTERNALIP_DEFAULT=auto
 INTERNALIP_DEFAULT=auto
 SHMEXT_DEFAULT=9001
 SHMINT_DEFAULT=10001
+PREVIOUS_PASSWORD=none
 
 #Check if container exists
 IMAGE_NAME="registry.gitlab.com/shardeum/server:latest"
@@ -136,6 +137,7 @@ if [ ! -z "${CONTAINER_ID}" ]; then
   INTERNALIP_DEFAULT=$(echo $ENV_VARS | grep -oP 'INT_IP=\K[^ ]+')
   SHMEXT_DEFAULT=$(echo $ENV_VARS | grep -oP 'SHMEXT=\K[^ ]+')
   SHMINT_DEFAULT=$(echo $ENV_VARS | grep -oP 'SHMINT=\K[^ ]+')
+  PREVIOUS_PASSWORD=$(echo $ENV_VARS | grep -oP 'DASHPASS=\K[^ ]+')
 elif [ -f .shardeum/.env ]; then
   echo "Existing .shardeum/.env file found. Reading settings from file."
 
@@ -161,6 +163,48 @@ EOF
 
 read -p "Do you want to run the web based Dashboard? (y/n): " RUNDASHBOARD
 RUNDASHBOARD=${RUNDASHBOARD:-y}
+
+if [ "$PREVIOUS_PASSWORD" != "none" ]; then
+  read -p "Do you want to change the password for the Dashboard? (y/N): " CHANGEPASSWORD
+  CHANGEPASSWORD=${CHANGEPASSWORD:-n}
+else
+  CHANGEPASSWORD="y"
+fi
+
+if [ "$CHANGEPASSWORD" == "y" ]; then
+  unset CHARCOUNT
+  echo -n "Set the password to access the Dashboard: "
+  CHARCOUNT=0
+  while IFS= read -p "$PROMPT" -r -s -n 1 CHAR
+  do
+    # Enter - accept password
+    if [[ $CHAR == $'\0' ]] ; then
+      if [ $CHARCOUNT -gt 0 ] ; then # Make sure password character length is greater than 0.
+        break
+      else
+        echo
+        echo -n "Invalid password input. Enter a password with character length greater than 0:"
+        continue
+      fi
+    fi
+    # Backspace
+    if [[ $CHAR == $'\177' ]] ; then
+      if [ $CHARCOUNT -gt 0 ] ; then
+        CHARCOUNT=$((CHARCOUNT-1))
+        PROMPT=$'\b \b'
+        DASHPASS="${DASHPASS%?}"
+      else
+        PROMPT=''
+      fi
+    else
+      CHARCOUNT=$((CHARCOUNT+1))
+      PROMPT='*'
+      DASHPASS+="$CHAR"
+    fi
+  done
+else
+  DASHPASS=$PREVIOUS_PASSWORD
+fi
 
 unset CHARCOUNT
 echo -n "Set the password to access the Dashboard: "
