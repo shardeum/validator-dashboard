@@ -108,6 +108,13 @@ else
     echo "Docker daemon is running"
 fi
 
+# DEFAULT VALUES FOR USER INPUTS
+DASHPORT_DEFAULT=8080
+EXTERNALIP_DEFAULT=auto
+INTERNALIP_DEFAULT=auto
+SHMEXT_DEFAULT=9001
+SHMINT_DEFAULT=10001
+
 cat << EOF
 
 #########################
@@ -154,11 +161,11 @@ echo # New line after inputs.
 # echo "Password saved as:" $DASHPASS #DEBUG: TEST PASSWORD WAS RECORDED AFTER ENTERED.
 
 while :; do
-  read -p "Enter the port (1025-65536) to access the web based Dashboard (default 8080): " DASHPORT
-  DASHPORT=${DASHPORT:-8080}
+  read -p "Enter the port (1025-65536) to access the web based Dashboard (default $DASHPORT_DEFAULT): " DASHPORT
+  DASHPORT=${DASHPORT:-DASHPORT_DEFAULT}
   [[ $DASHPORT =~ ^[0-9]+$ ]] || { echo "Enter a valid port"; continue; }
   if ((DASHPORT >= 1025 && DASHPORT <= 65536)); then
-    DASHPORT=${DASHPORT:-8080}
+    DASHPORT=${DASHPORT:-DASHPORT_DEFAULT}
     break
   else
     echo "Port out of range, try again"
@@ -166,8 +173,8 @@ while :; do
 done
 
 while :; do
-  read -p "If you wish to set an explicit external IP, enter an IPv4 address (default=auto): " EXTERNALIP
-  EXTERNALIP=${EXTERNALIP:-auto}
+  read -p "If you wish to set an explicit external IP, enter an IPv4 address (default=$EXTERNALIP_DEFAULT): " EXTERNALIP
+  EXTERNALIP=${EXTERNALIP:-EXTERNALIP_DEFAULT}
 
   if [ "$EXTERNALIP" == "auto" ]; then
     break
@@ -196,8 +203,8 @@ while :; do
 done
 
 while :; do
-  read -p "If you wish to set an explicit internal IP, enter an IPv4 address (default=auto): " INTERNALIP
-  INTERNALIP=${INTERNALIP:-auto}
+  read -p "If you wish to set an explicit internal IP, enter an IPv4 address (default=$INTERNALIP_DEFAULT): " INTERNALIP
+  INTERNALIP=${INTERNALIP:-INTERNALIP_DEFAULT}
 
   if [ "$INTERNALIP" == "auto" ]; then
     break
@@ -227,16 +234,16 @@ done
 
 while :; do
   echo "To run a validator on the Sphinx network, you will need to open two ports in your firewall."
-  read -p "This allows p2p communication between nodes. Enter the first port (1025-65536) for p2p communication (default 9001): " SHMEXT
-  SHMEXT=${SHMEXT:-9001}
+  read -p "This allows p2p communication between nodes. Enter the first port (1025-65536) for p2p communication (default $SHMEXT_DEFAULT): " SHMEXT
+  SHMEXT=${SHMEXT:-SHMEXT_DEFAULT}
   [[ $SHMEXT =~ ^[0-9]+$ ]] || { echo "Enter a valid port"; continue; }
   if ((SHMEXT >= 1025 && SHMEXT <= 65536)); then
     SHMEXT=${SHMEXT:-9001}
   else
     echo "Port out of range, try again"
   fi
-  read -p "Enter the second port (1025-65536) for p2p communication (default 10001): " SHMINT
-  SHMINT=${SHMINT:-10001}
+  read -p "Enter the second port (1025-65536) for p2p communication (default $SHMINT_DEFAULT): " SHMINT
+  SHMINT=${SHMINT:-SHMINT_DEFAULT}
   [[ $SHMINT =~ ^[0-9]+$ ]] || { echo "Enter a valid port"; continue; }
   if ((SHMINT >= 1025 && SHMINT <= 65536)); then
     SHMINT=${SHMINT:-10001}
