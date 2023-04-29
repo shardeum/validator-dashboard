@@ -6,7 +6,8 @@ read -p "During this early stage of Betanet the Shardeum team will be collecting
 This is only temporary and will be discontinued as we get closer to mainnet.
 Thanks for running a node and helping to make Shardeum better.
 
-By running this installer, you agree to allow the Shardeum team to collect this data. (y/n)?: " WARNING_AGREE
+By running this installer, you agree to allow the Shardeum team to collect this data. (Y/n)?: " WARNING_AGREE
+WARNING_AGREE=$(echo "$WARNING_AGREE" | tr '[:upper:]' '[:lower:]')
 WARNING_AGREE=${WARNING_AGREE:-y}
 
 if [ $WARNING_AGREE != "y" ];
@@ -161,11 +162,13 @@ cat << EOF
 
 EOF
 
-read -p "Do you want to run the web based Dashboard? (y/n): " RUNDASHBOARD
+read -p "Do you want to run the web based Dashboard? (Y/n): " RUNDASHBOARD
+RUNDASHBOARD=$(echo "$RUNDASHBOARD" | tr '[:upper:]' '[:lower:]')
 RUNDASHBOARD=${RUNDASHBOARD:-y}
 
 if [ "$PREVIOUS_PASSWORD" != "none" ]; then
   read -p "Do you want to change the password for the Dashboard? (y/N): " CHANGEPASSWORD
+  CHANGEPASSWORD=$(echo "$CHANGEPASSWORD" | tr '[:upper:]' '[:lower:]')
   CHANGEPASSWORD=${CHANGEPASSWORD:-n}
 else
   CHANGEPASSWORD="y"
