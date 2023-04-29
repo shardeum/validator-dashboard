@@ -109,6 +109,8 @@ else
     echo "Docker daemon is running"
 fi
 
+CURRENT_DIRECTORY=$(pwd)
+
 # DEFAULT VALUES FOR USER INPUTS
 DASHPORT_DEFAULT=8080
 EXTERNALIP_DEFAULT=auto
@@ -127,6 +129,12 @@ if [ ! -z "${CONTAINER_ID}" ]; then
   # Assign output of read_container_settings to variable
   if ! ENV_VARS=$(docker inspect --format="{{range .Config.Env}}{{println .}}{{end}}" "$CONTAINER_ID"); then
     ENV_VARS=$(sudo docker inspect --format="{{range .Config.Env}}{{println .}}{{end}}" "$CONTAINER_ID")
+  fi
+
+  if ! docker-safe cp "${CONTAINER_ID}:/home/node/app/cli/build/secrets.json" ./; then
+    echo "Container does not have secrets.json"
+  else 
+    echo "Reusing secrets.json from container"
   fi
 
   docker-safe stop "${CONTAINER_ID}"
@@ -402,6 +410,16 @@ fi
 
 echo "Starting image. This could take a while..."
 (docker-safe logs -f shardeum-dashboard &) | grep -q 'done'
+
+# Check if secrets.json exists and copy it inside container
+cd ${CURRENT_DIRECTORY}
+if [ -f secrets.json ]; then
+  echo "Reusing old node"
+  CONTAINER_ID=$(docker-safe ps -qf "ancestor=local-dashboard")
+  echo "New container id is : $CONTAINER_ID"
+  docker-safe cp ./secrets.json "${CONTAINER_ID}:/home/node/app/cli/build/secrets.json"
+  rm -f secrets.json
+fi
 
 #Do not indent
 if [ $RUNDASHBOARD = "y" ]
