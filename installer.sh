@@ -1,6 +1,30 @@
 #!/usr/bin/env bash
 set -e
 
+# Check if any hashing command is available
+if ! (command -v openssl > /dev/null || command -v shasum > /dev/null || command -v sha256sum > /dev/null); then
+  echo "No supported hashing commands found."
+  read -p "Would you like to install openssl? (y/n) " -n 1 -r
+  echo
+
+  if [[ $REPLY =~ ^[Yy]$ ]]; then
+    # Detect package manager and install openssl
+    if command -v apt-get > /dev/null; then
+      sudo apt-get update && sudo apt-get install -y openssl
+    elif command -v yum > /dev/null; then
+      sudo yum install -y openssl
+    elif command -v dnf > /dev/null; then
+      sudo dnf install -y openssl
+    else
+      echo "Your package manager is not supported. Please install openssl manually."
+      exit 1
+    fi
+  else
+    echo "Please install openssl, shasum, or sha256sum and try again."
+    exit 1
+  fi
+fi
+
 
 read -p "During this early stage of Betanet the Shardeum team will be collecting some performance and debugging info from your node to help improve future versions of the software.
 This is only temporary and will be discontinued as we get closer to mainnet.
@@ -100,6 +124,34 @@ get_external_ip() {
     fi
   fi
   echo $external_ip
+}
+
+hash_password() {
+  local input="$1"
+  local hashed_password
+
+  # Try using openssl
+  if command -v openssl > /dev/null; then
+    hashed_password=$(echo -n "$input" | openssl dgst -sha256 | awk '{print $1}')
+    echo "$hashed_password"
+    return 0
+  fi
+
+  # Try using shasum
+  if command -v shasum > /dev/null; then
+    hashed_password=$(echo -n "$input" | shasum -a 256 | awk '{print $1}')
+    echo "$hashed_password"
+    return 0
+  fi
+
+  # Try using sha256sum
+  if command -v sha256sum > /dev/null; then
+    hashed_password=$(echo -n "$input" | sha256sum | awk '{print $1}')
+    echo "$hashed_password"
+    return 0
+  fi
+
+  return 1
 }
 
 if [[ $(docker-safe info 2>&1) == *"Cannot connect to the Docker daemon"* ]]; then
@@ -218,6 +270,14 @@ else
 fi
 
 
+# Hash the password using the fallback mechanism
+DASHPASS=$(hash_password "$DASHPASS")
+
+if [ -z "$DASHPASS" ]; then
+  echo -e "\nFailed to hash the password. Please ensure you have openssl"
+  exit 1
+fi
+
 echo # New line after inputs.
 # echo "Password saved as:" $DASHPASS #DEBUG: TEST PASSWORD WAS RECORDED AFTER ENTERED.
 
@@ -252,7 +312,7 @@ while :; do
             valid_ip=false
         fi
     done
-    
+
     if [ $valid_ip == true ]; then
       break
     else
@@ -282,7 +342,7 @@ while :; do
             valid_ip=false
         fi
     done
-    
+
     if [ $valid_ip == true ]; then
       break
     else

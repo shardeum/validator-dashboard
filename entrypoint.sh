@@ -33,10 +33,10 @@ distinguished_name = req_distinguished_name
 
 [ req_distinguished_name ]
 C = XX
-ST = Localzone     
-L = localhost    
+ST = Localzone
+L = localhost
 O = Certificate Authority Local Validator Node
-OU = Develop      
+OU = Develop
 CN = mynode-sphinx.sharedum.local
 emailAddress = community@.sharedum.local" > CA.cnf
 fi
