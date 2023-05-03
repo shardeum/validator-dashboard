@@ -132,7 +132,7 @@ hash_password() {
 
   # Try using openssl
   if command -v openssl > /dev/null; then
-    hashed_password=$(echo -n "$input" | openssl dgst -sha256 | awk '{print $1}')
+    hashed_password=$(echo -n "$input" | openssl dgst -sha256 -r | awk '{print $1}')
     echo "$hashed_password"
     return 0
   fi
@@ -185,7 +185,7 @@ if [ ! -z "${CONTAINER_ID}" ]; then
 
   if ! docker-safe cp "${CONTAINER_ID}:/home/node/app/cli/build/secrets.json" ./; then
     echo "Container does not have secrets.json"
-  else 
+  else
     echo "Reusing secrets.json from container"
   fi
 
