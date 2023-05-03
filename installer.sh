@@ -381,7 +381,7 @@ NODEHOME=${NODEHOME:-~/.shardeum}
 
 #APPSEEDLIST="archiver-sphinx.shardeum.org"
 #APPMONITOR="monitor-sphinx.shardeum.org"
-APPMONITOR="52.59.208.112"
+APPMONITOR="139.144.35.86"
 
 cat <<EOF
 
