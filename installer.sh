@@ -265,13 +265,15 @@ if [ "$CHANGEPASSWORD" == "y" ]; then
       DASHPASS+="$CHAR"
     fi
   done
+
+  # Hash the password using the fallback mechanism
+  DASHPASS=$(hash_password "$DASHPASS")
 else
   DASHPASS=$PREVIOUS_PASSWORD
+  if ! [[ $DASHPASS =~ ^[0-9a-f]{64}$ ]]; then
+    DASHPASS=$(hash_password "$DASHPASS")
+  fi
 fi
-
-
-# Hash the password using the fallback mechanism
-DASHPASS=$(hash_password "$DASHPASS")
 
 if [ -z "$DASHPASS" ]; then
   echo -e "\nFailed to hash the password. Please ensure you have openssl"
