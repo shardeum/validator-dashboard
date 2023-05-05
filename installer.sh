@@ -190,7 +190,7 @@ if [ ! -z "${CONTAINER_ID}" ]; then
   fi
 
   # CHECK IF VALIDATOR IS ALREADY RUNNING
-  if [ "$(docker-safe exec "${CONTAINER_ID}" pm2 show validator | awk '/status/{print $4}')" = "online" ]; then
+  if [ "$(docker-safe exec "${CONTAINER_ID}" operator-cli status | awk '/state:/ {print $2}')" = "active" ]; then
     read -p "Your node is active and upgrading will cause the node to leave the network unexpectedly and lose the stake amount.
     Do you really want to upgrade now (y/N)?" REALLYUPGRADE
     REALLYUPGRADE=$(echo "$REALLYUPGRADE" | tr '[:upper:]' '[:lower:]')
