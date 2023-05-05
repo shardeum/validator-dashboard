@@ -189,6 +189,20 @@ if [ ! -z "${CONTAINER_ID}" ]; then
     echo "Reusing secrets.json from container"
   fi
 
+  # CHECK IF VALIDATOR IS ALREADY RUNNING
+  if [ "$(docker-safe exec "${CONTAINER_ID}" pm2 show validator | awk '/status/{print $4}')" = "online" ]; then
+    read -p "Your node is active and upgrading will cause the node to leave the network unexpectedly and lose the stake amount.
+    Do you really want to upgrade now (y/N)?" REALLYUPGRADE
+    REALLYUPGRADE=$(echo "$REALLYUPGRADE" | tr '[:upper:]' '[:lower:]')
+    REALLYUPGRADE=${REALLYUPGRADE:-n}
+
+    if [ "$REALLYUPGRADE" == "n" ]; then
+      exit 1
+    fi
+  else
+    echo "Validator process is not online"
+  fi
+
   docker-safe stop "${CONTAINER_ID}"
   docker-safe rm "${CONTAINER_ID}"
 
