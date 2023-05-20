@@ -190,8 +190,25 @@ if [ ! -z "${CONTAINER_ID}" ]; then
   fi
 
   # CHECK IF VALIDATOR IS ALREADY RUNNING
-  if [ "$(docker-safe exec "${CONTAINER_ID}" operator-cli status | awk '/state:/ {print $2}')" = "active" ]; then
-    read -p "Your node is active and upgrading will cause the node to leave the network unexpectedly and lose the stake amount.
+  status=$(docker-safe exec "${CONTAINER_ID}" operator-cli status | awk '/state:/ {print $2}' 2>/dev/null)
+
+  if [ $? -eq 0 ]; then
+    # The command ran successfully
+    if [ "$status" = "active" ]; then
+      read -p "Your node is active and upgrading will cause the node to leave the network unexpectedly and lose the stake amount.
+      Do you really want to upgrade now (y/N)?" REALLYUPGRADE
+      REALLYUPGRADE=$(echo "$REALLYUPGRADE" | tr '[:upper:]' '[:lower:]')
+      REALLYUPGRADE=${REALLYUPGRADE:-n}
+
+      if [ "$REALLYUPGRADE" == "n" ]; then
+        exit 1
+      fi
+    else
+      echo "Validator process is not online"
+    fi
+  else
+    read -p "The installer was unable to determine if the existing node is active.
+    An active node unexpectedly leaving the network will lose it's stake amount.
     Do you really want to upgrade now (y/N)?" REALLYUPGRADE
     REALLYUPGRADE=$(echo "$REALLYUPGRADE" | tr '[:upper:]' '[:lower:]')
     REALLYUPGRADE=${REALLYUPGRADE:-n}
@@ -199,8 +216,6 @@ if [ ! -z "${CONTAINER_ID}" ]; then
     if [ "$REALLYUPGRADE" == "n" ]; then
       exit 1
     fi
-  else
-    echo "Validator process is not online"
   fi
 
   docker-safe stop "${CONTAINER_ID}"
