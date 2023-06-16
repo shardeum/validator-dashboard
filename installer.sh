@@ -190,10 +190,14 @@ if [ ! -z "${CONTAINER_ID}" ]; then
   fi
 
   # CHECK IF VALIDATOR IS ALREADY RUNNING
-  status=$(docker-safe exec "${CONTAINER_ID}" operator-cli status | awk '/state:/ {print $2}' 2>/dev/null)
+  set +e
+  status=$(docker-safe exec "${CONTAINER_ID}" operator-cli status 2>/dev/null)
+  check=$?
+  set -e
 
-  if [ $? -eq 0 ]; then
+  if [ $check -eq 0 ]; then
     # The command ran successfully
+    status=$(echo $status | awk '/state:/ {print $2}')
     if [ "$status" = "active" ]; then
       read -p "Your node is active and upgrading will cause the node to leave the network unexpectedly and lose the stake amount.
       Do you really want to upgrade now (y/N)?" REALLYUPGRADE
