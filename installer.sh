@@ -407,6 +407,7 @@ done
 
 read -p "What base directory should the node use (defaults to ~/.shardeum): " NODEHOME
 NODEHOME=${NODEHOME:-~/.shardeum}
+eval NODEHOME="$NODEHOME" # expand ~ to $HOME
 
 #APPSEEDLIST="archiver-sphinx.shardeum.org"
 #APPMONITOR="monitor-sphinx.shardeum.org"
