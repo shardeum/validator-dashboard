@@ -197,7 +197,7 @@ if [ ! -z "${CONTAINER_ID}" ]; then
 
   if [ $check -eq 0 ]; then
     # The command ran successfully
-    status=$(echo $status | awk '/state:/ {print $2}')
+    status=$(awk '/state:/ {print $2}' <<< $status)
     if [ "$status" = "active" ]; then
       read -p "Your node is active and upgrading will cause the node to leave the network unexpectedly and lose the stake amount.
       Do you really want to upgrade now (y/N)?" REALLYUPGRADE
