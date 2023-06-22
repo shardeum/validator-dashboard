@@ -199,7 +199,7 @@ if [ ! -z "${CONTAINER_ID}" ]; then
     # The command ran successfully
     status=$(awk '/state:/ {print $2}' <<< $status)
     if [ "$status" = "active" ] || [ "$status" = "syncing" ]; then
-      read -p "Your node is active and upgrading will cause the node to leave the network unexpectedly and lose the stake amount.
+      read -p "Your node is $status and upgrading will cause the node to leave the network unexpectedly and lose the stake amount.
       Do you really want to upgrade now (y/N)?" REALLYUPGRADE
       REALLYUPGRADE=$(echo "$REALLYUPGRADE" | tr '[:upper:]' '[:lower:]')
       REALLYUPGRADE=${REALLYUPGRADE:-n}
