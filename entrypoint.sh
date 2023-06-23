@@ -8,6 +8,20 @@ echo "Install PM2"
 
 npm i -g pm2
 
+echo "/home/node/.pm2/logs/*.log /home/node/app/cli/build/logs/*.log {
+    daily
+    rotate 7
+    compress
+    delaycompress
+    missingok
+    notifempty
+    create 0640 user group
+    sharedscripts
+    postrotate
+        pm2 reloadLogs
+    endscript
+}" | sudo tee /etc/logrotate.d/pm2
+
 # Pull latest versions of the CLI and GUI
 
 git clone https://gitlab.com/shardeum/validator/cli.git
