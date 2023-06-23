@@ -434,7 +434,7 @@ if [ -d "$NODEHOME" ]; then
   fi
 fi
 
-git clone -b feat/logrotate-pm2 https://gitlab.com/shardeum/validator/dashboard.git ${NODEHOME} &&
+git clone https://gitlab.com/shardeum/validator/dashboard.git ${NODEHOME} &&
   cd ${NODEHOME} &&
   chmod a+x ./*.sh
 
