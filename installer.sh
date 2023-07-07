@@ -1,6 +1,40 @@
 #!/usr/bin/env bash
 set -e
 
+# Get the environment/OS
+environment=$(uname)
+
+# Function to exit with an error message
+exit_with_error() {
+    echo "Error: $1"
+    exit 1
+}
+
+# Check the operating system and get the processor information
+case "$environment" in
+    Linux)
+        processor=$(uname -m)
+        ;;
+    Darwin)
+        processor=$(uname -m)
+        ;;
+    *MINGW*)
+        exit_with_error "$environment (Windows) environment not yet supported. Please use WSL (WSL2 recommended) or a Linux VM. Exiting installer."
+        ;;
+    *)
+        processor="Unknown"
+        ;;
+esac
+
+# Check for ARM processor or Unknown and exit if true, meaning the installer is not supported by the processor
+if [[ "$processor" == *"arm"* || "$processor" == "Unknown" ]]; then
+    exit_with_error "$processor not yet supported. Exiting installer."
+fi
+
+# Print the detected environment and processor
+echo "$environment environment with $processor found."
+
+
 # Check if any hashing command is available
 if ! (command -v openssl > /dev/null || command -v shasum > /dev/null || command -v sha256sum > /dev/null); then
   echo "No supported hashing commands found."
