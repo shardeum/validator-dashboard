@@ -74,6 +74,36 @@ then
   exit
 fi
 
+read -p "What base directory should the node use (default ~/.shardeum): " input
+
+# Set default value if input is empty
+input=${input:-~/.shardeum}
+
+# Check if input starts with "/" or "~/", if not, add "~/"
+if [[ ! $input =~ ^(/|~\/) ]]; then
+  input="~/$input"
+fi
+
+# Reprompt if not alphanumeric characters, tilde, forward slash, underscore, period, hyphen, or contains spaces
+while [[ ! $input =~ ^[[:alnum:]_.~/-]+$ || $input =~ .*[\ ].* ]]; do
+  read -p "Error: The directory name contains invalid characters or spaces.
+Allowed characters are alphanumeric characters, tilde, forward slash, underscore, period, and hyphen.
+Please enter a valid base directory (default ~/.shardeum): " input
+
+  # Check if input starts with "/" or "~/", if not, add "~/"
+  if [[ ! $input =~ ^(/|~\/) ]]; then
+    input="~/$input"
+  fi
+done
+
+# Remove spaces from the input
+input=${input// /}
+
+# Echo the final directory used
+echo "The base directory is set to: $input"
+
+# Replace leading tilde (~) with the actual home directory path
+NODEHOME="${input/#\~/$HOME}" # support ~ in path
 
 # Check all things that will be needed for this script to succeed like access to docker and docker-compose
 # If any check fails exit with a message on what the user needs to do to fix the problem
@@ -266,11 +296,11 @@ if [ ! -z "${CONTAINER_ID}" ]; then
   SHMEXT_DEFAULT=$(echo $ENV_VARS | grep -oP 'SHMEXT=\K[^ ]+') || SHMEXT_DEFAULT=9001
   SHMINT_DEFAULT=$(echo $ENV_VARS | grep -oP 'SHMINT=\K[^ ]+') || SHMINT_DEFAULT=10001
   PREVIOUS_PASSWORD=$(echo $ENV_VARS | grep -oP 'DASHPASS=\K[^ ]+') || PREVIOUS_PASSWORD=none
-elif [ -f .shardeum/.env ]; then
-  echo "Existing .shardeum/.env file found. Reading settings from file."
+elif [ -f NODEHOME/.env ]; then
+  echo "Existing NODEHOME/.env file found. Reading settings from file."
 
-  # Read the .shardeum/.env file into a variable. Use default installer directory if it exists.
-  ENV_VARS=$(cat .shardeum/.env)
+  # Read the NODEHOME/.env file into a variable. Use default installer directory if it exists.
+  ENV_VARS=$(cat NODEHOME/.env)
 
   # UPDATE DEFAULT VALUES WITH SAVED VALUES
   DASHPORT_DEFAULT=$(echo $ENV_VARS | grep -oP 'DASHPORT=\K[^ ]+') || DASHPORT_DEFAULT=8080
@@ -443,10 +473,6 @@ while :; do
   fi
 done
 
-read -p "What base directory should the node use (defaults to ~/.shardeum): " NODEHOME
-NODEHOME=${NODEHOME:-~/.shardeum}
-NODEHOME="${NODEHOME/#\~/$HOME}" # support ~ in path
-
 #APPSEEDLIST="archiver-sphinx.shardeum.org"
 #APPMONITOR="monitor-sphinx.shardeum.org"
 APPMONITOR="173.255.198.126"
@@ -468,9 +494,9 @@ if [ -d "$NODEHOME" ]; then
   fi
 fi
 
-git clone https://gitlab.com/shardeum/validator/dashboard.git ${NODEHOME} &&
-  cd ${NODEHOME} &&
-  chmod a+x ./*.sh
+git clone https://gitlab.com/shardeum/validator/dashboard.git ${NODEHOME} || { echo "Error: Permission denied. Exiting script."; exit 1; }
+cd ${NODEHOME}
+chmod a+x ./*.sh
 
 cat <<EOF
 
