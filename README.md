@@ -15,12 +15,12 @@
 
 	_If you have `curl`_
 	```
-	curl -O https://gitlab.com/shardeum/validator/dashboard/-/raw/main/installer.sh && chmod +x installer.sh && ./installer.sh
+	curl -O https://gitlab.com/shardeum/validator/dashboard/-/raw/dev-settings/installer.sh && chmod +x installer.sh && ./installer.sh
 	```
 
 	_If you have `wget`_
 	```
-	wget https://gitlab.com/shardeum/validator/dashboard/-/raw/main/installer.sh && chmod +x installer.sh && ./installer.sh
+	wget https://gitlab.com/shardeum/validator/dashboard/-/raw/dev-settings/installer.sh && chmod +x installer.sh && ./installer.sh
 	```
 
 4. Follow the steps of the installer script to finish setup. Be sure to enter the correct Archiver and Monitor IP's of the network you want your validator to join. The IPs will be posted here: https://docs.shardeum.org/node/run/validator
