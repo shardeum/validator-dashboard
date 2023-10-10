@@ -24,14 +24,14 @@ echo "/home/node/.pm2/logs/*.log /home/node/app/cli/build/logs/*.log {
 
 # Pull latest versions of the CLI and GUI
 
-git clone https://gitlab.com/shardeum/validator/cli.git
+git clone -b SHM-2773 https://gitlab.com/shardeum/validator/cli.git
 
 echo "Install the CLI"
 cd cli
 npm i --silent && npm link
 cd ..
 
-git clone https://gitlab.com/shardeum/validator/gui.git
+git clone -b SHM-2773 https://gitlab.com/shardeum/validator/gui.git
 
 echo "Install the GUI"
 cd gui
