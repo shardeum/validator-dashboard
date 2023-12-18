@@ -1,4 +1,5 @@
-FROM registry.gitlab.com/shardeum/server:latest
+ARG IMAGE_TAG=latest
+FROM registry.gitlab.com/shardeum/server:${IMAGE_TAG}
 
 ARG RUNDASHBOARD=y
 ENV RUNDASHBOARD=${RUNDASHBOARD}

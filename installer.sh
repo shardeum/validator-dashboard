@@ -225,6 +225,46 @@ else
     echo "Docker daemon is running"
 fi
 
+list_networks() {
+    echo "Available networks:"
+    local i=1
+    for file in ./networks/*.json; do
+        if [ -e "$file" ]; then
+            network_names[i]=$(jq -r '.networkName' "$file")
+            network_files[i]=$file
+            echo " $i) ${network_names[i]}"
+            ((i++))
+        fi
+    done
+
+    # Check if any networks were found
+    if [ $i -eq 1 ]; then
+        echo "Error: No network configuration files found in ./networks/"
+        exit 1
+    fi
+}
+
+declare -a network_names
+declare -a network_files
+
+## User Input ## Select network
+list_networks
+while true; do
+    read -p "Choose a network by number: " choice
+    if [[ $choice =~ ^[0-9]+$ ]] && [ "$choice" -ge 1 ] && [ "$choice" -le ${#network_names[@]} ]; then
+        break
+    else
+        echo "Invalid selection. Please enter a number from the list."
+    fi
+done
+
+config_file=${network_files[$choice]}
+MONITORIP=$(jq -r '.monitor.ip' "$config_file")
+EXISTING_ARCHIVERS=$(jq -r '.archivers | @json' "$config_file")
+DOCKER_IMAGE_TAG=$(jq -r '.dockerImage' "$config_file")
+
+
+
 CURRENT_DIRECTORY=$(pwd)
 
 # DEFAULT VALUES FOR USER INPUTS
@@ -236,7 +276,7 @@ SHMINT_DEFAULT=10001
 PREVIOUS_PASSWORD=none
 
 #Check if container exists
-IMAGE_NAME="registry.gitlab.com/shardeum/server:latest"
+IMAGE_NAME="registry.gitlab.com/shardeum/server:${DOCKER_IMAGE_TAG}"
 CONTAINER_ID=$(docker-safe ps -qf "ancestor=local-dashboard")
 if [ ! -z "${CONTAINER_ID}" ]; then
   echo "CONTAINER_ID: ${CONTAINER_ID}"
@@ -473,10 +513,6 @@ while :; do
   fi
 done
 
-#APPSEEDLIST="archiver-sphinx.shardeum.org"
-#APPMONITOR="monitor-sphinx.shardeum.org"
-APPMONITOR="104.200.21.5"
-
 cat <<EOF
 
 ###########################
@@ -513,8 +549,8 @@ touch ./.env
 cat >./.env <<EOL
 EXT_IP=${EXTERNALIP}
 INT_IP=${INTERNALIP}
-EXISTING_ARCHIVERS=[{"ip":"45.56.68.62","port":4000,"publicKey":"840e7b59a95d3c5f5044f4bc62ab9fa94bc107d391001141410983502e3cde63"},{"ip":"173.255.247.88","port":4000,"publicKey":"2db7c949632d26b87d7e7a5a4ad41c306f63ee972655121a37c5e4f52b00a542"},{"ip":"170.187.154.43","port":4000,"publicKey":"7af699dd711074eb96a8d1103e32b589e511613ebb0c6a789a9e8791b2b05f34"}]
-APP_MONITOR=${APPMONITOR}
+EXISTING_ARCHIVERS=${EXISTING_ARCHIVERS}
+APP_MONITOR=${MONITORIP}
 DASHPASS=${DASHPASS}
 DASHPORT=${DASHPORT}
 SERVERIP=${SERVERIP}
@@ -542,7 +578,7 @@ cat <<EOF
 EOF
 
 cd ${NODEHOME} &&
-docker-safe build --no-cache -t local-dashboard -f Dockerfile --build-arg RUNDASHBOARD=${RUNDASHBOARD} .
+docker-safe build --no-cache -t local-dashboard -f Dockerfile --build-arg RUNDASHBOARD=${RUNDASHBOARD} --build-arg IMAGE_TAG=${IMAGE_TAG} .
 
 cat <<EOF
 
