@@ -34,6 +34,8 @@ fi
 # Print the detected environment and processor
 echo "$environment environment with $processor found."
 
+# Check if jq is installed
+command -v jq >/dev/null 2>&1 || { echo >&2 "'jq' is required but not installed. Please install 'jq' and try again. https://jqlang.github.io/jq/download/"; exit 1; }
 
 # Check if any hashing command is available
 if ! (command -v openssl > /dev/null || command -v shasum > /dev/null || command -v sha256sum > /dev/null); then
@@ -262,6 +264,13 @@ config_file=${network_files[$choice]}
 MONITORIP=$(jq -r '.monitor.ip' "$config_file")
 EXISTING_ARCHIVERS=$(jq -r '.archivers | @json' "$config_file")
 DOCKER_IMAGE_TAG=$(jq -r '.dockerImage' "$config_file")
+
+# Display selected network and configuration
+echo "You have selected the network: ${network_names[$choice]}"
+echo "Configuration being used:"
+echo "Monitor: $MONITORIP"
+echo "Archivers: $EXISTING_ARCHIVERS"
+echo "Docker Image: $DOCKER_IMAGE_TAG"
 
 
 
@@ -578,7 +587,7 @@ cat <<EOF
 EOF
 
 cd ${NODEHOME} &&
-docker-safe build --no-cache -t local-dashboard -f Dockerfile --build-arg RUNDASHBOARD=${RUNDASHBOARD} --build-arg IMAGE_TAG=${IMAGE_TAG} .
+docker-safe build --no-cache -t local-dashboard -f Dockerfile --build-arg RUNDASHBOARD=${RUNDASHBOARD} --build-arg IMAGE_TAG=${DOCKER_IMAGE_TAG} .
 
 cat <<EOF
 
