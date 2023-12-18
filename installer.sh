@@ -35,7 +35,12 @@ fi
 echo "$environment environment with $processor found."
 
 # Check if jq is installed
-command -v jq >/dev/null 2>&1 || { echo >&2 "'jq' is required but not installed. Please install 'jq' and try again. https://jqlang.github.io/jq/download/"; exit 1; }
+if command -v jq >/dev/null 2>&1; then
+    echo "'jq' is is installed on this machine."
+else
+    echo >&2 "'jq' is required but not installed. Please install 'jq' and try again. https://jqlang.github.io/jq/download/"
+    exit 1
+fi
 
 # Check if any hashing command is available
 if ! (command -v openssl > /dev/null || command -v shasum > /dev/null || command -v sha256sum > /dev/null); then
@@ -227,36 +232,49 @@ else
     echo "Docker daemon is running"
 fi
 
-list_networks() {
-    echo "Available networks:"
-    local i=1
-    for file in ./networks/*.json; do
-        if [ -e "$file" ]; then
-            network_names[i]=$(jq -r '.networkName' "$file")
-            network_files[i]=$file
-            echo " $i) ${network_names[i]}"
-            ((i++))
-        fi
-    done
+cat << EOF
 
-    # Check if any networks were found
-    if [ $i -eq 1 ]; then
-        echo "Error: No network configuration files found in ./networks/"
-        exit 1
-    fi
-}
+##################################
+# 0. SELECT THE SHARDEUM NETWORK #
+##################################
+
+EOF
 
 declare -a network_names
 declare -a network_files
 
-## User Input ## Select network
-list_networks
+echo "Available networks:"
+i=1
+default_index=0
+default_choice=""
+
+for file in ./networks/*.json; do
+    if [ -e "$file" ]; then
+        network_name=$(jq -r '.networkName' "$file")
+        network_names[i]=$network_name
+        network_files[i]=$file
+        if [[ $(basename "$file") == "betanet.json" ]]; then
+            default_index=$i
+            default_choice=" (default)"
+        fi
+        echo " $i) $network_name$default_choice"
+        ((i++))
+        default_choice=""  # Reset default choice indicator for next iteration
+    fi
+done
+
+if [ $i -eq 1 ]; then
+    echo "Error: No network configuration files found in ./networks/"
+    exit 1
+fi
+
 while true; do
-    read -p "Choose a network by number: " choice
+    read -p "Choose a network by number (default $default_index): " choice
+    choice=${choice:-$default_index}
     if [[ $choice =~ ^[0-9]+$ ]] && [ "$choice" -ge 1 ] && [ "$choice" -le ${#network_names[@]} ]; then
         break
     else
-        echo "Invalid selection. Please enter a number from the list."
+        echo "Invalid selection. Please enter a number from the list or press Enter for default."
     fi
 done
 
@@ -266,7 +284,8 @@ EXISTING_ARCHIVERS=$(jq -r '.archivers | @json' "$config_file")
 DOCKER_IMAGE_TAG=$(jq -r '.dockerImage' "$config_file")
 
 # Display selected network and configuration
-echo "You have selected the network: ${network_names[$choice]}"
+echo 
+echo "You have selected: ${network_names[$choice]}"
 echo "Configuration being used:"
 echo "Monitor: $MONITORIP"
 echo "Archivers: $EXISTING_ARCHIVERS"
@@ -362,9 +381,9 @@ fi
 
 cat << EOF
 
-#########################
-# 0. GET INFO FROM USER #
-#########################
+##################################
+# 1. GET NODE SETTINGS FROM USER #
+##################################
 
 EOF
 
@@ -525,7 +544,7 @@ done
 cat <<EOF
 
 ###########################
-# 1. Pull Compose Project #
+# 2. Pull Compose Project #
 ###########################
 
 EOF
@@ -546,7 +565,7 @@ chmod a+x ./*.sh
 cat <<EOF
 
 ###############################
-# 2. Create and Set .env File #
+# 3. Create and Set .env File #
 ###############################
 
 EOF
@@ -571,7 +590,7 @@ EOL
 cat <<EOF
 
 ##########################
-# 3. Clearing Old Images #
+# 4. Clearing Old Images #
 ##########################
 
 EOF
@@ -581,7 +600,7 @@ EOF
 cat <<EOF
 
 ##########################
-# 4. Building base image #
+# 5. Building base image #
 ##########################
 
 EOF
@@ -592,7 +611,7 @@ docker-safe build --no-cache -t local-dashboard -f Dockerfile --build-arg RUNDAS
 cat <<EOF
 
 ############################
-# 5. Start Compose Project #
+# 6. Start Compose Project #
 ############################
 
 EOF
