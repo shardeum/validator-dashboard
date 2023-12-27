@@ -2,7 +2,7 @@
 
 1. Prerequisites: Ensure `docker` and `docker-compose` are installed on your machine and included in the path of your shell:
 
-	__docker__: https://docs.docker.com/engine/install/  
+	__docker__: `curl -sL get.docker.com | bash`
 	__docker-compose__: https://docs.docker.com/compose/install/
 
 2. Make sure you have either 'curl' or 'wget' installed.
@@ -13,19 +13,46 @@
 
 3. Use one of the following commands to download and run the install script:
 
-	_If you have `curl`_
+	Overrides
+	```shell
+	# Overrides gui password
+	export OVERRIDE_PASSWORD=
+	# Override list of the archiver
+	export OVERRIDE_ARCHIVERS=
+	# Override monitor
+	export OVERRIDE_APPMONITOR=
+	# Server version, default latest
+	export SERVER_VERSOIN=
+	```
+
+	_With `curl`_
 	```
 	curl -O https://gitlab.com/shardeum/validator/dashboard/-/raw/main/installer.sh && chmod +x installer.sh && ./installer.sh
 	```
 
-	_If you have `wget`_
+	_With `wget`_
 	```
 	wget https://gitlab.com/shardeum/validator/dashboard/-/raw/main/installer.sh && chmod +x installer.sh && ./installer.sh
 	```
 
+	OR
+
+	non interactive(skip step 4)
+
+	_With `curl`_
+	```
+	curl -O https://gitlab.com/shardeum/validator/dashboard/-/raw/main/installer.sh && chmod +x installer.sh && ./installer.sh -y
+	```
+
+	_With `wget`_
+	```
+	wget https://gitlab.com/shardeum/validator/dashboard/-/raw/main/installer.sh && chmod +x installer.sh && ./installer.sh -y
+	```
+
+
 4. Follow the steps of the installer script to finish setup. Be sure to enter the correct Archiver and Monitor IP's of the network you want your validator to join. The IPs will be posted here: https://docs.shardeum.org/node/run/validator
 
-5. If you are behind a router, ensure ports `9001` and `10001` are forwarded.  
+5. If you are behind a router, ensure ports `9001` and `10001` are forwarded.
 	https://www.noip.com/support/knowledgebase/general-port-forwarding-guide/
 
 6. Once the installer finishes, start the validator through either the web-based dashboard or command line:
@@ -95,7 +122,7 @@ If you chose to start the GUI you should have been given the URL to access it an
 
 If you did not start the GUI or stopped it, you can start it again by following these steps
 
-``` 
+```
 ./shell.sh
 
 operator-cli gui start

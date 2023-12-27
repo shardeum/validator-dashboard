@@ -34,11 +34,24 @@ fi
 # Print the detected environment and processor
 echo "$environment environment with $processor found."
 
+# Check if the user wants to allow defaults which is non-interactive mode
+ALLOW_DEFAULTS=false
+while getopts "y" option; do
+  case $option in
+    y) ALLOW_DEFAULTS=true;;
+  esac
+done
 
 # Check if any hashing command is available
 if ! (command -v openssl > /dev/null || command -v shasum > /dev/null || command -v sha256sum > /dev/null); then
   echo "No supported hashing commands found."
-  read -p "Would you like to install openssl? (y/n) " -n 1 -r
+  if [ "$ALLOW_DEFAULTS" = true ]; then
+    REPLY='y'
+  else
+    read -p "Would you like to install openssl? (y/n) " -n 1 -r
+    echo
+  fi
+
   echo
 
   if [[ $REPLY =~ ^[Yy]$ ]]; then
@@ -59,12 +72,14 @@ if ! (command -v openssl > /dev/null || command -v shasum > /dev/null || command
   fi
 fi
 
-
+if [ "$ALLOW_DEFAULTS" != true ]; then
 read -p "During this early stage of Betanet the Shardeum team will be collecting some performance and debugging info from your node to help improve future versions of the software.
 This is only temporary and will be discontinued as we get closer to mainnet.
 Thanks for running a node and helping to make Shardeum better.
 
 By running this installer, you agree to allow the Shardeum team to collect this data. (Y/n)?: " WARNING_AGREE
+fi
+
 WARNING_AGREE=$(echo "$WARNING_AGREE" | tr '[:upper:]' '[:lower:]')
 WARNING_AGREE=${WARNING_AGREE:-y}
 
@@ -74,7 +89,9 @@ then
   exit
 fi
 
-read -p "What base directory should the node use (default ~/.shardeum): " input
+if [ "$ALLOW_DEFAULTS" != true ]; then
+  read -p "What base directory should the node use (default ~/.shardeum): " input
+fi
 
 # Set default value if input is empty
 input=${input:-~/.shardeum}
@@ -233,10 +250,9 @@ EXTERNALIP_DEFAULT=auto
 INTERNALIP_DEFAULT=auto
 SHMEXT_DEFAULT=9001
 SHMINT_DEFAULT=10001
-PREVIOUS_PASSWORD=none
+PREVIOUS_PASSWORD=pass
 
 #Check if container exists
-IMAGE_NAME="registry.gitlab.com/shardeum/server:latest"
 CONTAINER_ID=$(docker-safe ps -qf "ancestor=local-dashboard")
 if [ ! -z "${CONTAINER_ID}" ]; then
   echo "CONTAINER_ID: ${CONTAINER_ID}"
@@ -263,8 +279,9 @@ if [ ! -z "${CONTAINER_ID}" ]; then
     # The command ran successfully
     status=$(awk '/state:/ {print $2}' <<< $status)
     if [ "$status" = "active" ] || [ "$status" = "syncing" ]; then
-      read -p "Your node is $status and upgrading will cause the node to leave the network unexpectedly and lose the stake amount.
-      Do you really want to upgrade now (y/N)?" REALLYUPGRADE
+      # read -p "Your node is $status and upgrading will cause the node to leave the network unexpectedly and lose the stake amount.
+      # Do you really want to upgrade now (y/N)?" REALLYUPGRADE
+      REALLYUPGRADE=y
       REALLYUPGRADE=$(echo "$REALLYUPGRADE" | tr '[:upper:]' '[:lower:]')
       REALLYUPGRADE=${REALLYUPGRADE:-n}
 
@@ -275,9 +292,10 @@ if [ ! -z "${CONTAINER_ID}" ]; then
       echo "Validator process is not online"
     fi
   else
-    read -p "The installer was unable to determine if the existing node is active.
-    An active node unexpectedly leaving the network will lose it's stake amount.
-    Do you really want to upgrade now (y/N)?" REALLYUPGRADE
+    # read -p "The installer was unable to determine if the existing node is active.
+    # An active node unexpectedly leaving the network will lose it's stake amount.
+    # Do you really want to upgrade now (y/N)?" REALLYUPGRADE
+    REALLYUPGRADE=y
     REALLYUPGRADE=$(echo "$REALLYUPGRADE" | tr '[:upper:]' '[:lower:]')
     REALLYUPGRADE=${REALLYUPGRADE:-n}
 
@@ -296,11 +314,11 @@ if [ ! -z "${CONTAINER_ID}" ]; then
   SHMEXT_DEFAULT=$(echo $ENV_VARS | grep -oP 'SHMEXT=\K[^ ]+') || SHMEXT_DEFAULT=9001
   SHMINT_DEFAULT=$(echo $ENV_VARS | grep -oP 'SHMINT=\K[^ ]+') || SHMINT_DEFAULT=10001
   PREVIOUS_PASSWORD=$(echo $ENV_VARS | grep -oP 'DASHPASS=\K[^ ]+') || PREVIOUS_PASSWORD=none
-elif [ -f NODEHOME/.env ]; then
-  echo "Existing NODEHOME/.env file found. Reading settings from file."
+elif [ -f $NODEHOME/.env ]; then
+  echo "Existing $NODEHOME/.env file found. Reading settings from file."
 
   # Read the NODEHOME/.env file into a variable. Use default installer directory if it exists.
-  ENV_VARS=$(cat NODEHOME/.env)
+  ENV_VARS=$(cat $NODEHOME/.env)
 
   # UPDATE DEFAULT VALUES WITH SAVED VALUES
   DASHPORT_DEFAULT=$(echo $ENV_VARS | grep -oP 'DASHPORT=\K[^ ]+') || DASHPORT_DEFAULT=8080
@@ -319,12 +337,21 @@ cat << EOF
 
 EOF
 
-read -p "Do you want to run the web based Dashboard? (Y/n): " RUNDASHBOARD
+if [ "$ALLOW_DEFAULTS" != true ]; then
+  read -p "Do you want to run the web based Dashboard? (Y/n): " RUNDASHBOARD
+fi
+
 RUNDASHBOARD=$(echo "$RUNDASHBOARD" | tr '[:upper:]' '[:lower:]')
 RUNDASHBOARD=${RUNDASHBOARD:-y}
 
+if [ "$ALLOW_DEFAULTS" = true ]; then
+  PREVIOUS_PASSWORD=${OVERRIDE_PASSWORD:-"pass"}
+fi
+
 if [ "$PREVIOUS_PASSWORD" != "none" ]; then
-  read -p "Do you want to change the password for the Dashboard? (y/N): " CHANGEPASSWORD
+  if [ "$ALLOW_DEFAULTS" != true ]; then
+    read -p "Do you want to change the password for the Dashboard? (y/N): " CHANGEPASSWORD
+  fi
   CHANGEPASSWORD=$(echo "$CHANGEPASSWORD" | tr '[:upper:]' '[:lower:]')
   CHANGEPASSWORD=${CHANGEPASSWORD:-n}
 else
@@ -381,7 +408,9 @@ echo # New line after inputs.
 # echo "Password saved as:" $DASHPASS #DEBUG: TEST PASSWORD WAS RECORDED AFTER ENTERED.
 
 while :; do
-  read -p "Enter the port (1025-65536) to access the web based Dashboard (default $DASHPORT_DEFAULT): " DASHPORT
+  if [ "$ALLOW_DEFAULTS" != true ]; then
+    read -p "Enter the port (1025-65536) to access the web based Dashboard (default $DASHPORT_DEFAULT): " DASHPORT
+  fi
   DASHPORT=${DASHPORT:-$DASHPORT_DEFAULT}
   [[ $DASHPORT =~ ^[0-9]+$ ]] || { echo "Enter a valid port"; continue; }
   if ((DASHPORT >= 1025 && DASHPORT <= 65536)); then
@@ -393,7 +422,9 @@ while :; do
 done
 
 while :; do
-  read -p "If you wish to set an explicit external IP, enter an IPv4 address (default=$EXTERNALIP_DEFAULT): " EXTERNALIP
+  if [ "$ALLOW_DEFAULTS" != true ]; then
+    read -p "If you wish to set an explicit external IP, enter an IPv4 address (default=$EXTERNALIP_DEFAULT): " EXTERNALIP
+  fi
   EXTERNALIP=${EXTERNALIP:-$EXTERNALIP_DEFAULT}
 
   if [ "$EXTERNALIP" == "auto" ]; then
@@ -423,7 +454,9 @@ while :; do
 done
 
 while :; do
-  read -p "If you wish to set an explicit internal IP, enter an IPv4 address (default=$INTERNALIP_DEFAULT): " INTERNALIP
+  if [ "$ALLOW_DEFAULTS" != true ]; then
+    read -p "If you wish to set an explicit internal IP, enter an IPv4 address (default=$INTERNALIP_DEFAULT): " INTERNALIP
+  fi
   INTERNALIP=${INTERNALIP:-$INTERNALIP_DEFAULT}
 
   if [ "$INTERNALIP" == "auto" ]; then
@@ -454,7 +487,9 @@ done
 
 while :; do
   echo "To run a validator on the Sphinx network, you will need to open two ports in your firewall."
-  read -p "This allows p2p communication between nodes. Enter the first port (1025-65536) for p2p communication (default $SHMEXT_DEFAULT): " SHMEXT
+  if [ "$ALLOW_DEFAULTS" != true ]; then
+    read -p "This allows p2p communication between nodes. Enter the first port (1025-65536) for p2p communication (default $SHMEXT_DEFAULT): " SHMEXT
+  fi
   SHMEXT=${SHMEXT:-$SHMEXT_DEFAULT}
   [[ $SHMEXT =~ ^[0-9]+$ ]] || { echo "Enter a valid port"; continue; }
   if ((SHMEXT >= 1025 && SHMEXT <= 65536)); then
@@ -462,7 +497,9 @@ while :; do
   else
     echo "Port out of range, try again"
   fi
-  read -p "Enter the second port (1025-65536) for p2p communication (default $SHMINT_DEFAULT): " SHMINT
+  if [ "$ALLOW_DEFAULTS" != true ]; then
+    read -p "Enter the second port (1025-65536) for p2p communication (default $SHMINT_DEFAULT): " SHMINT
+  fi
   SHMINT=${SHMINT:-$SHMINT_DEFAULT}
   [[ $SHMINT =~ ^[0-9]+$ ]] || { echo "Enter a valid port"; continue; }
   if ((SHMINT >= 1025 && SHMINT <= 65536)); then
@@ -475,7 +512,7 @@ done
 
 #APPSEEDLIST="archiver-sphinx.shardeum.org"
 #APPMONITOR="monitor-sphinx.shardeum.org"
-APPMONITOR="104.200.21.5"
+APPMONITOR=${OVERRIDE_APPMONITOR:-'104.200.21.5'}
 
 cat <<EOF
 
@@ -494,7 +531,7 @@ if [ -d "$NODEHOME" ]; then
   fi
 fi
 
-git clone https://gitlab.com/shardeum/validator/dashboard.git ${NODEHOME} || { echo "Error: Permission denied. Exiting script."; exit 1; }
+git clone -b fix/operator-testing https://gitlab.com/shardeum/validator/dashboard.git ${NODEHOME} || { echo "Error: Permission denied. Exiting script."; exit 1; }
 cd ${NODEHOME}
 chmod a+x ./*.sh
 
@@ -513,7 +550,7 @@ touch ./.env
 cat >./.env <<EOL
 EXT_IP=${EXTERNALIP}
 INT_IP=${INTERNALIP}
-EXISTING_ARCHIVERS=[{"ip":"45.56.68.62","port":4000,"publicKey":"840e7b59a95d3c5f5044f4bc62ab9fa94bc107d391001141410983502e3cde63"},{"ip":"173.255.247.88","port":4000,"publicKey":"2db7c949632d26b87d7e7a5a4ad41c306f63ee972655121a37c5e4f52b00a542"},{"ip":"170.187.154.43","port":4000,"publicKey":"7af699dd711074eb96a8d1103e32b589e511613ebb0c6a789a9e8791b2b05f34"}]
+EXISTING_ARCHIVERS=${OVERRIDE_ARCHIVERS:-'[{"ip":"45.56.68.62","port":4000,"publicKey":"840e7b59a95d3c5f5044f4bc62ab9fa94bc107d391001141410983502e3cde63"},{"ip":"173.255.247.88","port":4000,"publicKey":"2db7c949632d26b87d7e7a5a4ad41c306f63ee972655121a37c5e4f52b00a542"},{"ip":"170.187.154.43","port":4000,"publicKey":"7af699dd711074eb96a8d1103e32b589e511613ebb0c6a789a9e8791b2b05f34"}]'}
 APP_MONITOR=${APPMONITOR}
 DASHPASS=${DASHPASS}
 DASHPORT=${DASHPORT}
@@ -538,11 +575,11 @@ cat <<EOF
 ##########################
 # 4. Building base image #
 ##########################
-
+${SERVER_VERSION}
 EOF
 
 cd ${NODEHOME} &&
-docker-safe build --no-cache -t local-dashboard -f Dockerfile --build-arg RUNDASHBOARD=${RUNDASHBOARD} .
+docker-safe build --no-cache -t local-dashboard -f Dockerfile --build-arg RUNDASHBOARD=${RUNDASHBOARD} --build-arg SERVER_VERSION=${SERVER_VERSION} .
 
 cat <<EOF
 
@@ -600,5 +637,3 @@ To use the Command Line Interface:
 	3. Run "operator-cli --help" for commands
 
 EOF
-
-

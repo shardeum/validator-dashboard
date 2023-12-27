@@ -8,6 +8,8 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+      args:
+        - SERVER_VERSION=${SERVER_VERSION:-latest}
     # volumes:
       # - './config.json:/usr/src/app/config.json:Z'
       # - './data/logs:/usr/src/app/logs:Z'
