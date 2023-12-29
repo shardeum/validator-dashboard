@@ -575,11 +575,11 @@ cat <<EOF
 ##########################
 # 4. Building base image #
 ##########################
-${SERVER_VERSION}
+
 EOF
 
 cd ${NODEHOME} &&
-docker-safe build --no-cache -t local-dashboard -f Dockerfile --build-arg RUNDASHBOARD=${RUNDASHBOARD} --build-arg SERVER_VERSION=${SERVER_VERSION} .
+docker-safe build --no-cache -t local-dashboard -f Dockerfile --build-arg RUNDASHBOARD=${RUNDASHBOARD} --build-arg SERVER_VERSION=${SERVER_VERSION:-latest} .
 
 cat <<EOF
 
