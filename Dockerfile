@@ -1,3 +1,4 @@
+# syntax=docker/dockerfile:1
 ARG SERVER_VERSION=latest
 FROM registry.gitlab.com/shardeum/server:${SERVER_VERSION}
 
