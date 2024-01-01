@@ -22,7 +22,9 @@
 	# Override monitor
 	export OVERRIDE_APPMONITOR=
 	# Server version, default latest
-	export SERVER_VERSOIN=
+	export SERVER_VERSOIN=latest
+	# Operator dashboard branch name, default main
+	export OPERATOR_DASHBOARD_BRANCH=main
 	```
 
 	_With `curl`_

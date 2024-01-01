@@ -531,7 +531,7 @@ if [ -d "$NODEHOME" ]; then
   fi
 fi
 
-git clone -b fix/operator-testing https://gitlab.com/shardeum/validator/dashboard.git ${NODEHOME} || { echo "Error: Permission denied. Exiting script."; exit 1; }
+git clone -b ${OPERATOR_DASHBOARD_BRANCH:-main} https://gitlab.com/shardeum/validator/dashboard.git ${NODEHOME} || { echo "Error: Permission denied. Exiting script."; exit 1; }
 cd ${NODEHOME}
 chmod a+x ./*.sh
 
