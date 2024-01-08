@@ -538,15 +538,19 @@ if [ $i -eq 1 ]; then
     exit 1
 fi
 
-while true; do
-    read -p "Choose a network by number (default $default_index): " choice
-    choice=${choice:-$default_index}
-    if [[ $choice =~ ^[0-9]+$ ]] && [ "$choice" -ge 1 ] && [ "$choice" -le ${#network_names[@]} ]; then
-        break
-    else
-        echo "Invalid selection. Please enter a number from the list or press Enter for default."
-    fi
-done
+if [ ${#network_names[@]} -eq 1 ]; then
+    choice=1
+else
+    while true; do
+        read -p "Choose a network by number (default $default_index): " choice
+        choice=${choice:-$default_index}
+        if [[ $choice =~ ^[0-9]+$ ]] && [ "$choice" -ge 1 ] && [ "$choice" -le ${#network_names[@]} ]; then
+            break
+        else
+            echo "Invalid selection. Please enter a number from the list or press Enter for default."
+        fi
+    done
+fi
 
 config_file=${network_files[$choice]}
 MONITORIP=$(jq -r '.monitor.ip' "$config_file")
@@ -555,7 +559,7 @@ DOCKER_IMAGE_TAG=$(jq -r '.dockerImage' "$config_file")
 
 # Display selected network and configuration
 echo 
-echo "You have selected: ${network_names[$choice]}"
+echo "Selected Network: ${network_names[$choice]}"
 echo "Configuration being used:"
 echo "Monitor: $MONITORIP"
 echo "Archivers: $EXISTING_ARCHIVERS"
