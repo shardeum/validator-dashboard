@@ -234,6 +234,7 @@ INTERNALIP_DEFAULT=auto
 SHMEXT_DEFAULT=9001
 SHMINT_DEFAULT=10001
 PREVIOUS_PASSWORD=none
+PREVIOUS_HASH_SALT=none
 
 #Check if container exists
 IMAGE_NAME="registry.gitlab.com/shardeum/server:latest"
@@ -296,6 +297,7 @@ if [ ! -z "${CONTAINER_ID}" ]; then
   SHMEXT_DEFAULT=$(echo $ENV_VARS | grep -oP 'SHMEXT=\K[^ ]+') || SHMEXT_DEFAULT=9001
   SHMINT_DEFAULT=$(echo $ENV_VARS | grep -oP 'SHMINT=\K[^ ]+') || SHMINT_DEFAULT=10001
   PREVIOUS_PASSWORD=$(echo $ENV_VARS | grep -oP 'DASHPASS=\K[^ ]+') || PREVIOUS_PASSWORD=none
+  PREVIOUS_HASH_SALT=$(echo $ENV_VARS | grep -oP 'HASH_SALT=\K[^ ]+') || PREVIOUS_HASH_SALT=none
 elif [ -f NODEHOME/.env ]; then
   echo "Existing NODEHOME/.env file found. Reading settings from file."
 
@@ -309,6 +311,19 @@ elif [ -f NODEHOME/.env ]; then
   SHMEXT_DEFAULT=$(echo $ENV_VARS | grep -oP 'SHMEXT=\K[^ ]+') || SHMEXT_DEFAULT=9001
   SHMINT_DEFAULT=$(echo $ENV_VARS | grep -oP 'SHMINT=\K[^ ]+') || SHMINT_DEFAULT=10001
   PREVIOUS_PASSWORD=$(echo $ENV_VARS | grep -oP 'DASHPASS=\K[^ ]+') || PREVIOUS_PASSWORD=none
+  PREVIOUS_HASH_SALT=$(echo $ENV_VARS | grep -oP 'HASH_SALT=\K[^ ]+') || PREVIOUS_HASH_SALT=none
+fi
+
+# Check if the env has a password salt. If not, generate one.
+if [ "$PREVIOUS_HASH_SALT" != "none" ]; then
+  HASH_SALT=$PREVIOUS_HASH_SALT
+else
+  HASH_SALT=$(openssl rand -hex 16)
+fi
+
+if [ -z "$HASH_SALT" ]; then
+  echo -e "\nFailed to generate a password salt"
+  exit 1
 fi
 
 cat << EOF
@@ -516,6 +531,7 @@ INT_IP=${INTERNALIP}
 EXISTING_ARCHIVERS=[{"ip":"45.56.68.62","port":4000,"publicKey":"840e7b59a95d3c5f5044f4bc62ab9fa94bc107d391001141410983502e3cde63"},{"ip":"173.255.247.88","port":4000,"publicKey":"2db7c949632d26b87d7e7a5a4ad41c306f63ee972655121a37c5e4f52b00a542"},{"ip":"170.187.154.43","port":4000,"publicKey":"7af699dd711074eb96a8d1103e32b589e511613ebb0c6a789a9e8791b2b05f34"}]
 APP_MONITOR=${APPMONITOR}
 DASHPASS=${DASHPASS}
+HASH_SALT=${HASH_SALT}
 DASHPORT=${DASHPORT}
 SERVERIP=${SERVERIP}
 LOCALLANIP=${LOCALLANIP}
