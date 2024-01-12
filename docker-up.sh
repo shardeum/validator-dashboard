@@ -16,4 +16,4 @@ docker-compose-safe() {
   fi
 }
 
-docker-compose-safe -f docker-compose.yml up -d
+docker-compose-safe -f docker-compose.yml up -d --force-recreate
