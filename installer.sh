@@ -191,7 +191,7 @@ get_external_ip() {
 }
 
 hash_password() {
-  local input="$1"
+  local input="$1$2"
   local hashed_password
 
   # Try using openssl
@@ -314,7 +314,7 @@ elif [ -f NODEHOME/.env ]; then
   PREVIOUS_HASH_SALT=$(echo $ENV_VARS | grep -oP 'HASH_SALT=\K[^ ]+') || PREVIOUS_HASH_SALT=none
 fi
 
-# Check if the env has a password salt. If not, generate one.
+# Check if the env has a hash salt. If not, generate one.
 if [ "$PREVIOUS_HASH_SALT" != "none" ]; then
   HASH_SALT=$PREVIOUS_HASH_SALT
 else
@@ -322,7 +322,7 @@ else
 fi
 
 if [ -z "$HASH_SALT" ]; then
-  echo -e "\nFailed to generate a password salt"
+  echo -e "\nFailed to generate a hash salt"
   exit 1
 fi
 
@@ -379,11 +379,11 @@ if [ "$CHANGEPASSWORD" == "y" ]; then
   done
 
   # Hash the password using the fallback mechanism
-  DASHPASS=$(hash_password "$DASHPASS")
+  DASHPASS=$(hash_password "$DASHPASS" "$HASH_SALT")
 else
   DASHPASS=$PREVIOUS_PASSWORD
   if ! [[ $DASHPASS =~ ^[0-9a-f]{64}$ ]]; then
-    DASHPASS=$(hash_password "$DASHPASS")
+    DASHPASS=$(hash_password "$DASHPASS" "$HASH_SALT")
   fi
 fi
 
