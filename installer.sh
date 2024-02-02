@@ -65,8 +65,17 @@ This is only temporary and will be discontinued as we get closer to mainnet.
 Thanks for running a node and helping to make Shardeum better.
 
 By running this installer, you agree to allow the Shardeum team to collect this data. (Y/n)?: " WARNING_AGREE
+
+# Echo user's response, or indicate if no response was provided
+if [ -z "$WARNING_AGREE" ]; then
+    echo "No response provided."
+    echo "Defaulting to y"
+    WARNING_AGREE=y
+else
+    echo "You entered: $WARNING_AGREE"
+fi
+
 WARNING_AGREE=$(echo "$WARNING_AGREE" | tr '[:upper:]' '[:lower:]')
-WARNING_AGREE=${WARNING_AGREE:-y}
 
 if [ $WARNING_AGREE != "y" ];
 then
