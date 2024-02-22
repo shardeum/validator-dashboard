@@ -1,4 +1,4 @@
-FROM registry.gitlab.com/shardeum/server:latest
+registry.gitlab.com/shardeum/server:atharva-emailNotif
 
 ARG RUNDASHBOARD=y
 ENV RUNDASHBOARD=${RUNDASHBOARD}
