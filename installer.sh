@@ -328,6 +328,9 @@ cat << EOF
 
 EOF
 
+read -p "Enter your email for operator notifications: " OPERATOREMAIL
+OPERATOREMAIL=${OPERATOREMAIL:-none}
+
 read -p "Do you want to run the web based Dashboard? (Y/n): " RUNDASHBOARD
 RUNDASHBOARD=$(echo "$RUNDASHBOARD" | tr '[:upper:]' '[:lower:]')
 RUNDASHBOARD=${RUNDASHBOARD:-y}
@@ -533,6 +536,9 @@ LOCALLANIP=${LOCALLANIP}
 SHMEXT=${SHMEXT}
 SHMINT=${SHMINT}
 RPC_SERVER_URL=${RPC_SERVER_URL}
+EMAIL_RECEIPIENT=${OPERATOREMAIL}
+EMAIL_HOST=smtp
+EMAIL_PORT=25
 EOL
 
 cat <<EOF
