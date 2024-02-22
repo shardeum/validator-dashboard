@@ -31,6 +31,12 @@ cd cli
 npm i --silent && npm link
 cd ..
 
+cd validator
+git checkout atharva/emailNotif
+npm i
+npm run compile
+cd ..
+
 git clone https://gitlab.com/shardeum/validator/gui.git
 
 echo "Install the GUI"
