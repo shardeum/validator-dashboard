@@ -19,3 +19,11 @@ services:
       - '10001-10010:10001-10010'
       - '8080:8080'
       - '3001:3001'
+
+  smtp:
+    image: catatnight/postfix
+    container_name: postfix-server
+    environment:
+      maildomain: shardeum.org
+    ports:
+      - "25:25"
