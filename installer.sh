@@ -484,7 +484,7 @@ done
 
 #APPSEEDLIST="archiver-sphinx.shardeum.org"
 #APPMONITOR="monitor-sphinx.shardeum.org"
-APPMONITOR="45.79.29.210"
+APPMONITOR="50.116.18.184"
 RPC_SERVER_URL="https://sphinx.shardeum.org"
 
 cat <<EOF
