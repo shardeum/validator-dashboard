@@ -157,6 +157,14 @@ docker-compose-safe() {
   fi
 }
 
+cleanup_docker() {
+    echo "Cleaning up old Docker resources..."
+    docker-safe image prune -af
+    docker-safe container prune -f
+    docker-safe volume prune -f
+    echo "Docker cleanup complete."
+}
+
 get_ip() {
   local ip
   if command -v ip >/dev/null; then
@@ -543,6 +551,7 @@ cat <<EOF
 EOF
 
 ./cleanup.sh
+cleanup_docker
 
 cat <<EOF
 
