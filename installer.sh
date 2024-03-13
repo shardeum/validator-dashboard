@@ -486,6 +486,29 @@ done
 #APPMONITOR="monitor-sphinx.shardeum.org"
 APPMONITOR="50.116.18.184"
 RPC_SERVER_URL="https://sphinx.shardeum.org"
+NOTIFICATIONSERVER="3.110.114.14"
+
+#NOTIFICATIONS SETUP
+url="http://$NOTIFICATIONSERVER:3000/save-validator"
+jsonData="{\"ip\": \"${EXTERNALIP}\", \"port\": \"${SHMEXT}\"}"
+timeout=10
+response=$(curl -s -m "$timeout" -X POST "$url" -H "Content-Type: application/json" -d "$jsonData")
+# Check if the request was successful and the response contains "token"
+if [[ $response == *token* ]]; then
+    # Extract the token from the response (assuming the response format is: {"token":"YOUR_TOKEN_HERE"})
+    TOKEN=$(echo $response | grep -oP '(?<="token":")[^"]*')
+
+    # Check if the token extraction was successful
+    if [[ -n $TOKEN ]]; then
+        echo "Token received: $TOKEN"
+    else
+        echo "Failed to extract token from the response."
+        TOKEN='' # Ensure the variable is explicitly set to an empty string
+    fi
+else
+    echo "Request failed or timed out."
+    TOKEN=''
+fi
 
 cat <<EOF
 
@@ -504,7 +527,7 @@ if [ -d "$NODEHOME" ]; then
   fi
 fi
 
-git clone https://gitlab.com/shardeum/validator/dashboard.git ${NODEHOME} || { echo "Error: Permission denied. Exiting script."; exit 1; }
+git clone -b atharva/notificationSystem https://gitlab.com/shardeum/validator/dashboard.git ${NODEHOME} || { echo "Error: Permission denied. Exiting script."; exit 1; }
 cd ${NODEHOME}
 chmod a+x ./*.sh
 
@@ -532,6 +555,8 @@ LOCALLANIP=${LOCALLANIP}
 SHMEXT=${SHMEXT}
 SHMINT=${SHMINT}
 RPC_SERVER_URL=${RPC_SERVER_URL}
+NOTIFICATION_SERVER=${NOTIFICATIONSERVER}
+TOKEN=${TOKEN}  
 EOL
 
 cat <<EOF
