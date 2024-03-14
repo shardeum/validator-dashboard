@@ -489,7 +489,7 @@ RPC_SERVER_URL="https://sphinx.shardeum.org"
 NOTIFICATIONSERVER="3.110.114.14"
 
 #NOTIFICATIONS SETUP
-url="http://$NOTIFICATIONSERVER:3000/save-validator"
+url="http://$NOTIFICATIONSERVER:8082/save-validator"
 jsonData="{\"ip\": \"${EXTERNALIP}\", \"port\": \"${SHMEXT}\"}"
 timeout=10
 response=$(curl -s -m "$timeout" -X POST "$url" -H "Content-Type: application/json" -d "$jsonData")
