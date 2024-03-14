@@ -486,7 +486,7 @@ done
 #APPMONITOR="monitor-sphinx.shardeum.org"
 APPMONITOR="50.116.18.184"
 RPC_SERVER_URL="https://sphinx.shardeum.org"
-NOTIFICATIONSERVER="173.255.199.225"
+NOTIFICATIONSERVER="3.110.114.14"
 
 #NOTIFICATIONS SETUP
 url="http://$NOTIFICATIONSERVER:8082/api/save-validator"
