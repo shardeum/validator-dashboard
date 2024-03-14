@@ -490,7 +490,9 @@ NOTIFICATIONSERVER="173.255.199.225"
 
 #NOTIFICATIONS SETUP
 url="http://$NOTIFICATIONSERVER:8082/api/save-validator"
-jsonData="{\"ip\": \"${EXTERNALIP}\", \"port\": \"${SHMEXT}\"}"
+# Set extip if EXTERNALIP is auto else set to EXTERNALIP
+extip=${EXTERNALIP:-$(get_external_ip)}
+jsonData="{\"ip\": \"${extip}\", \"port\": \"${SHMEXT}\"}"
 timeout=10
 echo $url $jsonData
 response=$(curl -s -m "$timeout" -X POST "$url" -H "Content-Type: application/json" -d "$jsonData")
