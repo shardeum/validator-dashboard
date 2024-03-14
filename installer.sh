@@ -490,8 +490,12 @@ NOTIFICATIONSERVER="3.110.114.14"
 
 #NOTIFICATIONS SETUP
 url="http://$NOTIFICATIONSERVER:8082/api/save-validator"
-# Set extip if EXTERNALIP is auto else set to EXTERNALIP
-extip=${EXTERNALIP:-$(get_external_ip)}
+# if EXTERNALIP is set to auto, run get_external_ip function to get the external IP, else use the provided IP
+if [ "$EXTERNALIP" == "auto" ]; then
+  extip=$(get_external_ip)
+else
+  extip=$EXTERNALIP
+fi
 jsonData="{\"ip\": \"${extip}\", \"port\": \"${SHMEXT}\"}"
 timeout=10
 echo $url $jsonData
