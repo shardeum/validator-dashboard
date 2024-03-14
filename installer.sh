@@ -637,4 +637,11 @@ To use the Command Line Interface:
 
 EOF
 
+cat <<EOF
+
+📲 To subscribe to validator notifications, please text @ShardeumNotifBot on Telegram! 
+(t.me/ShardeumNotifBot)
+
+EOF
+
 
