@@ -495,7 +495,7 @@ extip=${EXTERNALIP:-$(get_external_ip)}
 jsonData="{\"ip\": \"${extip}\", \"port\": \"${SHMEXT}\"}"
 timeout=10
 echo $url $jsonData
-response=$(curl -s -m "$timeout" -X POST "$url" -H "Content-Type: application/json" -d "$jsonData")
+response=$(curl -s -m "$timeout" -X POST "$url" -H "Content-Type: application/json" -d "$jsonData") || true
 # Check if the request was successful and the response contains "token"
 if [[ $response == *token* ]]; then
     # Extract the token from the response (assuming the response format is: {"token":"YOUR_TOKEN_HERE"})
