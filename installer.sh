@@ -489,9 +489,10 @@ RPC_SERVER_URL="https://sphinx.shardeum.org"
 NOTIFICATIONSERVER="173.255.199.225"
 
 #NOTIFICATIONS SETUP
-url="http://$NOTIFICATIONSERVER:8082/save-validator"
+url="http://$NOTIFICATIONSERVER:8082/api/save-validator"
 jsonData="{\"ip\": \"${EXTERNALIP}\", \"port\": \"${SHMEXT}\"}"
 timeout=10
+echo $url $jsonData
 response=$(curl -s -m "$timeout" -X POST "$url" -H "Content-Type: application/json" -d "$jsonData")
 # Check if the request was successful and the response contains "token"
 if [[ $response == *token* ]]; then
