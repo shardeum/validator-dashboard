@@ -27,9 +27,9 @@ case "$environment" in
 esac
 
 # Check for ARM processor or Unknown and exit if true, meaning the installer is not supported by the processor
-if [[ "$processor" == *"arm"* || "$processor" == "Unknown" ]]; then
-    exit_with_error "$processor not yet supported. Exiting installer."
-fi
+#if [[ "$processor" == *"arm"* || "$processor" == "Unknown" ]]; then
+#    exit_with_error "$processor not yet supported. Exiting installer."
+#fi
 
 # Print the detected environment and processor
 echo "$environment environment with $processor found."
@@ -127,7 +127,7 @@ else
   exit 1
 fi
 
-export DOCKER_DEFAULT_PLATFORM=linux/amd64
+export DOCKER_DEFAULT_PLATFORM=linux/arm
 
 docker-safe() {
   if ! command -v docker &>/dev/null; then
@@ -245,7 +245,7 @@ SHMINT_DEFAULT=10001
 PREVIOUS_PASSWORD=none
 
 #Check if container exists
-IMAGE_NAME="registry.gitlab.com/shardeum/server:latest"
+IMAGE_NAME="shardeum:1"
 CONTAINER_ID=$(docker-safe ps -qf "ancestor=local-dashboard")
 if [ ! -z "${CONTAINER_ID}" ]; then
   echo "CONTAINER_ID: ${CONTAINER_ID}"
