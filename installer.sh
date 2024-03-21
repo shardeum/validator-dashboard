@@ -484,7 +484,7 @@ done
 
 #APPSEEDLIST="archiver-sphinx.shardeum.org"
 #APPMONITOR="monitor-sphinx.shardeum.org"
-APPMONITOR="45.79.29.210"
+APPMONITOR="50.116.18.184"
 RPC_SERVER_URL="https://sphinx.shardeum.org"
 
 cat <<EOF
@@ -523,7 +523,7 @@ touch ./.env
 cat >./.env <<EOL
 EXT_IP=${EXTERNALIP}
 INT_IP=${INTERNALIP}
-EXISTING_ARCHIVERS=[{"ip":"172.105.153.160","port":4000,"publicKey":"7af699dd711074eb96a8d1103e32b589e511613ebb0c6a789a9e8791b2b05f34"},{"ip":"96.126.123.74","port":4000,"publicKey":"f8452228fa67578d6957392858fbbe3545ab98dbbc277e9b8b9f7a0f5177ca36"},{"ip":"45.79.109.231","port":4000,"publicKey":"2db7c949632d26b87d7e7a5a4ad41c306f63ee972655121a37c5e4f52b00a542"}]
+EXISTING_ARCHIVERS=[{"ip":"172.105.153.160","port":4000,"publicKey":"7af699dd711074eb96a8d1103e32b589e511613ebb0c6a789a9e8791b2b05f34"},{"ip":"45.79.109.231","port":4000,"publicKey":"2db7c949632d26b87d7e7a5a4ad41c306f63ee972655121a37c5e4f52b00a542"},{"ip":"172.233.176.64","port":4000,"publicKey":"f8452228fa67578d6957392858fbbe3545ab98dbbc277e9b8b9f7a0f5177ca36"}]
 APP_MONITOR=${APPMONITOR}
 DASHPASS=${DASHPASS}
 DASHPORT=${DASHPORT}
