@@ -1,4 +1,4 @@
-FROM registry.gitlab.com/shardeum/server:latest
+FROM registry.gitlab.com/shardeum/server:1.11.0rc0
 
 ARG RUNDASHBOARD=y
 ENV RUNDASHBOARD=${RUNDASHBOARD}
