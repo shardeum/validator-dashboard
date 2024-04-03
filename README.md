@@ -1,137 +1,166 @@
-# HOW TO Install and Run a Shardeum Validator node
+# How to Install and Run a Shardeum Validator Node
 
-1. Prerequisites: Ensure `docker` and `docker-compose` are installed on your machine and included in the path of your shell:
+This guide will walk you through the process of installing and running a Shardeum Validator Node on your system. Please follow the steps below carefully.
 
-	__docker__: https://docs.docker.com/engine/install/  
-	__docker-compose__: https://docs.docker.com/compose/install/
+## Prerequisites
 
-2. Make sure you have either 'curl' or 'wget' installed.
+Before you begin, ensure you have the following prerequisites installed on your system:
 
-    _Install 'curl' through your distro's package manager or get it from here: https://curl.se/download.html_
+1. Install Package Managers
 
-    _Or you can install 'wget' through your distro's package manager or get it from here: https://www.gnu.org/software/wget/_
+**For Linux:**
 
-3. Use one of the following commands to download and run the install script:
+```bash
+sudo apt-get install curl
+```
 
-	_If you have `curl`_
-	```
-	curl -O https://gitlab.com/shardeum/validator/dashboard/-/raw/main/installer.sh && chmod +x installer.sh && ./installer.sh
-	```
+**For MacOS:**
 
-	_If you have `wget`_
-	```
-	wget https://gitlab.com/shardeum/validator/dashboard/-/raw/main/installer.sh && chmod +x installer.sh && ./installer.sh
-	```
+```bash
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+```
 
-4. Follow the steps of the installer script to finish setup. Be sure to enter the correct Archiver and Monitor IP's of the network you want your validator to join. The IPs will be posted here: https://docs.shardeum.org/node/run/validator
+Add Homebrew to your `PATH`:
 
-5. If you are behind a router, ensure ports `9001` and `10001` are forwarded.  
-	https://www.noip.com/support/knowledgebase/general-port-forwarding-guide/
+```bash
+echo 'eval "$(/opt/homebrew/bin/brew shellenv)"'
+eval "$(/opt/homebrew/bin/brew shellenv)"
+```
 
-6. Once the installer finishes, start the validator through either the web-based dashboard or command line:
+2. Update Package Managers:
 
-	__Web Dashboard__
+For Linux:
 
-	1. Open a web browser and navigate to the web dashboard at `localhost:8080` or ServerIP:8080
-	2. Go to the `Maintenance` tab and click the `Start Node` button.
-	3. Go to the `Settings` tab and connect a wallet.
+```bash
+sudo apt update
+```
 
-	__Command Line__
+For MacOS:
 
-	1. Open a terminal and navigate to the Shardeum home directory (`$HOME/.shardeum`).
-	2. Enter the validator container with `./shell`.
-	3. In the container, run `operator-cli start` to start the validator node.
+```bash
+brew update
+```
 
-7. Add the network to wallet
-	1. Open the page https://docs.shardeum.org/network/endpoints
-	2. Use the setting for the Sphinx network.
+3. Install docker
 
-8. Get some coins from the faucet
-	* https://faucet-sphinx.shardeum.org/
-    * Go the the above faucet URL and enter the address from your wallet to get some coins.
+For Linux:
 
-7. Start your validator node
-	1. Open a web browser and navigate to the web dashboard at `localhost:8080` or ServerIP:8080 (or the port you picked)
-	2. Go to the `Maintenance` tab and click the `Start Node` button.
+Install docker with docker.io
 
-8. Stake coins
-    1. Go to the 'Maintenance' tab and connect the wallet and stake 10 coins.
+```bash
+sudo apt install docker.io
+```
 
-9. Check that your node status is 'Standby'.
+For MacOS:
+
+```bash
+brew install docker
+```
+
+> Verify Docker installation by running `docker --version` (should return version 20.10.12 or higher).
+
+4. Install docker-compose
+
+**For Linux:**
+
+```bash
+sudo curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+```
+
+Setup permissions for docker-compose using
+
+```bash
+sudo chmod +x /usr/local/bin/docker-compose
+```
+
+**For MacOS:**
+
+```bash
+brew install docker-compose
+```
+> Verify docker-compose installation by running `docker-compose --version` (should return version 1.29.2 or higher).
+
+## Download and Run Installation Script
+
+Choose one of the following methods to download and run the installation script:
+
+Using `curl`
+
+```bash
+curl -O https://gitlab.com/shardeum/validator/dashboard/-/raw/main/installer.sh && chmod +x installer.sh && ./installer.sh
+```
+
+Using `wget`
+
+```bash
+wget https://gitlab.com/shardeum/validator/dashboard/-/raw/main/installer.sh && chmod +x installer.sh && ./installer.sh
+```
+
+Follow the instructions provided by the installer script. Ensure you input the correct Archiver and Monitor IP addresses for the network you wish your validator to join.
+
+> If you are behind a router and you are using ports 9001 and 10001 for p2p communication, make sure ports 9001 and 10001, are forwarded (be careful doing this since it will modify your firewall). More info on router port forwarding: https://www.noip.com/support/knowledgebase/general-port-forwarding-guide/
+
+## Starting the Validator
+
+After the installation process completes, you can start the validator using either the web-based dashboard or the command line:
+
+Using Web Dashboard:
+
+- Open a web browser and navigate to the web dashboard at `localhost:8080` or ServerIP:8080
+- Go to the `Maintenance` tab and click the `Start Node` button.
+- Go to the `Settings` tab and connect a wallet.
+
+Using Command Line:
+
+- Open a terminal and navigate to the Shardeum home directory (`$HOME/.shardeum`).
+- Enter the validator container with `./shell`.
+- In the container, run `operator-cli start` to start the validator node.
+
+### Add the network to wallet
+
+Open the page https://docs.shardeum.org/network/endpoints and use the setting for the Sphinx network.
+
+### Get some coins from the faucet
+
+Visit the faucet URL: https://faucet-sphinx.shardeum.org/ and enter the address from your wallet to get some coins.
+
+### Start your validator node
+
+- Open a web browser and navigate to the web dashboard at `localhost:8080` or ServerIP:8080 (or the port you picked)
+- Go to the `Maintenance` tab and click the `Start Node` button.
+
+### Stake coins
+
+Go to the `Maintenance` tab and connect the wallet and stake 10 coins.
+
+Now check your node status, if your node status is on `Standby` and you have 10 SHM or more staked, your validator node is setup correctly. The network will automatically add your validator to be active in the network. The time to be added as an active validator will vary based on network load and validators in the network.
 
 ## Stack management
-### Start the stack:
-```
+
+### Start the stack
+
+```bash
 ./docker-up.sh
 ```
-#### This will be more effective when the info gathered in the install script is stored in persisent volume that is mounted by the container.
 
-### Stop the stack:
-```
+This will be more effective when the info gathered in the install script is stored in persisent volume that is mounted by the container.
+
+### Stop the stack
+
+```bash
 ./docker-down.sh
 ```
 
 ### Clean up
-```
+
+```bash
 ./clean.sh
 ```
-#### this will clean up the last (lastest) build. Just meant to save a few key strokes.
 
-# TODO
+This will clean up the last (lastest) build. Just meant to save a few key strokes.
 
-## User Experience
-Instructions for the user wanting to run a Shardeum validator node will be:
+Instructions for the user wanting to run a Shardeum validator node can be found here: <https://docs.shardeum.org/node/run/validator>
 
-### Initial Install
-* Setup Docker on the machine that will be running the Shardeum validator (link to more info)
-* From the command line run this command while logged in as the user that can run Docker commands
-	curl URL | sh
+## Contributing
 
-Answer the questions to specify where the validator will save files and what ports it uses
-
-If you chose to start the GUI you should have been given the URL to access it and set the password
-
-### Start the GUI Manually
-
-If you did not start the GUI or stopped it, you can start it again by following these steps
-
-``` 
-./shell.sh
-
-operator-cli gui start
-```
-
-If the above command fails with an error that you have not set the GUI access password, run
-
-```
-operator-cli gui password
-```
-
-### Start or Stop the Validator Manually
-```
-./shell.sh
-
-operator-cli status
-operator-cli start
-operator-cli stop
-```
-
-### Update the Validator software along with the Dashboard
-
-Be sure that your validator is not participating in the network
-```
-./shell.sh
-
-operator-cli status
-operator-cli disable
-```
-
-This will set the Validator to not join the network after it has exited
-
-Once it has exited, it will not try to rejoin since it has been disabled
-```
-./update.sh
-```
-This will stop the validator, remove the docker image, pull the current stable image and start the image; it will not need to ask questions about where to store the files and what ports to use since it will use the same settings as before
-
-## Need to add instructions for Staking
+Contributions are very welcome! Everyone interacting in our codebases, issue trackers, and any other form of communication, including chat rooms and mailing lists, is expected to follow our [code of conduct](./CODE_OF_CONDUCT.md) so we can all enjoy the effort we put into this project.
