@@ -117,7 +117,7 @@ NODEHOME="${input/#\~/$HOME}" # support ~ in path
 # Check all things that will be needed for this script to succeed like access to docker and docker-compose
 # If any check fails exit with a message on what the user needs to do to fix the problem
 command -v git >/dev/null 2>&1 || { echo >&2 "'git' is required but not installed."; exit 1; }
-command -v docker >/dev/null 2>&1 || { echo >&2 "'docker' is required but not installed. See https://gitlab.com/shardeum/validator/dashboard/-/tree/dashboard-gui-nextjs#how-to for details."; exit 1; }
+command -v docker >/dev/null 2>&1 || { echo >&2 "'docker' is required but not installed. See https://github.com/shardeum/validator-dashboard?tab=readme-ov-file#how-to-install-and-run-a-shardeum-validator-node for details."; exit 1; }
 if command -v docker-compose &>/dev/null; then
   echo "docker-compose is installed on this machine"
 elif docker --help | grep -q "compose"; then
@@ -244,9 +244,29 @@ SHMEXT_DEFAULT=9001
 SHMINT_DEFAULT=10001
 PREVIOUS_PASSWORD=none
 
-#Check if container exists
-IMAGE_NAME="registry.gitlab.com/shardeum/server:latest"
-CONTAINER_ID=$(docker-safe ps -qf "ancestor=local-dashboard")
+
+GITLAB_IMAGE_NAME="registry.gitlab.com/shardeum/server:latest"
+GITHUB_IMAGE_NAME="ghcr.io/shardeum/server:latest"
+
+# Check if container exists with GitLab image
+GITLAB_CONTAINER_ID=$(docker-safe ps -qf "ancestor=$GITLAB_IMAGE_NAME")
+
+# Check if container exists with GitHub image
+GITHUB_CONTAINER_ID=$(docker-safe ps -qf "ancestor=$GITHUB_IMAGE_NAME")
+
+# Determine action based on found container
+if [ ! -z "$GITLAB_CONTAINER_ID" ]; then
+  echo "Existing GitLab container found. ID: $GITLAB_CONTAINER_ID"
+  # Perform actions for GitLab container, e.g., copy settings, upgrade
+  CONTAINER_ID=$GITLAB_CONTAINER_ID
+elif [ ! -z "$GITHUB_CONTAINER_ID" ]; then
+  echo "Existing GitHub container found. ID: $GITHUB_CONTAINER_ID"
+  # Perform actions for GitHub container, e.g., copy settings, upgrade
+  CONTAINER_ID=$GITHUB_CONTAINER_ID
+else
+  echo "No existing containers found. Proceeding with fresh installation."
+fi
+
 if [ ! -z "${CONTAINER_ID}" ]; then
   echo "CONTAINER_ID: ${CONTAINER_ID}"
   echo "Existing container found. Reading settings from container."
@@ -504,7 +524,7 @@ if [ -d "$NODEHOME" ]; then
   fi
 fi
 
-git clone https://github.com/shardeum/validator-dashboard.git ${NODEHOME} || { echo "Error: Permission denied. Exiting script."; exit 1; }
+git clone -b sys-129-point-dashboard-installer-to-github-repos https://github.com/shardeum/validator-dashboard.git ${NODEHOME} || { echo "Error: Permission denied. Exiting script."; exit 1; }
 cd ${NODEHOME}
 chmod a+x ./*.sh
 
