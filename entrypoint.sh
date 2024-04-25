@@ -24,14 +24,14 @@ echo "/home/node/.pm2/logs/*.log /home/node/app/cli/build/logs/*.log {
 
 # Pull latest versions of the CLI and GUI
 
-git clone -b sys-129-point-dashboard-installer-to-github-repos https://github.com/shardeum/validator-cli.git cli
+git clone https://github.com/shardeum/validator-cli.git cli
 
 echo "Install the CLI"
 cd cli
 npm i --silent && npm link
 cd ..
 
-git clone -b sys-129-dashboard-github-migration https://github.com/shardeum/validator-gui.git gui
+git clone https://github.com/shardeum/validator-gui.git gui
 
 echo "Install the GUI"
 cd gui
