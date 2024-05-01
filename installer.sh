@@ -504,8 +504,8 @@ done
 
 #APPSEEDLIST="archiver-sphinx.shardeum.org"
 #APPMONITOR="monitor-sphinx.shardeum.org"
-APPMONITOR="50.116.18.184"
-RPC_SERVER_URL="https://sphinx.shardeum.org"
+APPMONITOR="34.68.4.202"
+RPC_SERVER_URL="http://34.71.92.251:8000"
 
 cat <<EOF
 
@@ -524,7 +524,7 @@ if [ -d "$NODEHOME" ]; then
   fi
 fi
 
-git clone https://github.com/shardeum/validator-dashboard.git ${NODEHOME} || { echo "Error: Permission denied. Exiting script."; exit 1; }
+git clone -b dev-settings-1.11 https://github.com/shardeum/validator-dashboard.git ${NODEHOME} || { echo "Error: Permission denied. Exiting script."; exit 1; }
 cd ${NODEHOME}
 chmod a+x ./*.sh
 
@@ -543,7 +543,7 @@ touch ./.env
 cat >./.env <<EOL
 EXT_IP=${EXTERNALIP}
 INT_IP=${INTERNALIP}
-EXISTING_ARCHIVERS=[{"ip":"172.105.153.160","port":4000,"publicKey":"7af699dd711074eb96a8d1103e32b589e511613ebb0c6a789a9e8791b2b05f34"},{"ip":"45.79.109.231","port":4000,"publicKey":"2db7c949632d26b87d7e7a5a4ad41c306f63ee972655121a37c5e4f52b00a542"},{"ip":"172.233.176.64","port":4000,"publicKey":"f8452228fa67578d6957392858fbbe3545ab98dbbc277e9b8b9f7a0f5177ca36"}]
+EXISTING_ARCHIVERS=EXISTING_ARCHIVERS=[{"ip":"104.198.10.186","port":4000,"publicKey":"840e7b59a95d3c5f5044f4bc62ab9fa94bc107d391001141410983502e3cde63"},{"ip":"198.58.115.4","port":4000,"publicKey":"7af699dd711074eb96a8d1103e32b589e511613ebb0c6a789a9e8791b2b05f34"},{"ip":"52.59.212.239","port":4000,"publicKey":"2db7c949632d26b87d7e7a5a4ad41c306f63ee972655121a37c5e4f52b00a542"},{"ip":"34.213.181.190","port":4000,"publicKey":"f1ea930045cd2574bfc4b1fb5665d5f02edb55e101991c394d34c9e78f50d11e"},{"ip":"35.229.156.94","port":4000,"publicKey":"64914efb15b60657808eb355bf92b6f8c54d8f7a676dd75ca0e9770d7616fe74"}]
 APP_MONITOR=${APPMONITOR}
 DASHPASS=${DASHPASS}
 DASHPORT=${DASHPORT}
