@@ -526,7 +526,13 @@ fi
 
 git clone https://github.com/shardeum/validator-dashboard.git ${NODEHOME} || { echo "Error: Permission denied. Exiting script."; exit 1; }
 cd ${NODEHOME}
+sed -i '' -e '/^cd gui$/{
+r /dev/stdin
+d
+}' entrypoint.sh <<'EOF'
+cd gui
 git checkout new-design
+EOF
 chmod a+x ./*.sh
 
 cat <<EOF
