@@ -35,6 +35,7 @@ git clone https://github.com/shardeum/validator-gui.git gui
 
 echo "Install the GUI"
 cd gui
+git checkout new-design
 npm i --silent
 npm run build
 #openssl req -x509 -nodes -days 99999 -newkey rsa:2048 -keyout ./selfsigned.key -out selfsigned.crt -subj "/C=US/ST=Texas/L=Dallas/O=Shardeum/OU=Shardeum/CN=shardeum.org"
