@@ -28,6 +28,7 @@ git clone https://github.com/shardeum/validator-cli.git cli
 
 echo "Install the CLI"
 cd cli
+git reset --hard afcd4cba2df87025673c2d942a5273aceac4e540
 npm i --silent && npm link
 cd ..
 
