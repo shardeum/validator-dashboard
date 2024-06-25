@@ -3,7 +3,7 @@ version: "3.4"
 services:
   shardeum-dashboard:
     container_name: shardeum-dashboard
-    # network_mode: 'host'
+    network_mode: "host"
     image: local-dashboard
     build:
       context: .
