@@ -240,8 +240,8 @@ CURRENT_DIRECTORY=$(pwd)
 DASHPORT_DEFAULT=8080
 EXTERNALIP_DEFAULT=auto
 INTERNALIP_DEFAULT=auto
-SHMEXT_DEFAULT=9001
-SHMINT_DEFAULT=10001
+SHMEXT_DEFAULT=9011
+SHMINT_DEFAULT=10011
 PREVIOUS_PASSWORD=none
 
 
@@ -483,7 +483,7 @@ done
 
 while :; do
   echo "To run a validator on the Sphinx network, you will need to open two ports in your firewall."
-  read -p "This allows p2p communication between nodes. Enter the first port (1025-65536) for p2p communication (default $SHMEXT_DEFAULT): " SHMEXT
+  read -p "This allows p2p communication between nodes. Enter the first port (1025-65536) for p2p communication. (TESTING ONLY: Please avoid using ports 9001 through 9010) (default $SHMEXT_DEFAULT): " SHMEXT
   SHMEXT=${SHMEXT:-$SHMEXT_DEFAULT}
   [[ $SHMEXT =~ ^[0-9]+$ ]] || { echo "Enter a valid port"; continue; }
   if ((SHMEXT >= 1025 && SHMEXT <= 65536)); then
@@ -491,7 +491,7 @@ while :; do
   else
     echo "Port out of range, try again"
   fi
-  read -p "Enter the second port (1025-65536) for p2p communication (default $SHMINT_DEFAULT): " SHMINT
+  read -p "Enter the second port (1025-65536) for p2p communication (TESTING ONLY: Please avoid using ports 10001 through 10010) (default $SHMINT_DEFAULT): " SHMINT
   SHMINT=${SHMINT:-$SHMINT_DEFAULT}
   [[ $SHMINT =~ ^[0-9]+$ ]] || { echo "Enter a valid port"; continue; }
   if ((SHMINT >= 1025 && SHMINT <= 65536)); then
@@ -504,7 +504,7 @@ done
 
 #APPSEEDLIST="archiver-sphinx.shardeum.org"
 #APPMONITOR="monitor-sphinx.shardeum.org"
-APPMONITOR="50.116.18.184"
+APPMONITOR="127.0.0.1"
 RPC_SERVER_URL="https://sphinx.shardeum.org"
 
 cat <<EOF
@@ -550,7 +550,7 @@ touch ./.env
 cat >./.env <<EOL
 EXT_IP=${EXTERNALIP}
 INT_IP=${INTERNALIP}
-EXISTING_ARCHIVERS=[{"ip":"172.105.153.160","port":4000,"publicKey":"7af699dd711074eb96a8d1103e32b589e511613ebb0c6a789a9e8791b2b05f34"},{"ip":"45.79.109.231","port":4000,"publicKey":"2db7c949632d26b87d7e7a5a4ad41c306f63ee972655121a37c5e4f52b00a542"}]
+EXISTING_ARCHIVERS=[{"ip":"127.0.0.1","port":4000,"publicKey":"758b1c119412298802cd28dbfa394cdfeecc4074492d60844cc192d632d84de3"}]
 APP_MONITOR=${APPMONITOR}
 DASHPASS=${DASHPASS}
 DASHPORT=${DASHPORT}
