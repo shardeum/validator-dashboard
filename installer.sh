@@ -524,7 +524,7 @@ if [ -d "$NODEHOME" ]; then
   fi
 fi
 
-git clone https://github.com/shardeum/validator-dashboard.git ${NODEHOME} || { echo "Error: Permission denied. Exiting script."; exit 1; }
+git clone -b qa-103-new-gui https://github.com/shardeum/validator-dashboard.git ${NODEHOME} || { echo "Error: Permission denied. Exiting script."; exit 1; }
 cd ${NODEHOME}
 chmod a+x ./*.sh
 
