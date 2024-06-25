@@ -1,4 +1,4 @@
-version: '3.4'
+version: "3.4"
 
 services:
   shardeum-dashboard:
@@ -9,12 +9,14 @@ services:
       context: .
       dockerfile: Dockerfile
     # volumes:
-      # - './config.json:/usr/src/app/config.json:Z'
-      # - './data/logs:/usr/src/app/logs:Z'
-      # - './data/db:/usr/src/app/db:Z'
+    # - './config.json:/usr/src/app/config.json:Z'
+    # - './data/logs:/usr/src/app/logs:Z'
+    # - './data/db:/usr/src/app/db:Z'
     # restart: 'always'
     env_file: .env
     ports:
-      - '9001:9001'
-      - '10001:10001'
-      - '8080:8080'
+      - "9001:9001"
+      - "10001:10001"
+      - "8080:8080"
+      - "4000:4000"
+      - "3000:3000"
