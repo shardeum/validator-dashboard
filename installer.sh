@@ -505,7 +505,7 @@ done
 #APPSEEDLIST="archiver-sphinx.shardeum.org"
 #APPMONITOR="monitor-sphinx.shardeum.org"
 APPMONITOR="127.0.0.1"
-RPC_SERVER_URL="https://sphinx.shardeum.org"
+RPC_SERVER_URL="127.0.0.1:8080"
 
 cat <<EOF
 
@@ -524,15 +524,10 @@ if [ -d "$NODEHOME" ]; then
   fi
 fi
 
-git clone https://github.com/shardeum/validator-dashboard.git ${NODEHOME} || { echo "Error: Permission denied. Exiting script."; exit 1; }
+# git clone -b new-design https://github.com/shardeum/validator-dashboard.git ${NODEHOME} || { echo "Error: Permission denied. Exiting script."; exit 1; }
+# copy local repo into nodehome
+cp -r ${CURRENT_DIRECTORY} ${NODEHOME}
 cd ${NODEHOME}
-sed -i '' -e '/^cd gui$/{
-r /dev/stdin
-d
-}' entrypoint.sh <<'EOF'
-cd gui
-git checkout new-design
-EOF
 chmod a+x ./*.sh
 
 cat <<EOF
@@ -591,15 +586,15 @@ cat <<EOF
 EOF
 
 cd ${NODEHOME}
-if [[ "$(uname)" == "Darwin" ]]; then
-  sed "s/- '8080:8080'/- '$DASHPORT:$DASHPORT'/" docker-compose.tmpl > docker-compose.yml
-  sed -i '' "s/- '9001-9010:9001-9010'/- '$SHMEXT:$SHMEXT'/" docker-compose.yml
-  sed -i '' "s/- '10001-10010:10001-10010'/- '$SHMINT:$SHMINT'/" docker-compose.yml
-else
-  sed "s/- '8080:8080'/- '$DASHPORT:$DASHPORT'/" docker-compose.tmpl > docker-compose.yml
-  sed -i "s/- '9001-9010:9001-9010'/- '$SHMEXT:$SHMEXT'/" docker-compose.yml
-  sed -i "s/- '10001-10010:10001-10010'/- '$SHMINT:$SHMINT'/" docker-compose.yml
-fi
+# if [[ "$(uname)" == "Darwin" ]]; then
+#   sed "s/- '8080:8080'/- '$DASHPORT:$DASHPORT'/" docker-compose.tmpl > docker-compose.yml
+#   sed -i '' "s/- '9001-9010:9001-9010'/- '$SHMEXT:$SHMEXT'/" docker-compose.yml
+#   sed -i '' "s/- '10001-10010:10001-10010'/- '$SHMINT:$SHMINT'/" docker-compose.yml
+# else
+#   sed "s/- '8080:8080'/- '$DASHPORT:$DASHPORT'/" docker-compose.tmpl > docker-compose.yml
+#   sed -i "s/- '9001-9010:9001-9010'/- '$SHMEXT:$SHMEXT'/" docker-compose.yml
+#   sed -i "s/- '10001-10010:10001-10010'/- '$SHMINT:$SHMINT'/" docker-compose.yml
+# fi
 ./docker-up.sh
 
 echo "Starting image. This could take a while..."
