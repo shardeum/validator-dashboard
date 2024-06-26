@@ -504,8 +504,8 @@ done
 
 #APPSEEDLIST="archiver-sphinx.shardeum.org"
 #APPMONITOR="monitor-sphinx.shardeum.org"
-APPMONITOR="50.116.18.184"
-RPC_SERVER_URL="https://sphinx.shardeum.org"
+APPMONITOR="34.68.4.202"
+RPC_SERVER_URL="http://34.71.92.251:8000"
 
 cat <<EOF
 
@@ -550,7 +550,7 @@ touch ./.env
 cat >./.env <<EOL
 EXT_IP=${EXTERNALIP}
 INT_IP=${INTERNALIP}
-EXISTING_ARCHIVERS=[{"ip":"172.105.153.160","port":4000,"publicKey":"7af699dd711074eb96a8d1103e32b589e511613ebb0c6a789a9e8791b2b05f34"},{"ip":"45.79.109.231","port":4000,"publicKey":"2db7c949632d26b87d7e7a5a4ad41c306f63ee972655121a37c5e4f52b00a542"}]
+EXISTING_ARCHIVERS=[{"ip":"198.58.115.4","port":4000,"publicKey":"7af699dd711074eb96a8d1103e32b589e511613ebb0c6a789a9e8791b2b05f34"},{"ip":"3.79.99.240","port":4000,"publicKey":"840e7b59a95d3c5f5044f4bc62ab9fa94bc107d391001141410983502e3cde63"}]
 APP_MONITOR=${APPMONITOR}
 DASHPASS=${DASHPASS}
 DASHPORT=${DASHPORT}
