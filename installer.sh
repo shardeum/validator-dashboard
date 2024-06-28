@@ -505,7 +505,7 @@ done
 #APPSEEDLIST="archiver-sphinx.shardeum.org"
 #APPMONITOR="monitor-sphinx.shardeum.org"
 APPMONITOR="45.33.18.134"
-RPC_SERVER_URL="http://45.33.18.134:8080/"
+RPC_SERVER_URL="https://5d7b-2600-3c00-00-f03c-94ff-fe7d-2c7f.ngrok-free.app"
 
 cat <<EOF
 
