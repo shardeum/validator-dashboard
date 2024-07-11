@@ -3,8 +3,9 @@ FROM ghcr.io/shardeum/server:beta1.12.0rc0-poqo-debug-4b4ca35-128
 ARG RUNDASHBOARD=y
 ENV RUNDASHBOARD=${RUNDASHBOARD}
 
-RUN apt-get install -y sudo
-RUN apt-get install -y logrotate
+RUN apt-get update && \
+    apt-get install -y sudo logrotate && \
+    rm -rf /var/lib/apt/lists/*
 
 # Create node user
 RUN usermod -aG sudo node && \
