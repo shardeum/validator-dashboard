@@ -1,4 +1,4 @@
-FROM ghcr.io/shardeum/server:latest
+FROM ghcr.io/shardeum/server:beta1.12.0rc0-poqo-debug-4b4ca35-128
 
 ARG RUNDASHBOARD=y
 ENV RUNDASHBOARD=${RUNDASHBOARD}
