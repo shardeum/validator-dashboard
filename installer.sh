@@ -504,8 +504,8 @@ done
 
 #APPSEEDLIST="archiver-sphinx.shardeum.org"
 #APPMONITOR="monitor-sphinx.shardeum.org"
-APPMONITOR="45.33.18.134"
-RPC_SERVER_URL="https://5d7b-2600-3c00-00-f03c-94ff-fe7d-2c7f.ngrok-free.app"
+APPMONITOR="34.82.12.146"
+RPC_SERVER_URL="https://airnet.shardeum.org"
 
 cat <<EOF
 
@@ -543,7 +543,7 @@ touch ./.env
 cat >./.env <<EOL
 EXT_IP=${EXTERNALIP}
 INT_IP=${INTERNALIP}
-EXISTING_ARCHIVERS=[{"ip":"45.33.18.134","port":4000,"publicKey":"758b1c119412298802cd28dbfa394cdfeecc4074492d60844cc192d632d84de3"}]
+EXISTING_ARCHIVERS=[{"ip":"34.82.12.146","port":4000,"publicKey":"840e7b59a95d3c5f5044f4bc62ab9fa94bc107d391001141410983502e3cde63"}]
 APP_MONITOR=${APPMONITOR}
 DASHPASS=${DASHPASS}
 DASHPORT=${DASHPORT}
