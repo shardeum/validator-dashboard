@@ -3,7 +3,7 @@ FROM ghcr.io/shardeum/server:gui-test
 ARG RUNDASHBOARD=y
 ENV RUNDASHBOARD=${RUNDASHBOARD}
 
-RUN sudo apt-get update
+RUN apt-get update
 
 RUN apt-get install -y sudo
 RUN apt-get install -y logrotate
