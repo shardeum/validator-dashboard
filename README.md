@@ -78,6 +78,7 @@ sudo chmod +x /usr/local/bin/docker-compose
 ```bash
 brew install docker-compose
 ```
+
 > Verify docker-compose installation by running `docker-compose --version` (should return version 1.29.2 or higher).
 
 ## Download and Run Installation Script
@@ -87,7 +88,7 @@ Choose one of the following methods to download and run the installation script:
 Using `curl`
 
 ```bash
-curl -O https://raw.githubusercontent.com/shardeum/validator-dashboard/airnet-newgui/installer.sh && chmod +x installer.sh && ./installer.sh
+curl -O https://raw.githubusercontent.com/shardeum/validator-dashboard/airnet-oldgui/installer.sh && chmod +x installer.sh && ./installer.sh
 ```
 
 Using `wget`

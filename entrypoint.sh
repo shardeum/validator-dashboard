@@ -31,7 +31,7 @@ cd cli
 npm i --silent && npm link
 cd ..
 
-git clone -b new-design https://github.com/shardeum/validator-gui.git gui
+git clone -b dev https://github.com/shardeum/validator-gui.git gui
 
 echo "Install the GUI"
 cd gui
