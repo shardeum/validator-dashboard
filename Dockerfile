@@ -1,4 +1,4 @@
-FROM ghcr.io/shardeum/server:beta1.12.1rc1-84e736d
+FROM ghcr.io/shardeum/server:1.12.1rc2
 
 ARG RUNDASHBOARD=y
 ENV RUNDASHBOARD=${RUNDASHBOARD}
