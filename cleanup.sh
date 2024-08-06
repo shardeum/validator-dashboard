@@ -22,5 +22,6 @@ docker-safe rmi -f test-dashboard
 docker-safe rmi -f local-dashboard
 docker-safe rmi -f registry.gitlab.com/shardeum/server
 docker-safe rmi -f ghcr.io/shardeum/server
+docker-safe network rm shardeum_default
 
 echo "done."
