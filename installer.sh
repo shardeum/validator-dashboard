@@ -552,9 +552,12 @@ LOCALLANIP=${LOCALLANIP}
 SHMEXT=${SHMEXT}
 SHMINT=${SHMINT}
 RPC_SERVER_URL=${RPC_SERVER_URL}
+NEXT_PUBLIC_RPC_URL=${RPC_SERVER_URL}
+NEXT_EXPLORER_URL=https://explorer-atomium.shardeum.org/
 minNodes=640
 baselineNodes=640
 nodesPerConsensusGroup=128
+
 EOL
 
 cat <<EOF
