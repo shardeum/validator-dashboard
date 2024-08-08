@@ -78,6 +78,7 @@ sudo chmod +x /usr/local/bin/docker-compose
 ```bash
 brew install docker-compose
 ```
+
 > Verify docker-compose installation by running `docker-compose --version` (should return version 1.29.2 or higher).
 
 ## Download and Run Installation Script
@@ -87,13 +88,13 @@ Choose one of the following methods to download and run the installation script:
 Using `curl`
 
 ```bash
-curl -O https://raw.githubusercontent.com/shardeum/validator-dashboard/itn-pahse2/installer.sh && chmod +x installer.sh && ./installer.sh
+curl -O https://raw.githubusercontent.com/shardeum/validator-dashboard/main/installer.sh && chmod +x installer.sh && ./installer.sh
 ```
 
 Using `wget`
 
 ```bash
-wget https://raw.githubusercontent.com/shardeum/validator-dashboard/itn-pahse2/installer.sh && chmod +x installer.sh && ./installer.sh
+wget https://raw.githubusercontent.com/shardeum/validator-dashboard/main/installer.sh && chmod +x installer.sh && ./installer.sh
 ```
 
 Follow the instructions provided by the installer script. Ensure you input the correct Archiver and Monitor IP addresses for the network you wish your validator to join.
