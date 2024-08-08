@@ -78,6 +78,7 @@ sudo chmod +x /usr/local/bin/docker-compose
 ```bash
 brew install docker-compose
 ```
+
 > Verify docker-compose installation by running `docker-compose --version` (should return version 1.29.2 or higher).
 
 ## Download and Run Installation Script
