@@ -89,18 +89,18 @@ read -p "What base directory should the node use (default ~/.shardeum): " input
 input=${input:-~/.shardeum}
 
 # Check if input starts with "/" or "~/", if not, add "~/"
-if [[ ! $input =~ ^(/|~\/) ]]; then
+if [[ ! $input =~ ^(/|~/) ]]; then
   input="~/$input"
 fi
 
 # Reprompt if not alphanumeric characters, tilde, forward slash, underscore, period, hyphen, or contains spaces
-while [[ ! $input =~ ^[[:alnum:]_.~/-]+$ || $input =~ .*[\ ].* ]]; do
+while [[ ! $input =~ ^[[:alnum:]_.~/-]+$ || $input =~ .*[ ].* ]]; do
   read -p "Error: The directory name contains invalid characters or spaces.
 Allowed characters are alphanumeric characters, tilde, forward slash, underscore, period, and hyphen.
 Please enter a valid base directory (default ~/.shardeum): " input
 
   # Check if input starts with "/" or "~/", if not, add "~/"
-  if [[ ! $input =~ ^(/|~\/) ]]; then
+  if [[ ! $input =~ ^(/|~/) ]]; then
     input="~/$input"
   fi
 done
@@ -112,7 +112,7 @@ input=${input// /}
 echo "The base directory is set to: $input"
 
 # Replace leading tilde (~) with the actual home directory path
-NODEHOME="${input/#\~/$HOME}" # support ~ in path
+NODEHOME="${input/#~/$HOME}" # support ~ in path
 
 # Check all things that will be needed for this script to succeed like access to docker and docker-compose
 # If any check fails exit with a message on what the user needs to do to fix the problem
@@ -177,7 +177,7 @@ get_external_ip() {
   external_ip=''
   external_ip=$(curl -s https://api.ipify.org)
   if [[ -z "$external_ip" ]]; then
-    external_ip=$(curl -s http://checkip.dyndns.org | grep -oE "\b([0-9]{1,3}\.){3}[0-9]{1,3}\b")
+    external_ip=$(curl -s http://checkip.dyndns.org | grep -oE "b([0-9]{1,3}.){3}[0-9]{1,3}b")
   fi
   if [[ -z "$external_ip" ]]; then
     external_ip=$(curl -s http://ipecho.net/plain)
@@ -319,12 +319,12 @@ if [ ! -z "${CONTAINER_ID}" ]; then
   docker-safe rm "${CONTAINER_ID}"
 
   # UPDATE DEFAULT VALUES WITH SAVED VALUES
-  DASHPORT_DEFAULT=$(echo $ENV_VARS | grep -oP 'DASHPORT=\K[^ ]+') || DASHPORT_DEFAULT=8080
-  EXTERNALIP_DEFAULT=$(echo $ENV_VARS | grep -oP 'EXT_IP=\K[^ ]+') || EXTERNALIP_DEFAULT=auto
-  INTERNALIP_DEFAULT=$(echo $ENV_VARS | grep -oP 'INT_IP=\K[^ ]+') || INTERNALIP_DEFAULT=auto
-  SHMEXT_DEFAULT=$(echo $ENV_VARS | grep -oP 'SHMEXT=\K[^ ]+') || SHMEXT_DEFAULT=9001
-  SHMINT_DEFAULT=$(echo $ENV_VARS | grep -oP 'SHMINT=\K[^ ]+') || SHMINT_DEFAULT=10001
-  PREVIOUS_PASSWORD=$(echo $ENV_VARS | grep -oP 'DASHPASS=\K[^ ]+') || PREVIOUS_PASSWORD=none
+  DASHPORT_DEFAULT=$(echo $ENV_VARS | grep -oP 'DASHPORT=K[^ ]+') || DASHPORT_DEFAULT=8080
+  EXTERNALIP_DEFAULT=$(echo $ENV_VARS | grep -oP 'EXT_IP=K[^ ]+') || EXTERNALIP_DEFAULT=auto
+  INTERNALIP_DEFAULT=$(echo $ENV_VARS | grep -oP 'INT_IP=K[^ ]+') || INTERNALIP_DEFAULT=auto
+  SHMEXT_DEFAULT=$(echo $ENV_VARS | grep -oP 'SHMEXT=K[^ ]+') || SHMEXT_DEFAULT=9001
+  SHMINT_DEFAULT=$(echo $ENV_VARS | grep -oP 'SHMINT=K[^ ]+') || SHMINT_DEFAULT=10001
+  PREVIOUS_PASSWORD=$(echo $ENV_VARS | grep -oP 'DASHPASS=K[^ ]+') || PREVIOUS_PASSWORD=none
 elif [ -f NODEHOME/.env ]; then
   echo "Existing NODEHOME/.env file found. Reading settings from file."
 
@@ -332,12 +332,12 @@ elif [ -f NODEHOME/.env ]; then
   ENV_VARS=$(cat NODEHOME/.env)
 
   # UPDATE DEFAULT VALUES WITH SAVED VALUES
-  DASHPORT_DEFAULT=$(echo $ENV_VARS | grep -oP 'DASHPORT=\K[^ ]+') || DASHPORT_DEFAULT=8080
-  EXTERNALIP_DEFAULT=$(echo $ENV_VARS | grep -oP 'EXT_IP=\K[^ ]+') || EXTERNALIP_DEFAULT=auto
-  INTERNALIP_DEFAULT=$(echo $ENV_VARS | grep -oP 'INT_IP=\K[^ ]+') || INTERNALIP_DEFAULT=auto
-  SHMEXT_DEFAULT=$(echo $ENV_VARS | grep -oP 'SHMEXT=\K[^ ]+') || SHMEXT_DEFAULT=9001
-  SHMINT_DEFAULT=$(echo $ENV_VARS | grep -oP 'SHMINT=\K[^ ]+') || SHMINT_DEFAULT=10001
-  PREVIOUS_PASSWORD=$(echo $ENV_VARS | grep -oP 'DASHPASS=\K[^ ]+') || PREVIOUS_PASSWORD=none
+  DASHPORT_DEFAULT=$(echo $ENV_VARS | grep -oP 'DASHPORT=K[^ ]+') || DASHPORT_DEFAULT=8080
+  EXTERNALIP_DEFAULT=$(echo $ENV_VARS | grep -oP 'EXT_IP=K[^ ]+') || EXTERNALIP_DEFAULT=auto
+  INTERNALIP_DEFAULT=$(echo $ENV_VARS | grep -oP 'INT_IP=K[^ ]+') || INTERNALIP_DEFAULT=auto
+  SHMEXT_DEFAULT=$(echo $ENV_VARS | grep -oP 'SHMEXT=K[^ ]+') || SHMEXT_DEFAULT=9001
+  SHMINT_DEFAULT=$(echo $ENV_VARS | grep -oP 'SHMINT=K[^ ]+') || SHMINT_DEFAULT=10001
+  PREVIOUS_PASSWORD=$(echo $ENV_VARS | grep -oP 'DASHPASS=K[^ ]+') || PREVIOUS_PASSWORD=none
 fi
 
 cat << EOF
@@ -367,7 +367,7 @@ if [ "$CHANGEPASSWORD" == "y" ]; then
   while IFS= read -p "$PROMPT" -r -s -n 1 CHAR
   do
     # Enter - accept password
-    if [[ $CHAR == $'\0' ]] ; then
+    if [[ $CHAR == $'0' ]] ; then
       if [ $CHARCOUNT -gt 0 ] ; then # Make sure password character length is greater than 0.
         break
       else
@@ -377,10 +377,10 @@ if [ "$CHANGEPASSWORD" == "y" ]; then
       fi
     fi
     # Backspace
-    if [[ $CHAR == $'\177' ]] ; then
+    if [[ $CHAR == $'177' ]] ; then
       if [ $CHARCOUNT -gt 0 ] ; then
         CHARCOUNT=$((CHARCOUNT-1))
-        PROMPT=$'\b \b'
+        PROMPT=$'b b'
         DASHPASS="${DASHPASS%?}"
       else
         PROMPT=''
@@ -402,7 +402,7 @@ else
 fi
 
 if [ -z "$DASHPASS" ]; then
-  echo -e "\nFailed to hash the password. Please ensure you have openssl"
+  echo -e "nFailed to hash the password. Please ensure you have openssl"
   exit 1
 fi
 
@@ -430,7 +430,7 @@ while :; do
   fi
 
   # Use regex to check if the input is a valid IPv4 address
-  if [[ $EXTERNALIP =~ ^([0-9]{1,3}\.){3}[0-9]{1,3}$ ]]; then
+  if [[ $EXTERNALIP =~ ^([0-9]{1,3}.){3}[0-9]{1,3}$ ]]; then
     # Check that each number in the IP address is between 0-255
     valid_ip=true
     IFS='.' read -ra ip_nums <<< "$EXTERNALIP"
@@ -460,7 +460,7 @@ while :; do
   fi
 
   # Use regex to check if the input is a valid IPv4 address
-  if [[ $INTERNALIP =~ ^([0-9]{1,3}\.){3}[0-9]{1,3}$ ]]; then
+  if [[ $INTERNALIP =~ ^([0-9]{1,3}.){3}[0-9]{1,3}$ ]]; then
     # Check that each number in the IP address is between 0-255
     valid_ip=true
     IFS='.' read -ra ip_nums <<< "$INTERNALIP"
@@ -504,8 +504,8 @@ done
 
 #APPSEEDLIST="archiver-sphinx.shardeum.org"
 #APPMONITOR="monitor-sphinx.shardeum.org"
-APPMONITOR="198.58.113.59"
-RPC_SERVER_URL="https://atomium.shardeum.org"
+APPMONITOR="34.68.4.202"
+RPC_SERVER_URL="https://earthnet.shardeum.org"
 
 cat <<EOF
 
@@ -524,7 +524,7 @@ if [ -d "$NODEHOME" ]; then
   fi
 fi
 
-git clone -b itn-pahse2 https://github.com/shardeum/validator-dashboard.git ${NODEHOME} || { echo "Error: Permission denied. Exiting script."; exit 1; }
+git clone -b earthnet https://github.com/shardeum/validator-dashboard.git ${NODEHOME} || { echo "Error: Permission denied. Exiting script."; exit 1; }
 cd ${NODEHOME}
 chmod a+x ./*.sh
 
@@ -543,7 +543,7 @@ touch ./.env
 cat >./.env <<EOL
 EXT_IP=${EXTERNALIP}
 INT_IP=${INTERNALIP}
-EXISTING_ARCHIVERS=[{"ip":"198.58.110.213","port":4000,"publicKey":"d34b80a5a6f9638b7c75d6eb6e59d35d9a3e103f1877827eebbe973b8281f794"},{"ip":"3.73.66.238","port":4000,"publicKey":"7af699dd711074eb96a8d1103e32b589e511613ebb0c6a789a9e8791b2b05f34"},{"ip":"35.233.225.113","port":4000,"publicKey":"59c3794461c7f58a0a7f24d70dfd512d4364cd179d2670ac58e9ae533d50c7eb"}]
+EXISTING_ARCHIVERS=[{"ip":"198.58.115.4","port":4000,"publicKey":"7af699dd711074eb96a8d1103e32b589e511613ebb0c6a789a9e8791b2b05f34"},{"ip":"3.79.99.240","port":4000,"publicKey":"840e7b59a95d3c5f5044f4bc62ab9fa94bc107d391001141410983502e3cde63"},{"ip"18.159.41.39","port":4000,"publicKey":"2db7c949632d26b87d7e7a5a4ad41c306f63ee972655121a37c5e4f52b00a542"}]
 APP_MONITOR=${APPMONITOR}
 DASHPASS=${DASHPASS}
 DASHPORT=${DASHPORT}
@@ -552,9 +552,11 @@ LOCALLANIP=${LOCALLANIP}
 SHMEXT=${SHMEXT}
 SHMINT=${SHMINT}
 RPC_SERVER_URL=${RPC_SERVER_URL}
-minNodes=640
-baselineNodes=640
-nodesPerConsensusGroup=128
+NEXT_PUBLIC_RPC_URL=${RPC_SERVER_URL}
+NEXT_EXPLORER_URL=https://explorer-atomium.shardeum.org/
+minNodes=50
+baselineNodes=50
+nodesPerConsensusGroup=10
 EOL
 
 cat <<EOF
