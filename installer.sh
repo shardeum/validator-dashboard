@@ -556,6 +556,7 @@ NEXT_PUBLIC_RPC_URL=${RPC_SERVER_URL}
 NEXT_EXPLORER_URL=https://explorer-atomium.shardeum.org/
 minNodes=640
 baselineNodes=640
+maxNodes=640
 nodesPerConsensusGroup=128
 
 EOL
