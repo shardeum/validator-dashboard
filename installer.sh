@@ -524,7 +524,8 @@ if [ -d "$NODEHOME" ]; then
   fi
 fi
 
-git clone -b beta1.12.2 https://github.com/shardeum/validator-dashboard.git ${NODEHOME} || { echo "Error: Permission denied. Exiting script."; exit 1; }cd ${NODEHOME}
+git clone -b beta1.12.2 https://github.com/shardeum/validator-dashboard.git ${NODEHOME} || { echo "Error: Permission denied. Exiting script."; exit 1; }
+cd ${NODEHOME}
 chmod a+x ./*.sh
 
 cat <<EOF
@@ -637,5 +638,3 @@ To use the Command Line Interface:
 	3. Run "operator-cli --help" for commands
 
 EOF
-
-
