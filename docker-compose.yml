@@ -1,4 +1,5 @@
-version: '3.4'
+# the attribute `version` is obsolete
+# version: '3.4'
 
 services:
   shardeum-dashboard:
