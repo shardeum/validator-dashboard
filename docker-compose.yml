@@ -1,6 +1,3 @@
-# the attribute `version` is obsolete
-# version: '3.4'
-
 services:
   shardeum-dashboard:
     container_name: shardeum-dashboard
