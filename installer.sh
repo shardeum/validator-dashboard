@@ -115,16 +115,43 @@ echo "The base directory is set to: $input"
 NODEHOME="${input/#\~/$HOME}" # support ~ in path
 
 # Check all things that will be needed for this script to succeed like access to docker and docker-compose
-# If any check fails exit with a message on what the user needs to do to fix the problem
-command -v git >/dev/null 2>&1 || { echo >&2 "'git' is required but not installed."; exit 1; }
-command -v docker >/dev/null 2>&1 || { echo >&2 "'docker' is required but not installed. See https://github.com/shardeum/validator-dashboard?tab=readme-ov-file#how-to-install-and-run-a-shardeum-validator-node for details."; exit 1; }
+# If any check fails, attempt to install the missing dependency
+command -v git >/dev/null 2>&1 || {
+    echo >&2 "'git' is not installed. Attempting to install git..."
+    if command -v apt-get >/dev/null 2>&1; then
+        sudo apt-get update && sudo apt-get install -y git
+    elif command -v yum >/dev/null 2>&1; then
+        sudo yum install -y git
+    else
+        echo >&2 "Unable to install git. Please install it manually."
+        exit 1
+    fi
+}
+
+command -v docker >/dev/null 2>&1 || {
+    echo >&2 "'docker' is not installed. Attempting to install docker..."
+    curl -fsSL https://get.docker.com -o get-docker.sh
+    sudo sh get-docker.sh
+    sudo usermod -aG docker $USER
+    rm get-docker.sh
+}
+
+if ! command -v docker-compose &>/dev/null && ! docker --help | grep -q "compose"; then
+    echo "docker-compose or docker compose is not installed. Attempting to install docker-compose..."
+    sudo curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+    sudo chmod +x /usr/local/bin/docker-compose
+fi
+
+# Verify installations
+command -v git >/dev/null 2>&1 || { echo >&2 "Failed to install git. Please install it manually."; exit 1; }
+command -v docker >/dev/null 2>&1 || { echo >&2 "Failed to install docker. Please install it manually."; exit 1; }
 if command -v docker-compose &>/dev/null; then
-  echo "docker-compose is installed on this machine"
+    echo "docker-compose is installed on this machine"
 elif docker --help | grep -q "compose"; then
-  echo "docker compose subcommand is installed on this machine"
+    echo "docker compose subcommand is installed on this machine"
 else
-  echo "docker-compose or docker compose is not installed on this machine"
-  exit 1
+    echo "Failed to install docker-compose. Please install it manually."
+    exit 1
 fi
 
 export DOCKER_DEFAULT_PLATFORM=linux/amd64
