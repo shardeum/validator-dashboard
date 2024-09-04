@@ -531,8 +531,8 @@ done
 
 #APPSEEDLIST="archiver-sphinx.shardeum.org"
 #APPMONITOR="monitor-sphinx.shardeum.org"
-APPMONITOR="198.58.113.59"
-RPC_SERVER_URL="https://atomium.shardeum.org"
+APPMONITOR="34.213.181.190"
+RPC_SERVER_URL="http://35.229.156.94:8000"
 
 cat <<EOF
 
@@ -570,7 +570,7 @@ touch ./.env
 cat >./.env <<EOL
 EXT_IP=${EXTERNALIP}
 INT_IP=${INTERNALIP}
-EXISTING_ARCHIVERS=[{"ip":"198.58.110.213","port":4000,"publicKey":"d34b80a5a6f9638b7c75d6eb6e59d35d9a3e103f1877827eebbe973b8281f794"},{"ip":"3.73.66.238","port":4000,"publicKey":"7af699dd711074eb96a8d1103e32b589e511613ebb0c6a789a9e8791b2b05f34"},{"ip":"35.233.225.113","port":4000,"publicKey":"59c3794461c7f58a0a7f24d70dfd512d4364cd179d2670ac58e9ae533d50c7eb"}]
+EXISTING_ARCHIVERS=[{"ip":"52.59.212.239","port":4000,"publicKey":"2db7c949632d26b87d7e7a5a4ad41c306f63ee972655121a37c5e4f52b00a542"},{"ip":"18.196.31.108","port":4000,"publicKey":"840e7b59a95d3c5f5044f4bc62ab9fa94bc107d391001141410983502e3cde63"},{"ip":"3.72.50.238","port":4000,"publicKey":"7af699dd711074eb96a8d1103e32b589e511613ebb0c6a789a9e8791b2b05f34"}]
 APP_MONITOR=${APPMONITOR}
 DASHPASS=${DASHPASS}
 DASHPORT=${DASHPORT}
@@ -581,10 +581,10 @@ SHMINT=${SHMINT}
 RPC_SERVER_URL=${RPC_SERVER_URL}
 NEXT_PUBLIC_RPC_URL=${RPC_SERVER_URL}
 NEXT_EXPLORER_URL=https://explorer-atomium.shardeum.org/
-minNodes=640
-baselineNodes=640
+minNodes=150
+baselineNodes=150
 maxNodes=640
-nodesPerConsensusGroup=128
+nodesPerConsensusGroup=32
 EOL
 
 cat <<EOF
