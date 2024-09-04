@@ -4,6 +4,12 @@ set -e
 # Get the environment/OS
 environment=$(uname)
 
+# If the script is run as root, set the HOME variable to the user's home directory
+if [ "$EUID" -eq 0 ]; then
+    ACTUAL_USER=$(logname 2>/dev/null || echo $SUDO_USER)
+    HOME="/home/$ACTUAL_USER"
+fi
+
 # Function to exit with an error message
 exit_with_error() {
     echo "Error: $1"
