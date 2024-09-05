@@ -393,36 +393,47 @@ else
   CHANGEPASSWORD="y"
 fi
 
-if [ "$CHANGEPASSWORD" == "y" ]; then
-  unset CHARCOUNT
-  echo -n "Set the password to access the Dashboard: "
-  CHARCOUNT=0
+
+read_password() {
+  local CHARCOUNT=0
+  local PASSWORD=""
   while IFS= read -p "$PROMPT" -r -s -n 1 CHAR
   do
     # Enter - accept password
     if [[ $CHAR == $'\0' ]] ; then
-      if [ $CHARCOUNT -gt 0 ] ; then # Make sure password character length is greater than 0.
-        break
-      else
-        echo
-        echo -n "Invalid password input. Enter a password with character length greater than 0:"
-        continue
-      fi
+      break
     fi
     # Backspace
     if [[ $CHAR == $'\177' ]] ; then
       if [ $CHARCOUNT -gt 0 ] ; then
         CHARCOUNT=$((CHARCOUNT-1))
         PROMPT=$'\b \b'
-        DASHPASS="${DASHPASS%?}"
+        PASSWORD="${PASSWORD%?}"
       else
         PROMPT=''
       fi
     else
       CHARCOUNT=$((CHARCOUNT+1))
       PROMPT='*'
-      DASHPASS+="$CHAR"
+      PASSWORD+="$CHAR"
     fi
+  done
+  echo $PASSWORD
+}
+
+if [ "$CHANGEPASSWORD" == "y" ]; then
+  valid_pass=false
+  while [ "$valid_pass" = false ] ;
+  do
+      echo -n -e "Password requirements: min 8 characters, at least 1 letter, at least 1 number, at least 1 special character \nSet the password to access the Dashboard:"
+      DASHPASS=$(read_password)
+      if (( ${#DASHPASS} < 8 )); then
+          echo -n -e  "\nInvalid password!\n\n"
+      elif [ -z $(echo $DASHPASS | grep "[a-z]" | grep "[A-Z]" | grep "[0-9]" | grep "[!@#$%^&*()_+*$]")  ]; then
+          echo -n -e  "\nInvalid password!\n\n"
+      else
+          valid_pass=true
+      fi
   done
 
   # Hash the password using the fallback mechanism
