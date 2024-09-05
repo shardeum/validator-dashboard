@@ -119,11 +119,11 @@ Using Command Line:
 
 ### Add the network to wallet
 
-Open the page https://docs.shardeum.org/network/endpoints and use the setting for the Sphinx network.
+Open the page https://docs.shardeum.org/network/endpoints and use the setting for the Atomium network.
 
 ### Get some coins from the faucet
 
-Visit the faucet URL: https://faucet-sphinx.shardeum.org/ and enter the address from your wallet to get some coins.
+[Join the Shardeum Discord](https://discord.gg/shardeum) and claim tokens from the faucet Channel by running the `/faucet <account>` command.
 
 ### Start your validator node
 
@@ -161,6 +161,15 @@ This will be more effective when the info gathered in the install script is stor
 This will clean up the last (lastest) build. Just meant to save a few key strokes.
 
 Instructions for the user wanting to run a Shardeum validator node can be found here: <https://docs.shardeum.org/node/run/validator>
+
+## Versioning
+
+To set up the dashboard installer script for different versions of the Shardeum network follow the steps below:
+
+- Point the installer to the correct CLI and GUI versions in [the entrypoint.sh](https://github.com/shardeum/validator-dashboard/blob/d366e0fbf53ca7e8efb7f7d4aa1db4de7574657e/entrypoint.sh#L25) file.
+- Set the right docker image version in the [Dockerfile](https://github.com/shardeum/validator-dashboard/blob/d366e0fbf53ca7e8efb7f7d4aa1db4de7574657e/Dockerfile#L1). You can find all tagged image versions [here](https://github.com/shardeum/shardeum/pkgs/container/server/versions?filters%5Bversion_type%5D=tagged).
+- The installer script creates a `.env` file that [defines the network details](https://github.com/shardeum/validator-dashboard/blob/d366e0fbf53ca7e8efb7f7d4aa1db4de7574657e/installer.sh#L540-L589), modify the script to specify the details of the new network. 
+The script should now correctly set up the Dashboard for your new network.
 
 ## Contributing
 
