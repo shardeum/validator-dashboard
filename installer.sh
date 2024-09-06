@@ -421,7 +421,7 @@ read_password() {
   echo $PASSWORD
 }
 
-if [ "$CHANGEPASSWORD" == "y" ]; then
+if [ "$CHANGEPASSWORD" = "y" ]; then
   valid_pass=false
   while [ "$valid_pass" = false ] ;
   do
