@@ -429,7 +429,7 @@ if [ "$CHANGEPASSWORD" == "y" ]; then
       DASHPASS=$(read_password)
       if (( ${#DASHPASS} < 8 )); then
           echo -n -e  "\nInvalid password!\n\n"
-      elif [ -z $(echo $DASHPASS | grep "[a-z]" | grep "[A-Z]" | grep "[0-9]" | grep "[!@#$%^&*()_+*$]")  ]; then
+      elif [ -z "$(echo $DASHPASS | grep "[a-z]" | grep "[A-Z]" | grep "[0-9]" | grep "[!@#$%^&*()_+*$]")"  ]; then
           echo -n -e  "\nInvalid password!\n\n"
       else
           valid_pass=true
