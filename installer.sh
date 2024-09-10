@@ -425,15 +425,34 @@ if [ "$CHANGEPASSWORD" = "y" ]; then
   valid_pass=false
   while [ "$valid_pass" = false ] ;
   do
-      echo -n -e "Password requirements: min 8 characters, at least 1 lower case letter, at least 1 upper case letter, at least 1 number, at least 1 special character !@#$%^&*()_+*$ \nSet the password to access the Dashboard:"
-      DASHPASS=$(read_password)
-      if (( ${#DASHPASS} < 8 )); then
-          echo -n -e  "\nInvalid password!\n\n"
-      elif [ -z "$(echo $DASHPASS | grep "[a-z]" | grep "[A-Z]" | grep "[0-9]" | grep "[!@#$%^&*()_+*$]")"  ]; then
-          echo -n -e  "\nInvalid password!\n\n"
-      else
-          valid_pass=true
-      fi
+    echo -n -e "Password requirements: min 8 characters, at least 1 lower case letter, at least 1 upper case letter, at least 1 number, at least 1 special character !@#$%^&*()_+*$ \nSet the password to access the Dashboard:"
+    DASHPASS=$(read_password)
+
+    # Check password length
+    if (( ${#DASHPASS} < 8 )); then
+        echo -e "\nInvalid password! Too short.\n"
+
+    # Check for at least one lowercase letter
+    elif ! [[ "$DASHPASS" =~ [a-z] ]]; then
+        echo -e "\nInvalid password! Must contain at least one lowercase letter.\n"
+
+    # Check for at least one uppercase letter
+    elif ! [[ "$DASHPASS" =~ [A-Z] ]]; then
+        echo -e "\nInvalid password! Must contain at least one uppercase letter.\n"
+
+    # Check for at least one number
+    elif ! [[ "$DASHPASS" =~ [0-9] ]]; then
+        echo -e "\nInvalid password! Must contain at least one number.\n"
+
+    # Check for at least one special character
+    elif ! [[ "$DASHPASS" =~ [!@#$%^\&*()_+*$] ]]; then
+        echo -e "\nInvalid password! Must contain at least one special character.\n"
+
+    # Password is valid
+    else
+        valid_pass=true
+        echo "Password set successfully."
+    fi
   done
 
   # Hash the password using the fallback mechanism
