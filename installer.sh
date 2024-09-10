@@ -425,7 +425,7 @@ if [ "$CHANGEPASSWORD" = "y" ]; then
   valid_pass=false
   while [ "$valid_pass" = false ] ;
   do
-    echo -n -e "Password requirements: min 8 characters, at least 1 lower case letter, at least 1 upper case letter, at least 1 number, at least 1 special character !@#$%^&*()_+*$ \nSet the password to access the Dashboard:"
+    echo -n -e "Password requirements: min 8 characters, at least 1 lower case letter, at least 1 upper case letter, at least 1 number, at least 1 special character !@#$%^&*()_+$ \nSet the password to access the Dashboard:"
     DASHPASS=$(read_password)
 
     # Check password length
@@ -445,8 +445,8 @@ if [ "$CHANGEPASSWORD" = "y" ]; then
         echo -e "\nInvalid password! Must contain at least one number.\n"
 
     # Check for at least one special character
-    elif ! [[ "$DASHPASS" =~ [!@#$%^\&*()_+*$] ]]; then
-        echo -e "\nInvalid password! Must contain at least one special character.\n"
+    elif ! [[ "$DASHPASS" =~ [!@#$%^\&*()_+$] ]]; then
+        echo -e "\nInvalid password! Must contain at least one special character !@#$%^&*()_+$.\n"
 
     # Password is valid
     else
