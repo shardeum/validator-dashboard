@@ -1,27 +1,39 @@
 #!/usr/bin/env bash
-set -e
 
-# Function to create file if it doesn't exist
-create_file_if_not_exists() {
-    [ -f "$1" ] || echo "$2" > "$1" &
-}
+echo "Install PM2"
+npm i -g pm2
 
-# Function to clone and install CLI
-install_cli() {
-    git clone --depth 1 -b dev https://github.com/shardeum/validator-cli.git
-    cd validator-cli
-    npm ci --silent && npm link
-    cd ..
-}
+echo "/home/node/.pm2/logs/*.log /home/node/app/cli/build/logs/*.log {
+    daily
+    rotate 7
+    compress
+    delaycompress
+    missingok
+    notifempty
+    create 0640 user group
+    sharedscripts
+    postrotate
+        pm2 reloadLogs
+    endscript
+}" | sudo tee /etc/logrotate.d/pm2
 
-# Function to clone and install GUI
-install_gui() {
-    git clone --depth 1 -b dev https://github.com/shardeum/validator-gui.git
-    cd validator-gui
-    npm ci --silent
-    npm run build
-    
-    create_file_if_not_exists "CA.cnf" "[ req ]
+# Pull latest versions of the CLI and GUI
+git clone -b dev https://github.com/shardeum/validator-cli.git cli
+echo "Install the CLI"
+cd cli
+npm i --silent && npm link
+cd ..
+
+git clone -b dev https://github.com/shardeum/validator-gui.git gui
+echo "Install the GUI"
+cd gui
+npm i --silent
+npm run build
+
+# SSL certificate generation
+# if CA.cnf does not exist, create it
+if [ ! -f "CA.cnf" ]; then
+    echo "[ req ]
 prompt = no
 distinguished_name = req_distinguished_name
 
@@ -32,9 +44,17 @@ L = localhost
 O = Certificate Authority Local Validator Node
 OU = Develop
 CN = mynode-sphinx.sharedum.local
-emailAddress = community@.sharedum.local"
+emailAddress = community@.sharedum.local" > CA.cnf
+fi
 
-    create_file_if_not_exists "selfsigned.cnf" "[ req ]
+# if CA.key does not exist, create it
+if [ ! -f "CA_key.pem" ]; then
+    openssl req -nodes -new -x509 -keyout CA_key.pem -out CA_cert.pem -days 1825 -config CA.cnf
+fi
+
+# if selfsigned.cnf does not exist, create it
+if [ ! -f "selfsigned.cnf" ]; then
+    echo "[ req ]
 default_bits  = 4096
 distinguished_name = req_distinguished_name
 req_extensions = req_ext
@@ -57,40 +77,40 @@ subjectAltName = @alt_names
 [alt_names]
 IP.1 = $SERVERIP
 IP.2 = $LOCALLANIP
-DNS.1 = localhost"
+DNS.1 = localhost" > selfsigned.cnf
+fi
 
-    wait
+# if csr file does not exist, create it
+if [ ! -f "selfsigned.csr" ]; then
+    openssl req -sha256 -nodes -newkey rsa:4096 -keyout selfsigned.key -out selfsigned.csr -config selfsigned.cnf
+fi
 
-    # Generate CA key and cert in parallel
-    [ -f "CA_key.pem" ] || openssl req -nodes -new -x509 -keyout CA_key.pem -out CA_cert.pem -days 1825 -config CA.cnf &
-    [ -f "selfsigned.csr" ] || openssl req -sha256 -nodes -newkey rsa:4096 -keyout selfsigned.key -out selfsigned.csr -config selfsigned.cnf &
-    wait
+# if selfsigned.crt does not exist, create it
+if [ ! -f "selfsigned_node.crt" ]; then
+    openssl x509 -req -days 398 -in selfsigned.csr -CA CA_cert.pem -CAkey CA_key.pem -CAcreateserial -out selfsigned_node.crt -extensions req_ext -extfile selfsigned.cnf
+fi
 
-    # Generate selfsigned cert
-    [ -f "selfsigned_node.crt" ] || openssl x509 -req -days 398 -in selfsigned.csr -CA CA_cert.pem -CAkey CA_key.pem -CAcreateserial -out selfsigned_node.crt -extensions req_ext -extfile selfsigned.cnf
-
-    # Combine certs
-    [ -f "selfsigned.crt" ] || cat selfsigned_node.crt CA_cert.pem > selfsigned.crt
-
-    cd ..
-}
-
-# Main script starts here
-
-# Run installations in parallel
-install_cli &
-install_gui &
-wait
+# if selfsigned.crt does not exist, create it
+if [ ! -f "selfsigned.crt" ]; then
+  cat selfsigned_node.crt CA_cert.pem > selfsigned.crt
+fi
+cd ../..
 
 # Start GUI if configured to in env file
 if [ "$RUNDASHBOARD" == "y" ]
 then
     echo "Starting operator gui"
-    # Call the CLI commands to set up and start the GUI
+    # Call the CLI command to set the GUI password
     operator-cli gui set password -h $DASHPASS
+    # Call the CLI command to set the GUI port
     operator-cli gui set port $DASHPORT
+    # Call the CLI command to start the GUI
     operator-cli gui start
 fi
+
+# Deprecated
+# operator-cli set external_port $SHMEXT
+# operator-cli set internal_port $SHMINT
 
 echo "done"
 
