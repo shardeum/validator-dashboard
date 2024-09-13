@@ -12,18 +12,22 @@ RUN apt-get update && apt-get install -y sudo logrotate
 RUN echo '%sudo ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
 
 # Set up node user
-RUN usermod -aG sudo node && \
-    chown -R node:node /usr/local/bin /usr/local/lib /usr/local/include /usr/local/share
+RUN usermod -aG sudo node
+
+# Create app directory
+RUN mkdir -p $APP_HOME && chown node:node $APP_HOME
 
 # Switch to node user
 USER node
 
-# Create app directory and set ownership
-RUN mkdir -p $APP_HOME
 WORKDIR $APP_HOME
 
-# Copy files with correct ownership
-COPY --chown=node:node . $APP_HOME
+# Copy package files with correct ownership and install dependencies
+COPY --chown=node:node package*.json ./
+RUN npm ci
+
+# Copy the rest of the files with correct ownership
+COPY --chown=node:node . .
 
 # Create symlink
 RUN ln -s /usr/src/app $APP_HOME/validator

@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
-
 echo "Install PM2"
 npm i -g pm2
 
