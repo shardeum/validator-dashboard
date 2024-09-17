@@ -1,0 +1,19 @@
+name: Test Docker Bukild
+
+on:
+  push:
+    branches:
+      - '**' # Trigger on any branch
+  pull_request:
+    branches:
+      - dev # Trigger only on pull requests to the dev branch
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Build the Docker image
+      run: docker build . -f Dockerfile
