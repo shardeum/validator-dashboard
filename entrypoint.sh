@@ -17,13 +17,13 @@ echo "/home/node/.pm2/logs/*.log /home/node/app/cli/build/logs/*.log {
 }" | sudo tee /etc/logrotate.d/pm2
 
 # Pull latest versions of the CLI and GUI
-git clone -b p-water https://github.com/shardeum/validator-cli.git
+git clone -b dev https://github.com/shardeum/validator-cli.git
 echo "Install the CLI"
 cd cli
 npm i --silent && npm link
 cd ..
 
-git clone -b dev https://github.com/shardeum/validator-gui.git gui
+git clone -b uifixes https://github.com/shardeum/validator-gui.git gui
 echo "Install the GUI"
 cd gui
 npm i --silent
