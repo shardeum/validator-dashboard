@@ -10,6 +10,9 @@ jobs:
   install_and_test:
     runs-on: ubuntu-22.04
 
+    env:
+      TEST_DASHBOARD_PASSWORD: ${{ secrets.TEST_DASHBOARD_PASSWORD }}
+
     steps:
       # 1. Checkout the repository
       - name: Checkout repository
@@ -61,7 +64,7 @@ jobs:
           docker-compose --version
           openssl version
           which expect
-          expect -v
+          expect --version
           curl --version
           echo "PATH: $PATH"
         shell: bash
@@ -105,8 +108,8 @@ jobs:
               send "y\r"
               exp_continue
             }
-            "Do you want to change the password for the Dashboard? (y/N): " {
-              send "n\r"
+            "Password requirements: min 8 characters, at least 1 lower case letter, at least 1 upper case letter, at least 1 number, at least 1 special character !@#$%^&*()_+$ \nSet the password to access the Dashboard: " {
+              send "$env(TEST_DASHBOARD_PASSWORD)\r"
               exp_continue
             }
             "Enter the port (1025-65536) to access the web based Dashboard (default 8080): " {
