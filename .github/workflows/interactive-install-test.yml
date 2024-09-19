@@ -1,0 +1,103 @@
+name: Test Interactive Install
+
+on:
+  push:
+    branches: [ sys-513 ]
+  pull_request:
+    branches: [ sys-513 ]
+
+jobs:
+  install_and_test:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1. Checkout the repository
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # 2. Install all prerequisites
+      - name: Install prerequisites
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y expect curl git docker.io docker-compose openssl
+          sudo systemctl start docker
+          sudo usermod -aG docker $USER
+          # Verify installations
+          git --version
+          docker --version
+          docker-compose --version
+          openssl version
+          expect -v
+          curl --version
+        shell: bash
+
+      # 3. Make installer.sh executable
+      - name: Make installer.sh executable
+        run: chmod +x ./installer.sh
+
+      # 4. Run installer.sh with expect to handle interactive prompts
+      - name: Run installer.sh with expect
+        run: |
+          expect << 'EOF'
+          set timeout -1
+          spawn ./installer.sh
+
+          expect {
+            "Would you like to install openssl? (y/n) " {
+              send "y\r"
+              exp_continue
+            }
+            "By running this installer, you agree to allow the Shardeum team to collect this data. (Y/n)?" {
+              send "y\r"
+              exp_continue
+            }
+            "What base directory should the node use (default ~/.shardeum): " {
+              send "\r"
+              exp_continue
+            }
+            "Do you want to run the web based Dashboard? (Y/n): " {
+              send "y\r"
+              exp_continue
+            }
+            "Do you want to change the password for the Dashboard? (y/N): " {
+              send "n\r"
+              exp_continue
+            }
+            "Enter the port (1025-65536) to access the web based Dashboard (default 8080): " {
+              send "\r"
+              exp_continue
+            }
+            "If you wish to set an explicit external IP, enter an IPv4 address (default=auto): " {
+              send "auto\r"
+              exp_continue
+            }
+            "If you wish to set an explicit internal IP, enter an IPv4 address (default=auto): " {
+              send "auto\r"
+              exp_continue
+            }
+            "Enter the first port (1025-65536) for p2p communication (default 9001): " {
+              send "\r"
+              exp_continue
+            }
+            "Enter the second port (1025-65536) for p2p communication (default 10001): " {
+              send "\r"
+              exp_continue
+            }
+            eof
+          }
+          EOF
+        shell: bash
+
+      # 5. Wait for the service to initialize
+      - name: Wait for service to start
+        run: |
+          echo "Waiting for service to start..."
+          sleep 30  # Adjust this duration if necessary
+        shell: bash
+
+      # 6. Verify that the service is up by curling localhost:8080
+      - name: Check service is up
+        run: |
+          echo "Verifying that the service is up..."
+          curl -f http://localhost:8080
+        shell: bash
