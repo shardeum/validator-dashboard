@@ -108,7 +108,7 @@ jobs:
               send "y\r"
               exp_continue
             }
-            "Password requirements: min 8 characters, at least 1 lower case letter, at least 1 upper case letter, at least 1 number, at least 1 special character !@#$%^&*()_+$ \nSet the password to access the Dashboard: " {
+            "Set the password to access the Dashboard:" {
               send "$env(TEST_DASHBOARD_PASSWORD)\r"
               exp_continue
             }
