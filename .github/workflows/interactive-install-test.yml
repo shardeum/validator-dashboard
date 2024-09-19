@@ -8,7 +8,7 @@ on:
 
 jobs:
   install_and_test:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
 
     steps:
       # 1. Checkout the repository
@@ -20,6 +20,11 @@ jobs:
         uses: docker/setup-buildx-action@v3
         with:
           install: true
+          driver: docker-container
+          buildkitd-flags: --allow-insecure-entitlement security.insecure --allow-insecure-entitlement network.host
+          use: true
+          cache-binary: true
+          cleanup: true
 
       # 3. Install Core Prerequisites
       - name: Install Core Prerequisites
@@ -49,21 +54,36 @@ jobs:
       # 6. Verify Installations
       - name: Verify Installations
         run: |
+          set -x  # Enable verbose logging for debugging
+          echo "Verifying installations..."
           git --version
           docker --version
           docker-compose --version
           openssl version
+          which expect
           expect --version
           curl --version
+          echo "PATH: $PATH"
         shell: bash
 
-      # 7. Make installer.sh Executable
+      # 7. List /usr/local/bin for Debugging (Optional)
+      - name: List /usr/local/bin for Debugging
+        run: ls -la /usr/local/bin
+        shell: bash
+
+      # 8. Verify Docker Daemon is Running
+      - name: Verify Docker Daemon
+        run: docker info
+        shell: bash
+
+      # 9. Make installer.sh Executable
       - name: Make installer.sh executable
         run: chmod +x ./installer.sh
 
-      # 8. Run installer.sh with Expect to Handle Interactive Prompts
+      # 10. Run installer.sh with Expect to Handle Interactive Prompts
       - name: Run installer.sh with expect
         run: |
+          set -x  # Enable verbose logging for debugging
           expect << 'EOF'
           set timeout -1
           spawn ./installer.sh
@@ -114,16 +134,25 @@ jobs:
           EOF
         shell: bash
 
-      # 9. Wait for the Service to Initialize
-      - name: Wait for service to start
+      # 11. Wait for the Service to Initialize with Retries
+      - name: Wait for service to start with retries
         run: |
           echo "Waiting for service to start..."
-          sleep 30  # Adjust this duration if necessary
+          for i in {1..10}; do
+            if curl -f http://localhost:8080; then
+              echo "Service is up!"
+              exit 0
+            else
+              echo "Service not up yet. Waiting..."
+              sleep 10
+            fi
+          done
+          echo "Service failed to start within the expected time."
+          exit 1
         shell: bash
 
-      # 10. Verify that the Service is Up by Curling localhost:8080
-      - name: Check service is up
+      # 12. Final Verification (Optional)
+      - name: Final Verification
         run: |
-          echo "Verifying that the service is up..."
-          curl -f http://localhost:8080
+          echo "Final verification complete."
         shell: bash
