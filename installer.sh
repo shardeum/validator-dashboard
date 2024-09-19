@@ -451,7 +451,7 @@ if [ "$CHANGEPASSWORD" = "y" ]; then
     # Password is valid
     else
         valid_pass=true
-        echo "Password set successfully."
+        echo "\nPassword set successfully."
     fi
   done
 
