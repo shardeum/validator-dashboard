@@ -61,7 +61,7 @@ jobs:
           docker-compose --version
           openssl version
           which expect
-          expect --version
+          expect -v
           curl --version
           echo "PATH: $PATH"
         shell: bash
