@@ -137,25 +137,19 @@ jobs:
           EOF
         shell: bash
 
-      # 11. Wait for the Service to Initialize with Retries
-      - name: Wait for service to start with retries
+      - name: Verify Docker Containers Are Running
         run: |
-          echo "Waiting for service to start..."
-          for i in {1..10}; do
-            if curl -f http://localhost:8080; then
-              echo "Service is up!"
-              exit 0
-            else
-              echo "Service not up yet. Waiting..."
-              sleep 10
-            fi
-          done
-          echo "Service failed to start within the expected time."
-          exit 1
-        shell: bash
-
-      # 12. Final Verification (Optional)
-      - name: Final Verification
+          ls
+          cd ./shardeum
+          docker compose ps
+          if [ $(docker compose ps -q | wc -l) -eq 0 ]; then
+            echo "No containers running"
+            exit 1
+          fi
+          if [ $(docker compose ps | grep -c "Up") -eq 0 ]; then
+            echo "Containers are not running"
+            exit 1
+          fi
+      - name: Check HTTP Response
         run: |
-          echo "Final verification complete."
-        shell: bash
+          curl -kf https://localhost:8080 || exit 1
