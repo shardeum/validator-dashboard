@@ -428,7 +428,11 @@ if [ "$PREVIOUS_PASSWORD" != "none" ]; then
 
   fi
 else
-  CHANGEPASSWORD="y"
+    if $INTERACTIVE; then
+        CHANGEPASSWORD="y"
+    else
+        CHANGEPASSWORD="n"
+    fi
 fi
 
 read_password() {
