@@ -1,0 +1,47 @@
+name: Test Validator Dashboard Installer
+
+on:
+  push:
+    branches:
+      - dev
+  pull_request:
+    branches:
+      - dev
+
+jobs:
+  test-installer:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Install Dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y curl
+
+    - name: Download and Run Installer
+      run: DEBUG=true ./installer.sh
+
+    - name: Wait for Services to Start
+      run: |
+        sleep 30  # Wait for services to fully boot. Adjust if needed.
+
+    - name: Verify Docker Containers Are Running
+      run: |
+        ls
+        cd ./shardeum
+        docker compose ps
+        if [ $(docker compose ps -q | wc -l) -eq 0 ]; then
+          echo "No containers running"
+          exit 1
+        fi
+        if [ $(docker compose ps | grep -c "Up") -eq 0 ]; then
+          echo "Containers are not running"
+          exit 1
+        fi
+
+    - name: Check HTTP Response (optional, customize based on service)
+      run: |
+        curl -kf https://localhost:8080 || exit 1
