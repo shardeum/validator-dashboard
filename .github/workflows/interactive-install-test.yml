@@ -15,38 +15,53 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      # 2. Set up Docker (Use pre-installed Docker)
-      - name: Set up Docker
+      # 2. Set up Docker Buildx
+      - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
         with:
           install: true
 
-      # 3. Install additional prerequisites
-      - name: Install additional prerequisites
+      # 3. Install Core Prerequisites
+      - name: Install Core Prerequisites
         run: |
           sudo apt-get update
           sudo apt-get install -y expect curl git openssl
-          
-          # Install Docker Compose if not already available as a Docker plugin
-          if ! docker compose version >/dev/null 2>&1; then
-            sudo curl -L "https://github.com/docker/compose/releases/download/v2.20.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
-            sudo chmod +x /usr/local/bin/docker-compose
-          fi
+        shell: bash
 
-          # Verify installations
+      # 4. Install Docker Compose
+      - name: Install Docker Compose
+        run: |
+          # Download Docker Compose binary
+          sudo curl -L "https://github.com/docker/compose/releases/download/v2.20.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+          
+          # Apply executable permissions to the binary
+          sudo chmod +x /usr/local/bin/docker-compose
+          
+          # Verify installation
+          /usr/local/bin/docker-compose --version
+        shell: bash
+
+      # 5. Add /usr/local/bin to PATH
+      - name: Add /usr/local/bin to PATH
+        run: echo "/usr/local/bin" >> $GITHUB_PATH
+        shell: bash
+
+      # 6. Verify Installations
+      - name: Verify Installations
+        run: |
           git --version
           docker --version
           docker-compose --version
           openssl version
-          expect -v
+          expect --version
           curl --version
         shell: bash
 
-      # 4. Make installer.sh executable
+      # 7. Make installer.sh Executable
       - name: Make installer.sh executable
         run: chmod +x ./installer.sh
 
-      # 5. Run installer.sh with expect to handle interactive prompts
+      # 8. Run installer.sh with Expect to Handle Interactive Prompts
       - name: Run installer.sh with expect
         run: |
           expect << 'EOF'
@@ -99,14 +114,14 @@ jobs:
           EOF
         shell: bash
 
-      # 6. Wait for the service to initialize
+      # 9. Wait for the Service to Initialize
       - name: Wait for service to start
         run: |
           echo "Waiting for service to start..."
           sleep 30  # Adjust this duration if necessary
         shell: bash
 
-      # 7. Verify that the service is up by curling localhost:8080
+      # 10. Verify that the Service is Up by Curling localhost:8080
       - name: Check service is up
         run: |
           echo "Verifying that the service is up..."
