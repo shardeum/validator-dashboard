@@ -15,13 +15,24 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      # 2. Install all prerequisites
-      - name: Install prerequisites
+      # 2. Set up Docker (Use pre-installed Docker)
+      - name: Set up Docker
+        uses: docker/setup-buildx-action@v3
+        with:
+          install: true
+
+      # 3. Install additional prerequisites
+      - name: Install additional prerequisites
         run: |
           sudo apt-get update
-          sudo apt-get install -y expect curl git docker.io docker-compose openssl
-          sudo systemctl start docker
-          sudo usermod -aG docker $USER
+          sudo apt-get install -y expect curl git openssl
+          
+          # Install Docker Compose if not already available as a Docker plugin
+          if ! docker compose version >/dev/null 2>&1; then
+            sudo curl -L "https://github.com/docker/compose/releases/download/v2.20.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+            sudo chmod +x /usr/local/bin/docker-compose
+          fi
+
           # Verify installations
           git --version
           docker --version
@@ -31,11 +42,11 @@ jobs:
           curl --version
         shell: bash
 
-      # 3. Make installer.sh executable
+      # 4. Make installer.sh executable
       - name: Make installer.sh executable
         run: chmod +x ./installer.sh
 
-      # 4. Run installer.sh with expect to handle interactive prompts
+      # 5. Run installer.sh with expect to handle interactive prompts
       - name: Run installer.sh with expect
         run: |
           expect << 'EOF'
@@ -88,14 +99,14 @@ jobs:
           EOF
         shell: bash
 
-      # 5. Wait for the service to initialize
+      # 6. Wait for the service to initialize
       - name: Wait for service to start
         run: |
           echo "Waiting for service to start..."
           sleep 30  # Adjust this duration if necessary
         shell: bash
 
-      # 6. Verify that the service is up by curling localhost:8080
+      # 7. Verify that the service is up by curling localhost:8080
       - name: Check service is up
         run: |
           echo "Verifying that the service is up..."
