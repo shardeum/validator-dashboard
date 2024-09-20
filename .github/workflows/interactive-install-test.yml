@@ -86,7 +86,7 @@ jobs:
       # 10. Run installer.sh with Expect to Handle Interactive Prompts
       - name: Run installer.sh with expect
         run: |
-          set -x  # Enable verbose logging for debugging
+          # set -x  # Enable verbose logging for debugging
           expect << 'EOF'
           set timeout -1
           spawn ./installer.sh
@@ -140,7 +140,7 @@ jobs:
       - name: Verify Docker Containers Are Running
         run: |
           ls
-          cd ~./shardeum
+          cd ~/./shardeum
           docker compose ps
           if [ $(docker compose ps -q | wc -l) -eq 0 ]; then
             echo "No containers running"
