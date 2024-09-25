@@ -141,7 +141,7 @@ jobs:
         run: |
           sleep 30  # Wait for services to fully boot.
 
-      - name: Verify Docker Containers Are Running
+      - name: Verify Docker Container is Running
         run: |
           cd ~/.shardeum
           docker compose ps
@@ -154,7 +154,7 @@ jobs:
             exit 1
           fi
           
-      - name: Check for GUI to be ip
+      - name: Check for GUI to be up
         run: |
           for i in {1..12}; do  # 12 iterations for 1 minute (12 * 5 seconds = 60 seconds)
             if curl -k https://localhost:8080; then
