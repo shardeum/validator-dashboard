@@ -2,9 +2,7 @@ name: Test Interactive Install
 
 on:
   push:
-    branches: [ sys-513-water ]
   pull_request:
-    branches: [ sys-513-water ]
 
 jobs:
   install_and_test:
@@ -141,7 +139,7 @@ jobs:
         run: |
           pwd
           ls -a
-          cd .shardeum
+          cd ~/.shardeum
           docker compose ps
           if [ $(docker compose ps -q | wc -l) -eq 0 ]; then
             echo "No containers running"
