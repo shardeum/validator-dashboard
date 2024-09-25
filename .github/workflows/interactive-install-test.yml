@@ -2,9 +2,9 @@ name: Test Interactive Install
 
 on:
   push:
-    branches: [ sys-513 ]
-  pull_request:
-    branches: [ sys-513 ]
+    branches: [ dev ] # on push to dev
+  pull_request:       # on any PR
+  workflow_dispatch:  # manual trigger
 
 jobs:
   install_and_test:
