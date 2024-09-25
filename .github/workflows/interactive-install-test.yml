@@ -156,18 +156,19 @@ jobs:
           
       - name: Check for GUI to be up
         run: |
-          for i in {1..12}; do  # 12 iterations for 1 minute (12 * 5 seconds = 60 seconds)
-            if curl -k https://localhost:8080; then
+          for i in {1..12}; do 
+            HTTP_STATUS=$(curl -s -o /dev/null -w "%{http_code}" -k https://localhost:8080)
+            if [ $HTTP_STATUS -eq 200 ]; then
               echo "GUI response successful!"
-              break  # Exit the loop if successful
+              break 
             else
-              echo "GUI response failed. Retrying in 5 seconds..."
+              echo "GUI response failed with status code: $HTTP_STATUS. Retrying in 5 seconds..."
               sleep 5
             fi
           done
 
-          # Check if the loop completed without a successful response
           if [ $i -eq 12 ]; then
             echo "GUI response check failed after 1 minute."
+            curl -k https://localhost:8080
             exit 1
           fi
