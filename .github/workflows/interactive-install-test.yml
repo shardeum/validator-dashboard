@@ -139,6 +139,7 @@ jobs:
 
       - name: Verify Docker Containers Are Running
         run: |
+          pwd
           ls -a
           cd .shardeum
           docker compose ps
