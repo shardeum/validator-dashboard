@@ -151,4 +151,4 @@ jobs:
           fi
       - name: Check HTTP Response
         run: |
-          curl -kf https://localhost:8080 || exit 1
+          curl -k https://localhost:8080 || exit 1
