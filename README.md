@@ -99,7 +99,7 @@ wget https://raw.githubusercontent.com/shardeum/validator-dashboard/water/instal
 
 Follow the instructions provided by the installer script. Ensure you input the correct Archiver and Monitor IP addresses for the network you wish your validator to join.
 
-> If you are behind a router and you are using ports 9001 and 10001 for p2p communication, make sure ports 9001 and 10001, are forwarded (be careful doing this since it will modify your firewall). More info on router port forwarding: https://www.noip.com/support/knowledgebase/general-port-forwarding-guide/
+> If you are behind a router and you are using ports 9001 and 10001 for p2p communication, make sure ports 9001 and 10001, are forwarded (be careful doing this since it will modify your firewall). More info on router port forwarding: <https://www.noip.com/support/knowledgebase/general-port-forwarding-guide/>
 
 ## Starting the Validator
 
@@ -108,8 +108,9 @@ After the installation process completes, you can start the validator using eith
 Using Web Dashboard:
 
 - Open a web browser and navigate to the web dashboard at `localhost:8080` or ServerIP:8080
-- Go to the `Maintenance` tab and click the `Start Node` button.
-- Go to the `Settings` tab and connect a wallet.
+- Enter the password you set during the installation process.
+- Click the `Start Node` button in the top right white box.
+- Once the validator has started, connect your wallet.
 
 Using Command Line:
 
@@ -119,7 +120,7 @@ Using Command Line:
 
 ### Add the network to wallet
 
-Open the page https://docs.shardeum.org/network/endpoints and use the setting for the Atomium network.
+Open the page <https://docs.shardeum.org/docs/network/endpoints> and use the setting for the Atomium network.
 
 ### Get some coins from the faucet
 
@@ -128,11 +129,11 @@ Open the page https://docs.shardeum.org/network/endpoints and use the setting fo
 ### Start your validator node
 
 - Open a web browser and navigate to the web dashboard at `localhost:8080` or ServerIP:8080 (or the port you picked)
-- Go to the `Maintenance` tab and click the `Start Node` button.
+- Click the `Start Node` button.
 
-### Stake coins
+### Stake SHM
 
-Go to the `Maintenance` tab and connect the wallet and stake 10 coins.
+Connect the wallet and stake 10 SHM.
 
 Now check your node status, if your node status is on `Standby` and you have 10 SHM or more staked, your validator node is setup correctly. The network will automatically add your validator to be active in the network. The time to be added as an active validator will vary based on network load and validators in the network.
 
@@ -160,7 +161,7 @@ This will be more effective when the info gathered in the install script is stor
 
 This will clean up the last (lastest) build. Just meant to save a few key strokes.
 
-Instructions for the user wanting to run a Shardeum validator node can be found here: <https://docs.shardeum.org/node/run/validator>
+Instructions for the user wanting to run a Shardeum validator node can be found here: <https://docs.shardeum.org/docs/node/run/validator>
 
 ## Versioning
 
@@ -168,7 +169,7 @@ To set up the dashboard installer script for different versions of the Shardeum 
 
 - Point the installer to the correct CLI and GUI versions in [the entrypoint.sh](https://github.com/shardeum/validator-dashboard/blob/d366e0fbf53ca7e8efb7f7d4aa1db4de7574657e/entrypoint.sh#L25) file.
 - Set the right docker image version in the [Dockerfile](https://github.com/shardeum/validator-dashboard/blob/d366e0fbf53ca7e8efb7f7d4aa1db4de7574657e/Dockerfile#L1). You can find all tagged image versions [here](https://github.com/shardeum/shardeum/pkgs/container/server/versions?filters%5Bversion_type%5D=tagged).
-- The installer script creates a `.env` file that [defines the network details](https://github.com/shardeum/validator-dashboard/blob/d366e0fbf53ca7e8efb7f7d4aa1db4de7574657e/installer.sh#L540-L589), modify the script to specify the details of the new network. 
+- The installer script creates a `.env` file that [defines the network details](https://github.com/shardeum/validator-dashboard/blob/d366e0fbf53ca7e8efb7f7d4aa1db4de7574657e/installer.sh#L540-L589), modify the script to specify the details of the new network.
 The script should now correctly set up the Dashboard for your new network.
 
 ## Contributing
