@@ -2,9 +2,11 @@ name: Test Interactive Install
 
 on:
   push:
-    branches: [ sys-513 ]
+    branches:
+      - dev
   pull_request:
-    branches: [ sys-513 ]
+    branches:
+      - dev
 
 jobs:
   install_and_test:
@@ -41,10 +43,10 @@ jobs:
         run: |
           # Download Docker Compose binary
           sudo curl -L "https://github.com/docker/compose/releases/download/v2.20.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
-          
+
           # Apply executable permissions to the binary
           sudo chmod +x /usr/local/bin/docker-compose
-          
+
           # Verify installation
           /usr/local/bin/docker-compose --version
         shell: bash
