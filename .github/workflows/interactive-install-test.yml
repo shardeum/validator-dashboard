@@ -1,0 +1,174 @@
+name: Test Interactive Install
+
+on:
+  push:
+    branches: [ dev ] # on push to dev
+  pull_request:       # on any PR
+  workflow_dispatch:  # manual trigger
+
+jobs:
+  install_and_test:
+    runs-on: ubuntu-22.04
+
+    env:
+      TEST_DASHBOARD_PASSWORD: ${{ secrets.TEST_DASHBOARD_PASSWORD }}
+
+    steps:
+      # 1. Checkout the repository
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # 2. Set up Docker Buildx
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+        with:
+          install: true
+          driver: docker-container
+          buildkitd-flags: --allow-insecure-entitlement security.insecure --allow-insecure-entitlement network.host
+          use: true
+          cache-binary: true
+          cleanup: true
+
+      # 3. Install Core Prerequisites
+      - name: Install Core Prerequisites
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y expect curl git openssl
+        shell: bash
+
+      # 4. Install Docker Compose
+      - name: Install Docker Compose
+        run: |
+          # Download Docker Compose binary
+          sudo curl -L "https://github.com/docker/compose/releases/download/v2.20.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+          
+          # Apply executable permissions to the binary
+          sudo chmod +x /usr/local/bin/docker-compose
+          
+          # Verify installation
+          /usr/local/bin/docker-compose --version
+        shell: bash
+
+      # 5. Add /usr/local/bin to PATH
+      - name: Add /usr/local/bin to PATH
+        run: echo "/usr/local/bin" >> $GITHUB_PATH
+        shell: bash
+
+      # 6. Verify Installations
+      - name: Verify Installations
+        run: |
+          set -x  # Enable verbose logging for debugging
+          echo "Verifying installations..."
+          git --version
+          docker --version
+          docker-compose --version
+          openssl version
+          which expect
+          expect -v
+          curl --version
+          echo "PATH: $PATH"
+        shell: bash
+
+      # 7. List /usr/local/bin for Debugging (Optional)
+      - name: List /usr/local/bin for Debugging
+        run: ls -la /usr/local/bin
+        shell: bash
+
+      # 8. Verify Docker Daemon is Running
+      - name: Verify Docker Daemon
+        run: docker info
+        shell: bash
+
+      # 9. Make installer.sh Executable
+      - name: Make installer.sh executable
+        run: chmod +x ./installer.sh
+
+      # 10. Run installer.sh with Expect to Handle Interactive Prompts
+      - name: Run installer.sh with expect
+        run: |
+          # set -x  # Enable verbose logging for debugging
+          expect << 'EOF'
+          set timeout -1
+          spawn ./installer.sh
+
+          expect {
+            "Would you like to install openssl? (y/n) " {
+              send "y\r"
+              exp_continue
+            }
+            "By running this installer, you agree to allow the Shardeum team to collect this data. (Y/n)?" {
+              send "y\r"
+              exp_continue
+            }
+            "What base directory should the node use (default ~/.shardeum): " {
+              send "\r"
+              exp_continue
+            }
+            "Do you want to run the web based Dashboard? (Y/n): " {
+              send "y\r"
+              exp_continue
+            }
+            "Set the password to access the Dashboard:" {
+              send "$env(TEST_DASHBOARD_PASSWORD)\r"
+              exp_continue
+            }
+            "Enter the port (1025-65536) to access the web based Dashboard (default 8080): " {
+              send "\r"
+              exp_continue
+            }
+            "If you wish to set an explicit external IP, enter an IPv4 address (default=auto): " {
+              send "auto\r"
+              exp_continue
+            }
+            "If you wish to set an explicit internal IP, enter an IPv4 address (default=auto): " {
+              send "auto\r"
+              exp_continue
+            }
+            "Enter the first port (1025-65536) for p2p communication (default 9001): " {
+              send "\r"
+              exp_continue
+            }
+            "Enter the second port (1025-65536) for p2p communication (default 10001): " {
+              send "\r"
+              exp_continue
+            }
+            eof
+          }
+          EOF
+        shell: bash
+        
+      - name: Wait for Services to Start
+        run: |
+          sleep 30  # Wait for services to fully boot.
+
+      - name: Verify Docker Container is Running
+        run: |
+          cd ~/.shardeum
+          docker compose ps
+          if [ $(docker compose ps -q | wc -l) -eq 0 ]; then
+            echo "No containers running"
+            exit 1
+          fi
+          if [ $(docker compose ps | grep -c "Up") -eq 0 ]; then
+            echo "Containers are not running"
+            exit 1
+          fi
+          
+      - name: Check for GUI to be up
+        run: |
+          for i in {1..12}; do 
+            HTTP_STATUS=$(curl -s -o /dev/null -w "%{http_code}" -k https://localhost:8080)
+            if [ $HTTP_STATUS -eq 200 ]; then
+              echo "GUI response successful!"
+              break 
+            else
+              echo "GUI response failed with status code: $HTTP_STATUS. Retrying in 5 seconds..."
+              sleep 5
+            fi
+          done
+
+          if [ $i -eq 12 ]; then
+            echo "GUI response check failed after 1 minute."
+            curl -k https://localhost:8080
+            exit 1
+          fi
