@@ -136,10 +136,14 @@ jobs:
           }
           EOF
         shell: bash
+        
+      - name: Wait for Services to Start
+        run: |
+          sleep 30  # Wait for services to fully boot.
 
       - name: Verify Docker Containers Are Running
         run: |
-          ~/.shardeum
+          cd ~/.shardeum
           docker compose ps
           if [ $(docker compose ps -q | wc -l) -eq 0 ]; then
             echo "No containers running"
@@ -149,6 +153,21 @@ jobs:
             echo "Containers are not running"
             exit 1
           fi
-      - name: Check HTTP Response
+          
+      - name: Check for GUI to be ip
         run: |
-          curl -k https://localhost:8080 || exit 1
+          for i in {1..12}; do  # 12 iterations for 1 minute (12 * 5 seconds = 60 seconds)
+            if curl -k https://localhost:8080; then
+              echo "GUI response successful!"
+              break  # Exit the loop if successful
+            else
+              echo "GUI response failed. Retrying in 5 seconds..."
+              sleep 5
+            fi
+          done
+
+          # Check if the loop completed without a successful response
+          if [ $i -eq 12 ]; then
+            echo "GUI response check failed after 1 minute."
+            exit 1
+          fi
