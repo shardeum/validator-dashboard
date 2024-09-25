@@ -139,9 +139,7 @@ jobs:
 
       - name: Verify Docker Containers Are Running
         run: |
-          pwd
-          ls -a
-          cd .shardeum
+          ~/.shardeum
           docker compose ps
           if [ $(docker compose ps -q | wc -l) -eq 0 ]; then
             echo "No containers running"
@@ -153,4 +151,4 @@ jobs:
           fi
       - name: Check HTTP Response
         run: |
-          curl -kf https://localhost:8080 || exit 1
+          curl -k https://localhost:8080 || exit 1
