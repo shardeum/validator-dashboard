@@ -162,7 +162,7 @@ jobs:
           # Using expect to run the command and handle the output
           expect << 'EOF'
           set timeout -1
-          spawn docker exec -i shardeum-node operator-cli gui login $env(TEST_DASHBOARD_PASSWORD)
+          spawn docker exec -i shardeum-dashboard operator-cli gui login $env(TEST_DASHBOARD_PASSWORD)
           
           expect {
             "login: 'authorized'" {
