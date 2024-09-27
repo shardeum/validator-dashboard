@@ -154,7 +154,7 @@ jobs:
             exit 1
           fi
           # print the docker logs
-          ./logs.sh
+          docker logs shardeum-dashboard
         shell: bash
           
       - name: Verify GUI Password inside Docker container
