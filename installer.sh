@@ -587,7 +587,7 @@ if [ -d "$NODEHOME" ]; then
   fi
 fi
 
-git clone -b dev https://github.com/shardeum/validator-dashboard.git ${NODEHOME} || { echo "Error: Permission denied. Exiting script."; exit 1; }
+git clone -b itnp3 https://github.com/shardeum/validator-dashboard.git ${NODEHOME} || { echo "Error: Permission denied. Exiting script."; exit 1; }
 cd ${NODEHOME}
 chmod a+x ./*.sh
 
@@ -617,6 +617,10 @@ SHMINT=${SHMINT}
 RPC_SERVER_URL=${RPC_SERVER_URL}
 NEXT_PUBLIC_RPC_URL=${RPC_SERVER_URL}
 NEXT_EXPLORER_URL=https://explorer-atomium.shardeum.org
+minNodes=640
+baselineNodes=640
+maxNodes=1200
+nodesPerConsensusGroup=128
 EOL
 
 cat <<EOF
