@@ -88,13 +88,13 @@ Choose one of the following methods to download and run the installation script:
 Using `curl`
 
 ```bash
-curl -O https://raw.githubusercontent.com/shardeum/validator-dashboard/dev/installer.sh && chmod +x installer.sh && ./installer.sh
+curl -O https://raw.githubusercontent.com/shardeum/validator-dashboard/main/installer.sh && chmod +x installer.sh && ./installer.sh
 ```
 
 Using `wget`
 
 ```bash
-wget https://raw.githubusercontent.com/shardeum/validator-dashboard/dev/installer.sh && chmod +x installer.sh && ./installer.sh
+wget https://raw.githubusercontent.com/shardeum/validator-dashboard/main/installer.sh && chmod +x installer.sh && ./installer.sh
 ```
 
 Follow the instructions provided by the installer script. Ensure you input the correct Archiver and Monitor IP addresses for the network you wish your validator to join.
@@ -170,7 +170,7 @@ To set up the dashboard installer script for different versions of the Shardeum 
 - Point the installer to the correct CLI and GUI versions in [the entrypoint.sh](https://github.com/shardeum/validator-dashboard/blob/d366e0fbf53ca7e8efb7f7d4aa1db4de7574657e/entrypoint.sh#L25) file.
 - Set the right docker image version in the [Dockerfile](https://github.com/shardeum/validator-dashboard/blob/d366e0fbf53ca7e8efb7f7d4aa1db4de7574657e/Dockerfile#L1). You can find all tagged image versions [here](https://github.com/shardeum/shardeum/pkgs/container/server/versions?filters%5Bversion_type%5D=tagged).
 - The installer script creates a `.env` file that [defines the network details](https://github.com/shardeum/validator-dashboard/blob/d366e0fbf53ca7e8efb7f7d4aa1db4de7574657e/installer.sh#L540-L589), modify the script to specify the details of the new network.
-The script should now correctly set up the Dashboard for your new network.
+  The script should now correctly set up the Dashboard for your new network.
 
 ## Contributing
 
