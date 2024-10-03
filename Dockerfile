@@ -13,8 +13,8 @@ RUN apt-get install -y logrotate
 
 # Create node user
 RUN usermod -aG sudo node && \
-    echo '%sudo ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers && \
-    mkdir -p $APP_HOME /usr/src/app
+ echo '%sudo ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers && \
+ chown -R node /usr/local/bin /usr/local/lib /usr/local/include /usr/local/share
 USER node
 
 # Copy cli src files as regular user
