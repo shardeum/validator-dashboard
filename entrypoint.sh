@@ -1,11 +1,5 @@
 #!/usr/bin/env bash
-sudo chown -R node:node /home/node
-sudo chown -R node:node /usr/src/app
-sudo ln -s /usr/src/app /home/node/app/validator
-sleep 10;
-
 echo "Install PM2"
-
 npm i -g pm2
 
 echo "/home/node/.pm2/logs/*.log /home/node/app/cli/build/logs/*.log {
@@ -23,8 +17,6 @@ echo "/home/node/.pm2/logs/*.log /home/node/app/cli/build/logs/*.log {
 }" | sudo tee /etc/logrotate.d/pm2
 
 # Pull latest versions of the CLI and GUI
-
-# Pull latest versions of the CLI and GUI from gui-updates branch
 
 git clone -b dev https://github.com/shardeum/validator-cli.git cli
 

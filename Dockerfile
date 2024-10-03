@@ -3,6 +3,7 @@ FROM ghcr.io/shardeum/server:latest
 ARG RUNDASHBOARD=y
 ENV RUNDASHBOARD=${RUNDASHBOARD}
 
+
 RUN apt-get update
 
 RUN apt-get install -y sudo
@@ -18,7 +19,7 @@ USER node
 WORKDIR /home/node/app
 COPY --chown=node:node . .
 
-# RUN ln -s /usr/src/app /home/node/app/validator
+RUN ln -s /usr/src/app /home/node/app/validator
 
 # Start entrypoint script as regular user
 CMD ["./entrypoint.sh"]
