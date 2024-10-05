@@ -7,7 +7,7 @@ environment=$(uname)
 # If the script is run as root, set the HOME variable to the user's home directory
 if [ "$EUID" -eq 0 ]; then
     ACTUAL_USER=$(logname 2>/dev/null || echo $SUDO_USER)
-    # prefer the more secure getent if available as it prevents command injection, but fall back to ~USER if not available
+    # Use 'getent' to get home dir (6th field of passwd). If unavailable, fallback to shell expansion ~
     if command -v getent 2>&1 >/dev/null; then
       HOME=$(getent passwd "$ACTUAL_USER" | cut -d: -f6)
     else
