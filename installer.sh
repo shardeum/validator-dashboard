@@ -4,12 +4,6 @@ set -e
 # Get the environment/OS
 environment=$(uname)
 
-# If the script is run as root, set the HOME variable to the user's home directory
-if [ "$EUID" -eq 0 ]; then
-    ACTUAL_USER=$(logname 2>/dev/null || echo $SUDO_USER)
-    HOME="/home/$ACTUAL_USER"
-fi
-
 # Function to exit with an error message
 exit_with_error() {
     echo "Error: $1"
@@ -117,8 +111,10 @@ input=${input// /}
 # Echo the final directory used
 echo "The base directory is set to: $input"
 
-# Replace leading tilde (~) with the actual home directory path
-NODEHOME="${input/#\~/$HOME}" # support ~ in path
+# Expand the tilde in the input if any
+NODEHOME=`realpath "${input}"`
+
+echo "Real path for directory is: $NODEHOME"
 
 # Check all things that will be needed for this script to succeed like access to docker and docker-compose
 # If any check fails, attempt to install the missing dependency
