@@ -90,9 +90,6 @@ input=${input:-~/.shardeum}
 
 # Reprompt if not alphanumeric characters, tilde, forward slash, underscore, period, hyphen, or contains spaces
 while [[ ! $input =~ ^[[:alnum:]_.~/-]+$ || $input =~ [[:space:]] ]]; do
-#   read -p "Error: The directory name contains invalid characters or spaces.
-# Allowed characters are alphanumeric characters, tilde, forward slash, underscore, period, and hyphen.
-# Please enter a valid base directory (default ~/.shardeum): " input
   echo "Error: The directory name contains invalid characters or spaces."
   echo "Allowed characters are alphanumeric characters, tilde (~), forward slash (/), underscore (_), period (.), and hyphen (-)."
   read -p "Please enter a valid base directory (default ~/.shardeum): " input
