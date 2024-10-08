@@ -88,31 +88,36 @@ read -p "What base directory should the node use (default ~/.shardeum): " input
 # Set default value if input is empty
 input=${input:-~/.shardeum}
 
-# Check if input starts with "/" or "~/", if not, add "~/"
-if [[ ! $input =~ ^(/|~\/) ]]; then
-  input="~/$input"
-fi
-
 # Reprompt if not alphanumeric characters, tilde, forward slash, underscore, period, hyphen, or contains spaces
-while [[ ! $input =~ ^[[:alnum:]_.~/-]+$ || $input =~ .*[\ ].* ]]; do
-  read -p "Error: The directory name contains invalid characters or spaces.
-Allowed characters are alphanumeric characters, tilde, forward slash, underscore, period, and hyphen.
-Please enter a valid base directory (default ~/.shardeum): " input
+while [[ ! $input =~ ^[[:alnum:]_.~/-]+$ || $input =~ [[:space:]] ]]; do
+#   read -p "Error: The directory name contains invalid characters or spaces.
+# Allowed characters are alphanumeric characters, tilde, forward slash, underscore, period, and hyphen.
+# Please enter a valid base directory (default ~/.shardeum): " input
+  echo "Error: The directory name contains invalid characters or spaces."
+  echo "Allowed characters are alphanumeric characters, tilde (~), forward slash (/), underscore (_), period (.), and hyphen (-)."
+  read -p "Please enter a valid base directory (default ~/.shardeum): " input
 
-  # Check if input starts with "/" or "~/", if not, add "~/"
-  if [[ ! $input =~ ^(/|~\/) ]]; then
-    input="~/$input"
-  fi
+  # Set default if input is empty
+  input=${input:-~/.shardeum}
 done
 
-# Remove spaces from the input
-input=${input// /}
-
-# Echo the final directory used
+# Echo the final directory used (with ~ if present)
 echo "The base directory is set to: $input"
 
-# Expand the tilde in the input if any
-NODEHOME=`realpath "${input}"`
+# Expand the tilde (~) using a subshell
+expanded_input=$(bash -c "echo $input")
+
+# Create the directory if it doesn't exist
+mkdir -p "$expanded_input"
+
+# Get the real (absolute) path of the directory
+NODEHOME=$(realpath "$expanded_input")
+
+# Check if realpath was successful
+if [[ $? -ne 0 ]]; then
+  echo "Error: Unable to resolve the real path for '$expanded_input'."
+  exit 1
+fi
 
 echo "Real path for directory is: $NODEHOME"
 
