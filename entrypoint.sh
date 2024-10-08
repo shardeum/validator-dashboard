@@ -111,7 +111,7 @@ if [ "$RUNDASHBOARD" == "y" ]
 then
 echo "Starting operator gui"
 # Call the CLI command to set the GUI password
-operator-cli gui set password -h $DASHPASS
+echo "$DASHPASS" | operator-cli gui set password -h
 # Call the CLI command to set the GUI port
 operator-cli gui set port $DASHPORT
 # Call the CLI command to start the GUI
