@@ -566,7 +566,7 @@ done
 #APPSEEDLIST="archiver-sphinx.shardeum.org"
 #APPMONITOR="monitor-sphinx.shardeum.org"
 APPMONITOR="54.185.250.216 "
-RPC_SERVER_URL="https://atomium.shardeum.org/"
+RPC_SERVER_URL="http://170.187.185.35:8000"
 
 cat <<EOF
 
