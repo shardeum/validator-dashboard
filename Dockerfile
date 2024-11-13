@@ -1,4 +1,4 @@
-FROM ghcr.io/shardeum/server:itn1.15.1-rotation-fd1320b
+FROM ghcr.io/shardeum/server:1.15.2
 
 ARG RUNDASHBOARD=y
 ENV RUNDASHBOARD=${RUNDASHBOARD}
