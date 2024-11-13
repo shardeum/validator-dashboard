@@ -1,8 +1,7 @@
 name: Test Interactive Install
 
 on:
-  push:
-    branches: [ dev ] # on push to dev
+  push:               # on push to any
   pull_request:       # on any PR
   workflow_dispatch:  # manual trigger
 
