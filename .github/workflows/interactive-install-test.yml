@@ -152,6 +152,33 @@ jobs:
             echo "Containers are not running"
             exit 1
           fi
+          # print the docker logs
+          docker logs shardeum-dashboard
+        shell: bash
+          
+      - name: Verify GUI Password inside Docker container
+        run: |
+          # Using expect to run the command and handle the output
+          expect << 'EOF'
+          set timeout -1
+          spawn docker exec -i shardeum-dashboard operator-cli gui login $env(TEST_DASHBOARD_PASSWORD)
+          
+          expect {
+            "login: 'authorized'" {
+              puts "Password verified successfully!"
+              exit 0
+            }
+            "login: 'unauthorized'" {
+              puts "Password verification failed!"
+              exit 1
+            }
+            eof {
+              puts "Unexpected EOF reached!"
+              exit 1
+            }
+          }
+          EOF
+        shell: bash
           
       - name: Check for GUI to be up
         run: |
