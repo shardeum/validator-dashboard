@@ -566,7 +566,7 @@ done
 #APPSEEDLIST="archiver-sphinx.shardeum.org"
 #APPMONITOR="monitor-sphinx.shardeum.org"
 APPMONITOR="34.159.253.200"
-RPC_SERVER_URL="https://ws-ldrpc.devnet-apac.workloads.shardeum.org/"
+RPC_SERVER_URL="https://ws-ldrpc.devnet-us.workloads.shardeum.org/"
 
 cat <<EOF
 
@@ -604,7 +604,7 @@ touch ./.env
 cat >./.env <<EOL
 EXT_IP=${EXTERNALIP}
 INT_IP=${INTERNALIP}
-EXISTING_ARCHIVERS=[{"ip":"34.107.20.148","port":4000,"publicKey":"7af699dd711074eb96a8d1103e32b589e511613ebb0c6a789a9e8791b2b05f34"}]
+EXISTING_ARCHIVERS=[{"ip":"35.246.218.66","port":4000,"publicKey":"7af699dd711074eb96a8d1103e32b589e511613ebb0c6a789a9e8791b2b05f34"}]
 APP_MONITOR=${APPMONITOR}
 DASHPASS=${DASHPASS}
 DASHPORT=${DASHPORT}
@@ -614,7 +614,7 @@ SHMEXT=${SHMEXT}
 SHMINT=${SHMINT}
 RPC_SERVER_URL=${RPC_SERVER_URL}
 NEXT_PUBLIC_RPC_URL=${RPC_SERVER_URL}
-NEXT_EXPLORER_URL=http://35.246.218.66:6001
+NEXT_EXPLORER_URL=http://34.107.20.148:6001
 minNodes=20
 baselineNodes=20
 nodesPerConsensusGroup=10
