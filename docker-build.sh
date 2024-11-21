@@ -2,7 +2,7 @@
 
 docker-safe() {
   if ! command -v docker &>/dev/null; then
-    echo "docker is not installed on this machine"
+    echo "Docker is not installed on this machine"
     exit 1
   fi
 
