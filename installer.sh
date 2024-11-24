@@ -26,40 +26,6 @@ case "$environment" in
         ;;
 esac
 
-# Check for ARM processor or Unknown and exit if true, meaning the installer is not supported by the processor
-if [[ "$processor" == *"arm"* || "$processor" == "Unknown" ]]; then
-    exit_with_error "$processor not yet supported. Exiting installer."
-fi
-
-# Print the detected environment and processor
-echo "$environment environment with $processor found."
-
-
-# Check if any hashing command is available
-if ! (command -v openssl > /dev/null || command -v shasum > /dev/null || command -v sha256sum > /dev/null); then
-  echo "No supported hashing commands found."
-  read -p "Would you like to install openssl? (y/n) " -n 1 -r
-  echo
-
-  if [[ $REPLY =~ ^[Yy]$ ]]; then
-    # Detect package manager and install openssl
-    if command -v apt-get > /dev/null; then
-      sudo apt-get update && sudo apt-get install -y openssl
-    elif command -v yum > /dev/null; then
-      sudo yum install -y openssl
-    elif command -v dnf > /dev/null; then
-      sudo dnf install -y openssl
-    else
-      echo "Your package manager is not supported. Please install openssl manually."
-      exit 1
-    fi
-  else
-    echo "Please install openssl, shasum, or sha256sum and try again."
-    exit 1
-  fi
-fi
-
-
 read -p "During this early stage of Betanet the Shardeum team will be collecting some performance and debugging info from your node to help improve future versions of the software.
 This is only temporary and will be discontinued as we get closer to mainnet.
 Thanks for running a node and helping to make Shardeum better.
@@ -118,47 +84,17 @@ fi
 
 echo "Real path for directory is: $NODEHOME"
 
-# Check all things that will be needed for this script to succeed like access to docker and docker-compose
-# If any check fails, attempt to install the missing dependency
-command -v git >/dev/null 2>&1 || {
-    echo >&2 "'git' is not installed. Attempting to install git..."
-    if command -v apt-get >/dev/null 2>&1; then
-        sudo apt-get update && sudo apt-get install -y git
-    elif command -v yum >/dev/null 2>&1; then
-        sudo yum install -y git
-    else
-        echo >&2 "Unable to install git. Please install it manually."
-        exit 1
-    fi
-}
-
-command -v docker >/dev/null 2>&1 || {
-    echo >&2 "'docker' is not installed. Attempting to install docker..."
-    curl -fsSL https://get.docker.com -o get-docker.sh
-    sudo sh get-docker.sh
-    sudo usermod -aG docker $USER
-    rm get-docker.sh
-}
-
-if ! command -v docker-compose &>/dev/null && ! docker --help | grep -q "compose"; then
-    echo "docker-compose or docker compose is not installed. Attempting to install docker-compose..."
-    sudo curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
-    sudo chmod +x /usr/local/bin/docker-compose
-fi
+#command -v docker >/dev/null 2>&1 || {
+#  if [[ $REPLY =~ ^[Yy]$ ]]; then
+#    echo >&2 "'docker' is not installed. Attempting to install docker..."
+#    curl -fsSL https://get.docker.com -o get-docker.sh
+#    sudo sh get-docker.sh
+#    sudo usermod -aG docker $USER
+#    rm get-docker.sh
+#}
 
 # Verify installations
-command -v git >/dev/null 2>&1 || { echo >&2 "Failed to install git. Please install it manually."; exit 1; }
-command -v docker >/dev/null 2>&1 || { echo >&2 "Failed to install docker. Please install it manually."; exit 1; }
-if command -v docker-compose &>/dev/null; then
-    echo "docker-compose is installed on this machine"
-elif docker --help | grep -q "compose"; then
-    echo "docker compose subcommand is installed on this machine"
-else
-    echo "Failed to install docker-compose. Please install it manually."
-    exit 1
-fi
-
-export DOCKER_DEFAULT_PLATFORM=linux/amd64
+command -v docker >/dev/null 2>&1 || { echo >&2 "Docker is not installed on this machine but is required to run the shardeum validator. Please install docker before continuing."; exit 1; }
 
 docker-safe() {
   if ! command -v docker &>/dev/null; then
@@ -169,22 +105,6 @@ docker-safe() {
   if ! docker $@; then
     echo "Trying again with sudo..." >&2
     sudo docker $@
-  fi
-}
-
-docker-compose-safe() {
-  if command -v docker-compose &>/dev/null; then
-    cmd="docker-compose"
-  elif docker --help | grep -q "compose"; then
-    cmd="docker compose"
-  else
-    echo "docker-compose or docker compose is not installed on this machine"
-    exit 1
-  fi
-
-  if ! $cmd $@; then
-    echo "Trying again with sudo..."
-    sudo $cmd $@
   fi
 }
 
@@ -234,6 +154,30 @@ hash_password() {
   local input="$1"
   local hashed_password
 
+  # Check if any hashing command is available
+  if ! (command -v openssl > /dev/null || command -v shasum > /dev/null || command -v sha256sum > /dev/null); then
+    echo "No supported hashing commands found."
+    read -p "Would you like to install openssl? (y/n) " -n 1 -r
+    echo
+
+    if [[ $REPLY =~ ^[Yy]$ ]]; then
+      # Detect package manager and install openssl
+      if command -v apt-get > /dev/null; then
+        sudo apt-get update && sudo apt-get install -y openssl
+      elif command -v yum > /dev/null; then
+        sudo yum install -y openssl
+      elif command -v dnf > /dev/null; then
+        sudo dnf install -y openssl
+      else
+        echo "Your package manager is not supported. Please install openssl manually."
+        exit 1
+      fi
+    else
+      echo "Please install openssl, shasum, or sha256sum and try again."
+      exit 1
+    fi
+  fi
+
   # Try using openssl
   if command -v openssl > /dev/null; then
     hashed_password=$(echo -n "$input" | openssl dgst -sha256 -r | awk '{print $1}')
@@ -259,7 +203,7 @@ hash_password() {
 }
 
 if [[ $(docker-safe info 2>&1) == *"Cannot connect to the Docker daemon"* ]]; then
-    echo "Docker daemon is not running"
+    echo "Docker daemon is not running, please staert the Docker daemon and try again"
     exit 1
 else
     echo "Docker daemon is running"
@@ -275,22 +219,13 @@ SHMEXT_DEFAULT=9001
 SHMINT_DEFAULT=10001
 PREVIOUS_PASSWORD=none
 
-
-GITLAB_IMAGE_NAME="registry.gitlab.com/shardeum/server:latest"
 GITHUB_IMAGE_NAME="ghcr.io/shardeum/server:latest"
-
-# Check if container exists with GitLab image
-GITLAB_CONTAINER_ID=$(docker-safe ps -qf "ancestor=$GITLAB_IMAGE_NAME")
 
 # Check if container exists with GitHub image
 GITHUB_CONTAINER_ID=$(docker-safe ps -qf "ancestor=$GITHUB_IMAGE_NAME")
 
 # Determine action based on found container
-if [ ! -z "$GITLAB_CONTAINER_ID" ]; then
-  echo "Existing GitLab container found. ID: $GITLAB_CONTAINER_ID"
-  # Perform actions for GitLab container, e.g., copy settings, upgrade
-  CONTAINER_ID=$GITLAB_CONTAINER_ID
-elif [ ! -z "$GITHUB_CONTAINER_ID" ]; then
+if [ ! -z "$GITHUB_CONTAINER_ID" ]; then
   echo "Existing GitHub container found. ID: $GITHUB_CONTAINER_ID"
   # Perform actions for GitHub container, e.g., copy settings, upgrade
   CONTAINER_ID=$GITHUB_CONTAINER_ID
@@ -543,7 +478,7 @@ while :; do
 done
 
 while :; do
-  echo "To run a validator on the Sphinx network, you will need to open two ports in your firewall."
+  echo "To run a validator on the Shardeum network, you will need to open two ports in your firewall."
   read -p "This allows p2p communication between nodes. Enter the first port (1025-65536) for p2p communication (default $SHMEXT_DEFAULT): " SHMEXT
   SHMEXT=${SHMEXT:-$SHMEXT_DEFAULT}
   [[ $SHMEXT =~ ^[0-9]+$ ]] || { echo "Enter a valid port"; continue; }
@@ -563,8 +498,6 @@ while :; do
   fi
 done
 
-#APPSEEDLIST="archiver-sphinx.shardeum.org"
-#APPMONITOR="monitor-sphinx.shardeum.org"
 APPMONITOR="54.185.250.216"
 RPC_SERVER_URL="https://atomium.shardeum.org"
 
