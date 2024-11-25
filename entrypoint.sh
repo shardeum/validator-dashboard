@@ -83,4 +83,4 @@ fi
 echo "done";
 
 # Keep container running
-tail -f /dev/null
+pm2-runtime logs

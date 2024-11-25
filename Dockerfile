@@ -105,4 +105,4 @@ RUN echo '/home/node/.pm2/logs/*.log /home/node/app/cli/build/logs/*.log {\n\
 ## pm2 logs is a good default to keep the instance running & have useful output.
 USER node
 WORKDIR /home/node/app/gui
-CMD [ "pm2-runtime", "logs" ]
+CMD [ "entrypoint.sh" ]
