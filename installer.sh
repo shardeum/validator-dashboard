@@ -585,7 +585,7 @@ if [ -d "$NODEHOME" ]; then
   fi
 fi
 
-git clone -b dev-settings https://github.com/shardeum/validator-dashboard.git ${NODEHOME} || { echo "Error: Permission denied. Exiting script."; exit 1; }
+git clone -b dev-settings-local https://github.com/shardeum/validator-dashboard.git ${NODEHOME} || { echo "Error: Permission denied. Exiting script."; exit 1; }
 cd ${NODEHOME}
 chmod a+x ./*.sh
 
@@ -604,7 +604,7 @@ touch ./.env
 cat >./.env <<EOL
 EXT_IP=${EXTERNALIP}
 INT_IP=${INTERNALIP}
-EXISTING_ARCHIVERS=[{"ip":"34.68.218.222","port":4000,"publicKey":"64a3833499130406550729ab20f6bec351d04ec9be3e5f0144d54f01d4d18c45"},{"ip":"34.174.86.241","port":4000,"publicKey":"9b4ba46439ea6cafc6b20d971ab0ef0f21b415c27482652efac96fd61a76d73c"},{"ip":"34.48.51.73","port":4000,"publicKey":"ea72ef63e27cb960bfe02f17d40e74b5c28437af1d0df83dd21ba2084596789f"}]
+EXISTING_ARCHIVERS=[{"ip":"127.0.0.1","port":4000,"publicKey":"758b1c119412298802cd28dbfa394cdfeecc4074492d60844cc192d632d84de3"}]
 APP_MONITOR=${APPMONITOR}
 DASHPASS=${DASHPASS}
 DASHPORT=${DASHPORT}
