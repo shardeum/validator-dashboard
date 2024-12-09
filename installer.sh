@@ -276,8 +276,8 @@ SHMINT_DEFAULT=10001
 PREVIOUS_PASSWORD=none
 
 
-GITLAB_IMAGE_NAME="registry.gitlab.com/shardeum/server:devnets2"
-GITHUB_IMAGE_NAME="ghcr.io/shardeum/server:devnets2"
+GITLAB_IMAGE_NAME="registry.gitlab.com/shardeum/server:devnets"
+GITHUB_IMAGE_NAME="ghcr.io/shardeum/server:devnets"
 
 # Check if container exists with GitLab image
 GITLAB_CONTAINER_ID=$(docker-safe ps -qf "ancestor=$GITLAB_IMAGE_NAME")
