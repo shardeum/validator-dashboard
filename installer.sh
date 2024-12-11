@@ -276,8 +276,8 @@ SHMINT_DEFAULT=10001
 PREVIOUS_PASSWORD=none
 
 
-GITLAB_IMAGE_NAME="registry.gitlab.com/shardeum/server:devnets"
-GITHUB_IMAGE_NAME="ghcr.io/shardeum/server:devnets"
+GITLAB_IMAGE_NAME="registry.gitlab.com/shardeum/server:dev-apac"
+GITHUB_IMAGE_NAME="ghcr.io/shardeum/server:dev-apac"
 
 # Check if container exists with GitLab image
 GITLAB_CONTAINER_ID=$(docker-safe ps -qf "ancestor=$GITLAB_IMAGE_NAME")
@@ -565,8 +565,8 @@ done
 
 #APPSEEDLIST="archiver-sphinx.shardeum.org"
 #APPMONITOR="monitor-sphinx.shardeum.org"
-APPMONITOR="34.73.24.68"
-RPC_SERVER_URL="http://34.139.178.3:8000"
+APPMONITOR="34.148.227.213"
+RPC_SERVER_URL="http://35.227.99.174:8000/"
 
 cat <<EOF
 
@@ -604,7 +604,7 @@ touch ./.env
 cat >./.env <<EOL
 EXT_IP=${EXTERNALIP}
 INT_IP=${INTERNALIP} 
-EXISTING_ARCHIVERS=[{"ip":"35.237.67.90","port":4000,"publicKey":"7af699dd711074eb96a8d1103e32b589e511613ebb0c6a789a9e8791b2b05f34"}]
+EXISTING_ARCHIVERS=[{"ip":"35.243.187.134","port":4000,"publicKey":"2db7c949632d26b87d7e7a5a4ad41c306f63ee972655121a37c5e4f52b00a542"}]
 APP_MONITOR=${APPMONITOR}
 DASHPASS=${DASHPASS}
 DASHPORT=${DASHPORT}
