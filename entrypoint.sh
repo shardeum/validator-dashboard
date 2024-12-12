@@ -6,6 +6,11 @@ sleep 10;
 
 echo "Install PM2"
 
+source ./check-variables.sh
+
+# Verify critical environment variables are set (use common variables only)
+check_required_env_vars "${REQUIRED_ENV_VARS_COMMON[@]}"
+
 npm i -g pm2
 
 echo "/home/node/.pm2/logs/*.log /home/node/app/cli/build/logs/*.log {

@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 set -e
 
+source ./check-variables.sh
+
 # Get the environment/OS
 environment=$(uname)
 
@@ -34,6 +36,11 @@ fi
 # Print the detected environment and processor
 echo "$environment environment with $processor found."
 
+# Combine common and installer-specific required variables
+ALL_REQUIRED_ENV_VARS=("${REQUIRED_ENV_VARS_COMMON[@]}" "${REQUIRED_ENV_VARS_INSTALLER[@]}")
+
+# Verify if necessary environment variables are set
+check_required_env_vars "${ALL_REQUIRED_ENV_VARS[@]}"
 
 # Check if any hashing command is available
 if ! (command -v openssl > /dev/null || command -v shasum > /dev/null || command -v sha256sum > /dev/null); then
