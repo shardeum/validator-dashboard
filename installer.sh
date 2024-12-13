@@ -430,7 +430,7 @@ if [ "$CHANGEPASSWORD" = "y" ]; then
     if (( ${#DASHPASS} < 8 )); then
         echo -e "\nInvalid password! Too short.\n"
 
-    if (( ${#DASHPASS} > 128 )); then
+    elif (( ${#DASHPASS} > 128 )); then
         echo -e "\nInvalid password! Too long.\n"
 
     # Check for at least one lowercase letter
