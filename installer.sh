@@ -566,7 +566,7 @@ done
 #APPSEEDLIST="archiver-sphinx.shardeum.org"
 #APPMONITOR="monitor-sphinx.shardeum.org"
 APPMONITOR="34.28.123.3"
-RPC_SERVER_URL="http://34.42.232.167:8080"
+RPC_SERVER_URL="http://34.42.232.167:8000"
 
 cat <<EOF
 
@@ -585,7 +585,7 @@ if [ -d "$NODEHOME" ]; then
   fi
 fi
 
-git clone https://github.com/shardeum/validator-dashboard.git ${NODEHOME} || { echo "Error: Permission denied. Exiting script."; exit 1; }
+git clone -b itn4-changes https://github.com/shardeum/validator-dashboard.git ${NODEHOME} || { echo "Error: Permission denied. Exiting script."; exit 1; }
 cd ${NODEHOME}
 chmod a+x ./*.sh
 
