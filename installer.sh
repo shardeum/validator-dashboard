@@ -423,12 +423,15 @@ if [ "$CHANGEPASSWORD" = "y" ]; then
   valid_pass=false
   while [ "$valid_pass" = false ] ;
   do
-    echo -n -e "Password requirements: min 8 characters, at least 1 lower case letter, at least 1 upper case letter, at least 1 number, at least 1 special character !@#$%^&*()_+$ \nSet the password to access the Dashboard:"
+    echo -n -e "Password requirements: min 8 characters, max 128 characters, at least 1 lower case letter, at least 1 upper case letter, at least 1 number, at least 1 special character !@#$%^&*()_+$ \nSet the password to access the Dashboard:"
     DASHPASS=$(read_password)
 
     # Check password length
     if (( ${#DASHPASS} < 8 )); then
         echo -e "\nInvalid password! Too short.\n"
+
+    if (( ${#DASHPASS} > 128 )); then
+        echo -e "\nInvalid password! Too long.\n"
 
     # Check for at least one lowercase letter
     elif ! [[ "$DASHPASS" =~ [a-z] ]]; then
@@ -565,7 +568,7 @@ done
 
 #APPSEEDLIST="archiver-sphinx.shardeum.org"
 #APPMONITOR="monitor-sphinx.shardeum.org"
-APPMONITOR="54.185.250.216"
+APPMONITOR="34.28.123.3"
 RPC_SERVER_URL="https://atomium.shardeum.org"
 
 cat <<EOF
@@ -604,7 +607,7 @@ touch ./.env
 cat >./.env <<EOL
 EXT_IP=${EXTERNALIP}
 INT_IP=${INTERNALIP}
-EXISTING_ARCHIVERS=[{"ip":"34.68.218.222","port":4000,"publicKey":"64a3833499130406550729ab20f6bec351d04ec9be3e5f0144d54f01d4d18c45"},{"ip":"34.174.86.241","port":4000,"publicKey":"9b4ba46439ea6cafc6b20d971ab0ef0f21b415c27482652efac96fd61a76d73c"},{"ip":"34.48.51.73","port":4000,"publicKey":"ea72ef63e27cb960bfe02f17d40e74b5c28437af1d0df83dd21ba2084596789f"}]
+EXISTING_ARCHIVERS=[{"ip":"35.193.191.159","port":"4000","publicKey":"1c63734aedef5665d6cf02d3a79ae30aedcbd27eae3b76fff05d587a6ac62981"},{"ip":"34.73.94.45","port":"4000","publicKey":"11086314ccf8642906b99f09cf3ae9a13370c57106653cd28fc1a9eee2560b64"},{"ip":"34.19.93.147","port":"4000","publicKey":"b09a8792593682cbffbbf2fc3bd812d8143740197a5f435c77a38740397088ac"}]
 APP_MONITOR=${APPMONITOR}
 DASHPASS=${DASHPASS}
 DASHPORT=${DASHPORT}
