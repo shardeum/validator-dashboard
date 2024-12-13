@@ -27,9 +27,9 @@ case "$environment" in
 esac
 
 # Check for ARM processor or Unknown and exit if true, meaning the installer is not supported by the processor
-# if [[ "$processor" == *"arm"* || "$processor" == "Unknown" ]]; then
-#     exit_with_error "$processor not yet supported. Exiting installer."
-# fi
+ if [[ "$processor" == *"arm"* || "$processor" == "Unknown" ]]; then
+     exit_with_error "$processor not yet supported. Exiting installer."
+ fi
 
 # Print the detected environment and processor
 echo "$environment environment with $processor found."
