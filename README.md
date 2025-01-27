@@ -94,7 +94,7 @@ curl -O https://raw.githubusercontent.com/shardeum/validator-dashboard/main/inst
 Using `wget`
 
 ```bash
-wget https://raw.githubusercontent.com/shardeum/validator-dashboard/main/installer.sh && chmod +x installer.sh && ./installer.sh
+wget -O installer.sh https://raw.githubusercontent.com/shardeum/validator-dashboard/main/installer.sh && chmod +x installer.sh && ./installer.sh
 ```
 
 Follow the instructions provided by the installer script. Ensure you input the correct Archiver and Monitor IP addresses for the network you wish your validator to join.
