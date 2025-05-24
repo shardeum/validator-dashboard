@@ -161,7 +161,7 @@ This will be more effective when the info gathered in the install script is stor
 
 This will clean up the last (lastest) build. Just meant to save a few key strokes.
 
-Instructions for the user wanting to run a Shardeum validator node can be found here: <https://docs.shardeum.org/docs/node/run/validator>
+Instructions for the user wanting to run a Shardeum validator node can be found here: <https://docs.shardeum.org/docs/run-a-node/getting-started>
 
 ## Versioning
 
